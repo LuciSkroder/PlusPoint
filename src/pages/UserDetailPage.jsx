@@ -12,7 +12,7 @@ export default function UserDetailPage() {
     const usersData = JSON.parse(data) || [];
     const user = usersData.find((user) => String(user.id) === id);
     setUser(user);
-  }, []);
+  }, [id]);
 
   const navigate = useNavigate();
   function showUpdate() {

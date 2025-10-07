@@ -14,7 +14,7 @@ export default function CreatePage() {
   const navigate = useNavigate();
 
   function handleCancel() {
-    navigate("/PlusPoint"); // Navigates back one step in history
+    navigate("/"); // Navigates back one step in history
   }
 
   async function handleSubmit(e) {
@@ -39,7 +39,7 @@ export default function CreatePage() {
       await push(usersRef, newUser);
 
       console.log("User added to Firebase successfully!");
-      navigate("/PlusPoint"); // Navigate to the home page after successful submission
+      navigate("/"); // Navigate to the home page after successful submission
     } catch (error) {
       console.error("Error adding user to Firebase:", error);
       alert("Failed to create user. Please try again."); // Provide user feedback
