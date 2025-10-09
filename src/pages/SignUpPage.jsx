@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   createUserWithEmailAndPassword,
   fetchSignInMethodsForEmail,
 } from "firebase/auth";
-import { Auth } from "../components/DataBase";
+import { ref, set } from "firebase/database";
+import { Auth, DataBase } from "../components/DataBase";
 import { useNavigate } from "react-router";
 
 export default function SignUpPage() {
@@ -14,18 +15,38 @@ export default function SignUpPage() {
 
   const handleSignUp = async (e) => {
     e.preventDefault();
-    setError("");
+    setError(""); // Clear previous errors
 
     try {
-      await createUserWithEmailAndPassword(Auth, email, password);
+      // 1. Create the user's Firebase Authentication account (only call once!)
+      const userCredential = await createUserWithEmailAndPassword(
+        Auth,
+        email,
+        password
+      );
+      const user = userCredential.user;
+
       console.log("Signed up successfully!");
-      navigate("/dashboard"); // Redirect to dashboard or a success page
+
+      // 2. Write the new user's profile to the Realtime Database
+      if (user) {
+        const userProfileRef = ref(DataBase, `users/${user.uid}`);
+        await set(userProfileRef, {
+          email: user.email,
+          name: "New Parent User", // Or prompt for name in the form
+          children: {}, // Initialize with an empty children object
+        });
+        console.log("User profile created in Realtime Database.");
+      }
+
+      // 3. Redirect after successful sign-up and database write
+      navigate("/dashboard"); // Redirect to dashboard or wherever new users go
     } catch (err) {
+      // Handle any errors that occur during Auth creation or DB writing
       if (err.code === "auth/email-already-in-use") {
         setError(
           "This email is already in use. Please try logging in instead, or use a different email."
         );
-
         // Optional: Provide more specific guidance on how they originally signed up
         try {
           const signInMethods = await fetchSignInMethodsForEmail(Auth, email);
@@ -39,11 +60,13 @@ export default function SignUpPage() {
           }
         } catch (fetchError) {
           console.error("Error fetching sign-in methods:", fetchError);
-          // Fallback message if fetching methods fails
         }
       } else if (err.code === "auth/weak-password") {
-        setError("Password is too weak. Please choose a stronger password.");
+        setError(
+          "Password is too weak. Please choose a stronger password (min 6 characters)."
+        );
       } else {
+        // Catch any other Firebase errors or network issues
         setError(err.message);
       }
       console.error("Sign up error:", err.message);

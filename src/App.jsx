@@ -7,20 +7,59 @@ import UserUpdatePage from "./pages/UserUpdatePage";
 import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignUpPage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
+import AddChildPage from "./pages/AddChildPage";
+import { AuthProvider } from "./AuthContext";
+import ProtectedRoute from "./components/ProtectedRoutes";
 
 export default function App() {
   return (
-    <BrowserRouter className="app">
-      <NavBar></NavBar>
-      <Routes>
-        <Route path="/" element={<HomePage />}></Route>
-        <Route path="/login" element={<LoginPage />}></Route>
-        <Route path="/signup" element={<SignUpPage />}></Route>
-        <Route path="/forgotpassword" element={<ForgotPasswordPage />}></Route>
-        <Route path="/create" element={<CreatePage />}></Route>
-        <Route path="/users/:id" element={<UserDetailPage />}></Route>
-        <Route path="/users/:id/update" element={<UserUpdatePage />}></Route>
-      </Routes>
-    </BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter className="app">
+        <NavBar></NavBar>
+        <Routes>
+          <Route path="/login" element={<LoginPage />}></Route>
+          <Route path="/signup" element={<SignUpPage />}></Route>
+          <Route
+            path="/forgotpassword"
+            element={<ForgotPasswordPage />}
+          ></Route>
+
+          {/* Wrap protected routes with ProtectedRoute component */}
+          <Route path="/" element={<HomePage />}></Route>
+          <Route
+            path="/addchild"
+            element={
+              <ProtectedRoute>
+                <AddChildPage />
+              </ProtectedRoute>
+            }
+          ></Route>
+          <Route
+            path="/create"
+            element={
+              <ProtectedRoute>
+                <CreatePage />
+              </ProtectedRoute>
+            }
+          ></Route>
+          <Route
+            path="/users/:id"
+            element={
+              <ProtectedRoute>
+                <UserDetailPage />
+              </ProtectedRoute>
+            }
+          ></Route>
+          <Route
+            path="/users/:id/update"
+            element={
+              <ProtectedRoute>
+                <UserUpdatePage />
+              </ProtectedRoute>
+            }
+          ></Route>
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }

@@ -1,6 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getDatabase } from "firebase/database";
 import { getAuth } from "firebase/auth";
+import { getFunctions } from "firebase/functions";
 
 // Your Firebase configuration (get this from Project settings -> General in the Firebase Console)
 const firebaseConfig = {
@@ -16,8 +17,6 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-
-// Get a reference to the Realtime Database service
 export const DataBase = getDatabase(app);
-
-export const Auth = getAuth(app); // Export the Auth service for your login component
+export const Auth = getAuth(app);
+export const Functions = getFunctions(app);

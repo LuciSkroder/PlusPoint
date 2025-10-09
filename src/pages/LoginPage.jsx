@@ -14,7 +14,6 @@ export default function LoginPage() {
     setError(""); // Clear previous errors
     try {
       await signInWithEmailAndPassword(Auth, email, password);
-      // User logged in successfully!
       console.log("Logged in successfully!");
       navigate("/");
     } catch (err) {
