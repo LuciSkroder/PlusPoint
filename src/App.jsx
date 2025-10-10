@@ -14,7 +14,7 @@ import ProtectedRoute from "./components/ProtectedRoutes";
 export default function App() {
   return (
     <AuthProvider>
-      <BrowserRouter className="app">
+      <BrowserRouter basename="/PlusPoint" className="app">
         <NavBar></NavBar>
         <Routes>
           <Route path="/login" element={<LoginPage />}></Route>
@@ -23,8 +23,6 @@ export default function App() {
             path="/forgotpassword"
             element={<ForgotPasswordPage />}
           ></Route>
-
-          {/* Wrap protected routes with ProtectedRoute component */}
           <Route path="/" element={<HomePage />}></Route>
           <Route
             path="/addchild"
