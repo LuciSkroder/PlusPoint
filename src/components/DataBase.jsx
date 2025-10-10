@@ -5,14 +5,14 @@ import { getFunctions } from "firebase/functions";
 
 // Your Firebase configuration (get this from Project settings -> General in the Firebase Console)
 const firebaseConfig = {
-  apiKey: "AIzaSyDpsWFFZINv7aXPXK0uBum9U_w8mRSEL64",
-  authDomain: "pluspoint-f355e.firebaseapp.com",
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
   databaseURL:
     "https://pluspoint-f355e-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "pluspoint-f355e",
-  storageBucket: "pluspoint-f355e.firebasestorage.app",
-  messagingSenderId: "520562860299",
-  appId: "1:520562860299:web:b1a821c743b563d0ef420e",
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
 // Initialize Firebase
@@ -20,3 +20,19 @@ const app = initializeApp(firebaseConfig);
 export const DataBase = getDatabase(app);
 export const Auth = getAuth(app);
 export const Functions = getFunctions(app);
+
+console.log("Firebase Client Config:");
+console.log("  VITE_FIREBASE_API_KEY:", import.meta.env.VITE_FIREBASE_API_KEY);
+console.log(
+  "  VITE_FIREBASE_AUTH_DOMAIN:",
+  import.meta.env.VITE_FIREBASE_AUTH_DOMAIN
+);
+console.log(
+  "  VITE_FIREBASE_PROJECT_ID:",
+  import.meta.env.VITE_FIREBASE_PROJECT_ID
+);
+console.log(
+  "  VITE_FIREBASE_MESSAGING_SENDER_ID:",
+  import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID
+);
+console.log("  VITE_FIREBASE_APP_ID:", import.meta.env.VITE_FIREBASE_APP_ID);

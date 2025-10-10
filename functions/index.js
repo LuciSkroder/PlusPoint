@@ -1,99 +1,121 @@
-const functions = require("firebase-functions");
-const admin = require("firebase-admin");
+import * as functions from "firebase-functions";
+import { initializeApp } from "firebase-admin/app";
+import { getAuth } from "firebase-admin/auth";
+import { getDatabase } from "firebase-admin/database";
 
-// Initialize Firebase Admin SDK
-// This automatically picks up credentials when deployed to Cloud Functions
-admin.initializeApp();
+initializeApp();
 
-// Export a callable Cloud Function
-// Callable functions are designed to be invoked directly from your client-side code
-// and automatically provide the authenticated user's context.
-exports.addChildAccount = functions.https.onCall(async (data, context) => {
-  // 1. Authenticate the caller (ensure a parent is logged in)
-  if (!context.auth) {
-    throw new functions.https.HttpsError(
-      "unauthenticated",
-      "The function must be called while authenticated."
-    );
-  }
+// REMOVED ALL TYPE ANNOTATIONS IN THE FUNCTION SIGNATURE AND VARIABLE DECLARATIONS
+export const addChildAccount = functions.https.onCall(
+  async (firstArgumentFromRuntime, secondArgumentFromRuntime) => {
+    console.log("--- START FUNCTION LOG ---");
 
-  const parentUid = context.auth.uid; // The UID of the parent calling this function
+    // Based on logs, firstArgumentFromRuntime is the actual CallableContext
+    // Removed explicit type annotation for 'context' to avoid SyntaxError
+    const context = firstArgumentFromRuntime;
+    // And the client's data payload is expected to be ON that context object
+    const clientPayload = context.data;
 
-  // 2. Validate input from the client
-  const { childEmail, childPassword, childDisplayName } = data;
+    console.log("Actual CallableContext (from first arg):", context);
+    console.log("Client data payload (from context.data):", clientPayload); // THIS is what should be your form data
 
-  if (!childEmail || !childPassword || !childDisplayName) {
-    throw new functions.https.HttpsError(
-      "invalid-argument",
-      'The function must be called with "childEmail", "childPassword", and "childDisplayName".'
-    );
-  }
-  if (childPassword.length < 6) {
-    throw new functions.https.HttpsError(
-      "invalid-argument",
-      "The child password must be at least 6 characters long."
-    );
-  }
-
-  // 3. Create the child user using Firebase Admin SDK
-  let childUid;
-  try {
-    const userRecord = await admin.auth().createUser({
-      email: childEmail,
-      password: childPassword,
-      displayName: childDisplayName,
-      // You can also set photoURL, phoneNumber, etc.
-      // Set emailVerified: true if you don't want children to verify their emails
-      emailVerified: true, // Or false, depending on your flow
-    });
-    childUid = userRecord.uid;
+    // For debugging, we can still log the second argument if it helps understanding further:
     console.log(
-      `Successfully created new child user: ${childUid} for parent: ${parentUid}`
+      "Type of 'secondArgumentFromRuntime':",
+      typeof secondArgumentFromRuntime
     );
-  } catch (error) {
-    if (error.code === "auth/email-already-exists") {
+    console.log(
+      "Content of 'secondArgumentFromRuntime':",
+      secondArgumentFromRuntime
+    );
+
+    // --- Auth Context Check ---
+    // The 'context' variable here is now the actual CallableContext object
+    if (!context || !context.auth) {
       throw new functions.https.HttpsError(
-        "already-exists",
-        "The provided email is already in use by an existing user."
+        "unauthenticated",
+        "The function must be called while authenticated. (Debug: Auth context not found in the first argument.)"
       );
     }
-    // Re-throw other authentication errors
-    throw new functions.https.HttpsError(
-      "internal",
-      `Error creating child user: ${error.message}`,
-      error
-    );
-  }
 
-  // 4. Update Realtime Database with child profile and link to parent
-  const db = admin.database(); // Get Realtime Database reference
-
-  const updates = {};
-  // Set child's profile
-  updates[`/childrenProfiles/${childUid}`] = {
-    parentUid: parentUid,
-    displayName: childDisplayName,
-    email: childEmail,
-    points: 0, // Initialize points for the child
-  };
-  // Link child to parent's list
-  updates[`/users/${parentUid}/children/${childUid}`] = true;
-
-  try {
-    await db.ref().update(updates);
+    // Auth context is now correctly available
+    console.log("context.auth IS present. UID:", context.auth.uid);
+    // Re-added JSON.stringify for context.auth.token for clarity in logs, as it's a known safe object.
     console.log(
-      `Realtime Database updated for child: ${childUid} and parent: ${parentUid}`
+      "context.auth.token (claims):",
+      JSON.stringify(context.auth.token, null, 2)
     );
-  } catch (error) {
-    // If database update fails, consider if you want to delete the auth user
-    // or log an admin alert. For simplicity, we'll just throw the error.
-    throw new functions.https.HttpsError(
-      "internal",
-      `Error updating Realtime Database: ${error.message}`,
-      error
-    );
-  }
 
-  // 5. Return success message (optional, but good for client feedback)
-  return { success: true, childUid: childUid };
-});
+    // --- Begin Business Logic ---
+    const parentUid = context.auth.uid;
+
+    // Now, destructure the actual clientPayload
+    const { childEmail, childPassword, childDisplayName } = clientPayload;
+
+    if (!childEmail || !childPassword || !childDisplayName) {
+      throw new functions.https.HttpsError(
+        "invalid-argument",
+        'The function must be called with "childEmail", "childPassword", and "childDisplayName".'
+      );
+    }
+    if (childPassword.length < 6) {
+      throw new functions.https.HttpsError(
+        "invalid-argument",
+        "The child password must be at least 6 characters long."
+      );
+    }
+
+    let childUid;
+    try {
+      const auth = getAuth();
+      const userRecord = await auth.createUser({
+        email: childEmail,
+        password: childPassword,
+        displayName: childDisplayName,
+        emailVerified: true,
+      });
+      childUid = userRecord.uid;
+      console.log(
+        `Successfully created new child user: ${childUid} for parent: ${parentUid}`
+      );
+    } catch (error) {
+      if (error.code === "auth/email-already-exists") {
+        throw new functions.https.HttpsError(
+          "already-exists",
+          "The provided email is already in use by an existing user."
+        );
+      }
+      throw new functions.https.HttpsError(
+        "internal",
+        `Error creating child user: ${error.message}`,
+        error
+      );
+    }
+
+    const db = getDatabase();
+    const updates = {};
+    updates[`/childrenProfiles/${childUid}`] = {
+      parentUid: parentUid,
+      displayName: childDisplayName,
+      email: childEmail,
+      points: 0,
+    };
+    updates[`/users/${parentUid}/children/${childUid}`] = true;
+
+    try {
+      await db.ref().update(updates);
+      console.log(
+        `Realtime Database updated for child: ${childUid} and parent: ${parentUid}`
+      );
+    } catch (error) {
+      throw new functions.https.HttpsError(
+        "internal",
+        `Error updating Realtime Database: ${error.message}`,
+        error
+      );
+    }
+
+    console.log("--- END FUNCTION LOG ---");
+    return { success: true, childUid: childUid };
+  }
+);
