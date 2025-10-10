@@ -5,57 +5,38 @@ import { getDatabase } from "firebase-admin/database";
 
 initializeApp();
 
-// REMOVED ALL TYPE ANNOTATIONS IN THE FUNCTION SIGNATURE AND VARIABLE DECLARATIONS
 export const addChildAccount = functions.https.onCall(
-  async (firstArgumentFromRuntime, secondArgumentFromRuntime) => {
-    console.log("--- START FUNCTION LOG ---");
+  async (firstArgFromRuntime, secondArgFromRuntime) => {
+    // --- Core Logic: Argument Re-assignment based on observed behavior ---
+    // In your environment, the first argument is consistently the CallableContext.
+    // The client's payload is found within this context object's 'data' property.
+    // The second argument seems to be some other internal object.
 
-    // Based on logs, firstArgumentFromRuntime is the actual CallableContext
-    // Removed explicit type annotation for 'context' to avoid SyntaxError
-    const context = firstArgumentFromRuntime;
-    // And the client's data payload is expected to be ON that context object
-    const clientPayload = context.data;
+    const context = firstArgFromRuntime; // This is the actual CallableContext object (contains .auth and .data)
+    const clientPayload = context.data; // This is the actual data sent from your web app
 
-    console.log("Actual CallableContext (from first arg):", context);
-    console.log("Client data payload (from context.data):", clientPayload); // THIS is what should be your form data
+    // Optional: You can still log these for diagnostic purposes if needed in the future,
+    // but they are not part of the standard execution path now.
+    // console.log("Debug: secondArgFromRuntime type:", typeof secondArgFromRuntime);
+    // console.log("Debug: secondArgFromRuntime content:", secondArgFromRuntime);
 
-    // For debugging, we can still log the second argument if it helps understanding further:
-    console.log(
-      "Type of 'secondArgumentFromRuntime':",
-      typeof secondArgumentFromRuntime
-    );
-    console.log(
-      "Content of 'secondArgumentFromRuntime':",
-      secondArgumentFromRuntime
-    );
-
-    // --- Auth Context Check ---
-    // The 'context' variable here is now the actual CallableContext object
+    // 1. Authenticate the caller
     if (!context || !context.auth) {
       throw new functions.https.HttpsError(
         "unauthenticated",
-        "The function must be called while authenticated. (Debug: Auth context not found in the first argument.)"
+        "The function must be called while authenticated. (Auth context not found in expected argument.)"
       );
     }
 
-    // Auth context is now correctly available
-    console.log("context.auth IS present. UID:", context.auth.uid);
-    // Re-added JSON.stringify for context.auth.token for clarity in logs, as it's a known safe object.
-    console.log(
-      "context.auth.token (claims):",
-      JSON.stringify(context.auth.token, null, 2)
-    );
+    const parentUid = context.auth.uid; // The UID of the parent calling this function
 
-    // --- Begin Business Logic ---
-    const parentUid = context.auth.uid;
-
-    // Now, destructure the actual clientPayload
-    const { childEmail, childPassword, childDisplayName } = clientPayload;
+    // 2. Validate input from the client
+    const { childEmail, childPassword, childDisplayName } = clientPayload; // Use clientPayload here
 
     if (!childEmail || !childPassword || !childDisplayName) {
       throw new functions.https.HttpsError(
         "invalid-argument",
-        'The function must be called with "childEmail", "childPassword", and "childDisplayName".'
+        'The function must be called with "childEmail", "childPassword", and "childDisplayName" in the request data.'
       );
     }
     if (childPassword.length < 6) {
@@ -65,6 +46,7 @@ export const addChildAccount = functions.https.onCall(
       );
     }
 
+    // 3. Create the child user using Firebase Admin SDK
     let childUid;
     try {
       const auth = getAuth();
@@ -75,9 +57,6 @@ export const addChildAccount = functions.https.onCall(
         emailVerified: true,
       });
       childUid = userRecord.uid;
-      console.log(
-        `Successfully created new child user: ${childUid} for parent: ${parentUid}`
-      );
     } catch (error) {
       if (error.code === "auth/email-already-exists") {
         throw new functions.https.HttpsError(
@@ -92,7 +71,9 @@ export const addChildAccount = functions.https.onCall(
       );
     }
 
+    // 4. Update Realtime Database with child profile and link to parent
     const db = getDatabase();
+
     const updates = {};
     updates[`/childrenProfiles/${childUid}`] = {
       parentUid: parentUid,
@@ -104,9 +85,6 @@ export const addChildAccount = functions.https.onCall(
 
     try {
       await db.ref().update(updates);
-      console.log(
-        `Realtime Database updated for child: ${childUid} and parent: ${parentUid}`
-      );
     } catch (error) {
       throw new functions.https.HttpsError(
         "internal",
@@ -115,7 +93,7 @@ export const addChildAccount = functions.https.onCall(
       );
     }
 
-    console.log("--- END FUNCTION LOG ---");
+    // 5. Return success message
     return { success: true, childUid: childUid };
   }
 );

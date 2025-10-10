@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useAuth } from "../AuthContext";
-import { Functions, Auth } from "../components/DataBase";
+import { Functions } from "../components/DataBase";
 import { httpsCallable } from "firebase/functions";
 
 function AddChildPage() {
@@ -17,23 +17,6 @@ function AddChildPage() {
   // Initialize the callable function once
   const addChildAccountCallable = httpsCallable(Functions, "addChildAccount");
 
-  useEffect(() => {
-    console.log("AddChildPage Rendered/Updated:");
-    console.log("  AuthContext currentUser (from useAuth):", currentUser);
-    console.log("  AuthContext loading (from useAuth):", authLoading);
-    console.log(
-      "  Firebase Auth SDK's current user (Auth.currentUser):",
-      Auth.currentUser
-    );
-    if (currentUser) {
-      console.log(
-        "  currentUser has getIdToken method:",
-        typeof currentUser.getIdToken === "function"
-      );
-    }
-    console.log("-------------------------------------");
-  }, [currentUser, authLoading]);
-
   const handleAddChild = async (e) => {
     e.preventDefault();
     setLoadingForm(true);
@@ -49,15 +32,13 @@ function AddChildPage() {
     }
 
     try {
-      // Use the callable function directly
       const result = await addChildAccountCallable({
         childEmail: childEmail,
         childPassword: childPassword,
         childDisplayName: childDisplayName,
-        parentUid: parentUid, // Still good to pass for your internal logic validation
+        parentUid: parentUid,
       });
 
-      // Handle the result from the Cloud Function
       if (result.data && result.data.success) {
         setSuccessMessage(`Child "${childDisplayName}" added successfully!`);
         setChildEmail("");
@@ -70,11 +51,12 @@ function AddChildPage() {
         );
       }
     } catch (err) {
-      console.error("Error calling addChildAccount Cloud Function:", err);
-      // HttpsError objects from callable functions have a 'code' and 'message'
+      // Handle HttpsError objects from callable functions
+      // The error object has 'code' and 'message' properties for HttpsError
       if (err.code && err.message) {
         setError(`Failed to add child: ${err.message}`);
       } else {
+        // Fallback for unexpected errors
         setError(
           `Failed to add child: ${err.message || "An unknown error occurred."}`
         );
@@ -85,16 +67,17 @@ function AddChildPage() {
   };
 
   if (authLoading) {
-    return <div>Loading user information...</div>;
+    return <div>Loading user information...</div>; // Show a loading state while auth is being determined
   }
 
   if (!currentUser) {
-    return <div>You must be logged in to add a child. Please log in.</div>;
+    return <div>You must be logged in to add a child. Please log in.</div>; // Redirect or show message if not logged in
   }
 
   return (
     <div>
       <h2>Add a New Child Account</h2>
+      {/* Display parent's email from currentUser from context */}
       <p>Logged in as: {currentUser?.email}</p>
       <form onSubmit={handleAddChild}>
         <div>
