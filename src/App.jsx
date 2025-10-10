@@ -23,7 +23,14 @@ export default function App() {
             path="/forgotpassword"
             element={<ForgotPasswordPage />}
           ></Route>
-          <Route path="/" element={<HomePage />}></Route>
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <HomePage />
+              </ProtectedRoute>
+            }
+          ></Route>
           <Route
             path="/addchild"
             element={
