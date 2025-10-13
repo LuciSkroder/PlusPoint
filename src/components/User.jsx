@@ -14,10 +14,8 @@ export default function User({ user }) {
         src={user.image || "https://placehold.co/600x400?text=No+Image"}
         alt={user.displayName || "Child Profile"}
       />
-      <h2>
-        {user.displayName}
-        {user.email}
-      </h2>
+      <h2>{user.displayName} </h2>
+      <p>{user.email}</p>
       {user.hasOwnProperty("points") && <p>Points: {user.points}</p>}
     </article>
   );
