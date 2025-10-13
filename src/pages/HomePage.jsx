@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import User from "../components/User";
 
 import { ref, onValue, off } from "firebase/database";
@@ -11,7 +11,7 @@ export default function HomePage() {
   useEffect(() => {
     // 1. Create a reference to the 'users' path in your Realtime Database
     //    Make sure you actually have data under a 'users' node in your DB!
-    const usersRef = ref(DataBase, "users");
+    const usersRef = ref(DataBase, "childrenProfiles");
 
     // 2. Set up a real-time listener using onValue
     const unsubscribe = onValue(
