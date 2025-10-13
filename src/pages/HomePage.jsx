@@ -9,8 +9,6 @@ export default function HomePage() {
   const [loading, setLoading] = useState(true); // Add a loading state
 
   useEffect(() => {
-    // 1. Create a reference to the 'users' path in your Realtime Database
-    //    Make sure you actually have data under a 'users' node in your DB!
     const usersRef = ref(DataBase, "childrenProfiles");
 
     // 2. Set up a real-time listener using onValue
