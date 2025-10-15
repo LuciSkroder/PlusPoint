@@ -1,6 +1,6 @@
 import { Route, Routes, BrowserRouter } from "react-router";
 import HomePage from "./pages/HomePage";
-import CreatePage from "./pages/CreatePage";
+import CreateTaskPage from "./pages/CreateTaskPage";
 import NavBar from "./components/NavBar";
 import UserDetailPage from "./pages/UserDetailPage";
 import UserUpdatePage from "./pages/UserUpdatePage";
@@ -12,9 +12,11 @@ import { AuthProvider } from "./AuthContext";
 import ProtectedRoute from "./components/ProtectedRoutes";
 
 export default function App() {
+  const basename = process.env.NODE_ENV === "production" ? "/PlusPoint" : "/";
+
   return (
     <AuthProvider>
-      <BrowserRouter basename="/PlusPoint" className="app">
+      <BrowserRouter basename={basename} className="app">
         <NavBar></NavBar>
         <Routes>
           <Route path="/login" element={<LoginPage />}></Route>
@@ -43,7 +45,7 @@ export default function App() {
             path="/create"
             element={
               <ProtectedRoute>
-                <CreatePage />
+                <CreateTaskPage />
               </ProtectedRoute>
             }
           ></Route>
