@@ -88,8 +88,6 @@ export default function CreateTaskPage() {
     }
   }, [parentUid, authLoading]);
 
-  console.log("Current User UID (parentUid):", parentUid);
-
   const handleCreateTask = async (e) => {
     e.preventDefault();
     setLoadingForm(true);
@@ -131,20 +129,6 @@ export default function CreateTaskPage() {
         status: "pending", // Initial status for a new task
         createdAt: new Date().toISOString(), // Timestamp for creation
       };
-      console.log("Task payload being sent:", newTask);
-
-      console.log("Checking authentication state before RTDB write...");
-      if (currentUser) {
-        const idToken = await currentUser.getIdToken(true); // 'true' forces a refresh of the token
-        console.log("currentUser (from useAuth):", currentUser);
-        console.log("currentUser UID:", currentUser.uid);
-        console.log("Firebase ID Token:", idToken);
-      } else {
-        console.log("currentUser is NULL before RTDB write!");
-      }
-
-      await new Promise((resolve) => setTimeout(resolve, 500)); // Wait for 500ms
-      console.log("Proceeding with RTDB write after delay...");
 
       await set(newTaskRef, newTask);
 
