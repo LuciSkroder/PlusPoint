@@ -6,19 +6,10 @@ import { getDatabase } from "firebase-admin/database";
 initializeApp();
 
 export const addChildAccount = functions.https.onCall(
-  async (firstArgFromRuntime, secondArgFromRuntime) => {
+  async (firstArgFromRuntime) => {
     // --- Core Logic: Argument Re-assignment based on observed behavior ---
-    // In your environment, the first argument is consistently the CallableContext.
-    // The client's payload is found within this context object's 'data' property.
-    // The second argument seems to be some other internal object.
-
     const context = firstArgFromRuntime; // This is the actual CallableContext object (contains .auth and .data)
     const clientPayload = context.data; // This is the actual data sent from your web app
-
-    // Optional: You can still log these for diagnostic purposes if needed in the future,
-    // but they are not part of the standard execution path now.
-    // console.log("Debug: secondArgFromRuntime type:", typeof secondArgFromRuntime);
-    // console.log("Debug: secondArgFromRuntime content:", secondArgFromRuntime);
 
     // 1. Authenticate the caller
     if (!context || !context.auth) {
@@ -31,7 +22,7 @@ export const addChildAccount = functions.https.onCall(
     const parentUid = context.auth.uid; // The UID of the parent calling this function
 
     // 2. Validate input from the client
-    const { childEmail, childPassword, childDisplayName } = clientPayload; // Use clientPayload here
+    const { childEmail, childPassword, childDisplayName } = clientPayload;
 
     if (!childEmail || !childPassword || !childDisplayName) {
       throw new functions.https.HttpsError(
