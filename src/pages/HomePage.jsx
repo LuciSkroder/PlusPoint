@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import User from "../components/User";
+import ChildShopViewer from "../components/ChildShopViewer";
+import ShopManager from "../components/ParentShopManager";
 import { DataBase, Auth } from "../components/DataBase";
-
-// Import specific functions for querying Realtime Database
 import {
   ref,
   onValue,
@@ -10,68 +10,91 @@ import {
   query,
   orderByChild,
   equalTo,
+  get,
 } from "firebase/database";
 
 export default function HomePage() {
-  const [users, setUsers] = useState([]);
+  const [userRole, setUserRole] = useState(null);
+  const [childrenForParent, setChildrenForParent] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null); // State to hold any error messages
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    // 1. Get the authenticated user from the exported Auth instance
-    const currentUser = Auth.currentUser; // Use the exported Auth instance directly
+    // Listener for Firebase Auth state changes
+    const unsubscribeAuth = Auth.onAuthStateChanged(async (user) => {
+      setLoading(true); // Start loading when auth state changes
+      setError(null);
+      setChildrenForParent([]); // Clear children list
 
-    if (!currentUser) {
-      setLoading(false);
-      setError("Please log in to view child accounts.");
-      return;
-    }
-
-    const parentUid = currentUser.uid;
-
-    // 2. Create a query to find children profiles where 'parentUid' matches the current user's UID
-    const childrenProfilesRef = ref(DataBase, "childrenProfiles");
-    const parentChildrenQuery = query(
-      childrenProfilesRef,
-      orderByChild("parentUid"),
-      equalTo(parentUid)
-    );
-
-    // 3. Set up a real-time listener using onValue on the query
-    const unsubscribe = onValue(
-      parentChildrenQuery,
-      (snapshot) => {
-        const usersData = [];
-        if (snapshot.exists()) {
-          snapshot.forEach((childSnapshot) => {
-            usersData.push({
-              id: childSnapshot.key,
-              ...childSnapshot.val(), // The actual child profile data
-            });
-          });
-        }
-
-        usersData.sort((user1, user2) =>
-          (user1.displayName || "").localeCompare(user2.displayName || "")
-        );
-
-        setUsers(usersData);
+      if (!user) {
+        setUserRole(null);
         setLoading(false);
-        setError(null);
-      },
-      (dbError) => {
-        console.error("Error fetching child accounts:", dbError);
-        setLoading(false);
-        setError(
-          "Failed to load child accounts. Please ensure you are logged in and have permission."
-        );
+        setError("Please log in to use PlusPoint.");
+        return;
       }
-    );
 
-    // 4. Cleanup function: important to unsubscribe when the component unmounts
-    return () => {
-      off(parentChildrenQuery, "value", unsubscribe);
-    };
+      const currentUserUid = user.uid;
+
+      try {
+        const childProfileRef = ref(
+          DataBase,
+          `childrenProfiles/${currentUserUid}/parentUid`
+        );
+        const snapshot = await get(childProfileRef);
+
+        if (snapshot.exists()) {
+          setUserRole("child");
+          setLoading(false);
+        } else {
+          setUserRole("parent");
+
+          const childrenProfilesRef = ref(DataBase, "childrenProfiles");
+          const parentChildrenQuery = query(
+            childrenProfilesRef,
+            orderByChild("parentUid"),
+            equalTo(currentUserUid)
+          );
+
+          const unsubscribeParentChildren = onValue(
+            parentChildrenQuery,
+            (parentChildrenSnapshot) => {
+              const childrenData = [];
+              if (parentChildrenSnapshot.exists()) {
+                parentChildrenSnapshot.forEach((childSnap) => {
+                  childrenData.push({
+                    id: childSnap.key,
+                    ...childSnap.val(),
+                  });
+                });
+              }
+
+              childrenData.sort((user1, user2) =>
+                (user1.displayName || "").localeCompare(user2.displayName || "")
+              );
+
+              setChildrenForParent(childrenData);
+              setLoading(false);
+            },
+            (dbError) => {
+              console.error("Error fetching child accounts:", dbError);
+              setLoading(false);
+              setError(
+                "Failed to load child accounts. Please ensure you are logged in and have permission."
+              );
+            }
+          );
+
+          return () =>
+            off(parentChildrenQuery, "value", unsubscribeParentChildren);
+        }
+      } catch (err) {
+        console.error("Error determining user role:", err);
+        setError("Could not determine user role. Please try again.");
+        setLoading(false);
+      }
+    });
+
+    return () => unsubscribeAuth();
   }, []);
 
   if (loading) {
@@ -86,13 +109,32 @@ export default function HomePage() {
     return <p>No child accounts found for you in the database.</p>;
   }
 
-  return (
-    <main className="page">
-      <section className="grid">
-        {users.map((user) => (
-          <User key={user.id} user={user} />
-        ))}
-      </section>
-    </main>
-  );
+  if (userRole === "child") {
+    return (
+      <main className="page">
+        <h1>Welcome, Child!</h1>
+        <ChildShopViewer />
+      </main>
+    );
+  }
+
+  if (userRole === "parent") {
+    return (
+      <main className="page">
+        <h1>Welcome, Parent!</h1>
+        <ShopManager />
+
+        <h2>Your Child Accounts:</h2>
+        {childrenForParent.length === 0 ? (
+          <p>No child accounts found linked to your profile.</p>
+        ) : (
+          <section className="grid">
+            {childrenForParent.map((childUser) => (
+              <User key={childUser.id} user={childUser} />
+            ))}
+          </section>
+        )}
+      </main>
+    );
+  }
 }

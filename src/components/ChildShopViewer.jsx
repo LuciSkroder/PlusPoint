@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Auth, DataBase } from "../firebase-init";
+import { Auth, DataBase } from "../components/DataBase";
 import {
   ref,
   get,
