@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import User from "../components/User";
 import ChildShopViewer from "../components/ChildShopViewer";
-import ShopManager from "../components/ParentShopManager";
+import ShopManager from "../components/ShopManager";
 import ChildTaskViewer from "../components/ChildTaskViewer";
 import TaskVerifier from "../components/TaskVerifier";
 import { DataBase, Auth } from "../components/DataBase";
