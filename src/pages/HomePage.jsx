@@ -107,10 +107,6 @@ export default function HomePage() {
     return <p className="error-message">{error}</p>;
   }
 
-  if (users.length === 0) {
-    return <p>No child accounts found for you in the database.</p>;
-  }
-
   if (userRole === "child") {
     return (
       <main className="page">
