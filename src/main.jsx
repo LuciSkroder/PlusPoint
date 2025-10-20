@@ -4,6 +4,7 @@ import "./css/root.css";
 import "./css/homepage.css";
 import "./css/shop.css";
 import "./css/tasks.css";
+import "./css/login.css";
 import App from "./App.jsx";
 
 createRoot(document.getElementById("root")).render(

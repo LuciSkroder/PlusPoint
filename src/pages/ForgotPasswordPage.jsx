@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { sendPasswordResetEmail } from "firebase/auth";
 import { Auth } from "../components/DataBase";
 import { useNavigate } from "react-router";
+import "../css/login.css"; // Import the CSS file
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
@@ -39,7 +40,7 @@ export default function ForgotPasswordPage() {
         Enter your email address below and we'll send you a link to reset your
         password.
       </p>
-      <form onSubmit={handlePasswordReset}>
+      <form className="login-form" onSubmit={handlePasswordReset}>
         <input
           type="email"
           placeholder="Email"

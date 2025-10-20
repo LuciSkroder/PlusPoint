@@ -1,0 +1,73 @@
+{
+  "rules": {
+    // Only logged-in users (parents) can read/write their own user data
+    "users": {
+      "$parentUid": {
+        ".read": "auth != null && auth.uid == $parentUid",
+        ".write": "auth != null && auth.uid == $parentUid",
+        // Allow parent to add children UIDs to their list
+        "children": {
+          "$childUid": {
+            ".validate": "newData.val() === true && root.child('childrenProfiles').child($childUid).child('parentUid').val() == $parentUid"
+          }
+        }
+      }
+    },
+    // Rules for child profiles
+    "childrenProfiles": {
+      ".indexOn": ["parentUid"],
+      // This rule for read allows fetching profiles where the parentUid matches auth.uid
+      // Parents can read their children's profiles, including points and purchases
+      ".read": "auth != null && query.orderByChild == 'parentUid' && query.equalTo == auth.uid",
+
+      // This rule for individual $childUid still allows direct access to a specific child's data
+      "$childUid": {
+        // Child can read their own profile, parent can read their child's profile
+        ".read": "auth != null && (auth.uid == $childUid || data.child('parentUid').val() === auth.uid)",
+        // For a prototype, allow child to write to their own profile, but prevent changing parentUid
+                ".write": "auth != null && (auth.uid == $childUid && (newData.child('parentUid').val() == data.child('parentUid').val() || !newData.hasChild('parentUid')) || data.child('parentUid').val() == auth.uid)",
+        "points": {
+          ".validate": "newData.isNumber() && newData.val() >= 0"
+        },
+        "purchases": {
+          ".write": "auth != null && auth.uid == $childUid",
+          "$purchaseId": {
+            ".validate": "newData.hasChildren(['itemId', 'itemName', 'price', 'timestamp']) && newData.child('itemId').isString() && newData.child('itemName').isString() && newData.child('price').isNumber() && newData.child('timestamp').isNumber()"
+          }
+        }
+      }
+    },
+    "tasks": {
+      // NEW: Allow parents to query for tasks they created.
+      // The query needs to specify orderByChild('createdByParentUid') == auth.uid
+      ".read": "auth != null && query.orderByChild == 'createdByParentUid' && query.equalTo == auth.uid",
+      // Allow any authenticated user who also exists as a top-level user (parent) to create new tasks.
+      ".write": "auth != null && root.child('users').hasChild(auth.uid)",
+
+      "$taskId": {
+        ".read": "auth != null && (data.child('createdByParentUid').val() == auth.uid || data.child('assignedToChildUid').val() == auth.uid)",
+        ".write": "auth != null && (data.child('createdByParentUid').val() == auth.uid || (data.child('assignedToChildUid').val() == auth.uid && !newData.child('name').exists() && !newData.child('description').exists() && !newData.child('room').exists() && !newData.child('points').exists() && !newData.child('assignedDay').exists() && !newData.child('repeat').exists() && !newData.child('createdByParentUid').exists() && !newData.child('assignedToChildUid').exists()))",
+
+        ".validate": "newData.hasChildren(['createdByParentUid', 'assignedToChildUid', 'name', 'points', 'status']) && newData.child('createdByParentUid').isString() && newData.child('assignedToChildUid').isString() && newData.child('name').isString() && newData.child('points').isNumber() && newData.child('points').val() >= 0 && newData.child('status').isString() && (!newData.child('description').exists() || newData.child('description').isString()) && (!newData.child('room').exists() || newData.child('room').isString()) && (!newData.child('assignedDay').exists() || newData.child('assignedDay').isString()) && (!newData.child('repeat').exists() || newData.child('repeat').isString()) && (!newData.child('createdAt').exists() || newData.child('createdAt').isString()) && (!newData.child('completedAt').exists() || newData.child('completedAt').isString())"
+      }
+    },
+    "points": {
+      ".read": "true",
+      ".write": "true"
+    },
+    "shop": {
+      "$parentUid": {
+        // Parents can read and write (create, update, delete) to their own shop.
+        ".read": "auth != null && auth.uid === $parentUid",
+        ".write": "auth != null && auth.uid === $parentUid",
+        // For individual shop items under a parent's shop
+        "$itemId": {
+          ".read": "auth != null && (auth.uid === $parentUid || root.child('childrenProfiles').child(auth.uid).child('parentUid').val() === $parentUid)",
+          ".write": "auth != null && auth.uid === $parentUid",
+          // Validation ensures shop items have required fields and proper types.
+          ".validate": "newData.hasChildren(['name', 'price']) && newData.child('name').isString() && newData.child('price').isNumber() && newData.child('price').val() >= 0"
+        }
+      }
+    }
+  }
+}
