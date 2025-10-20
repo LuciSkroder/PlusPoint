@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import User from "../components/User";
 import ChildShopViewer from "../components/ChildShopViewer";
 import ShopManager from "../components/ParentShopManager";
+import ChildTaskViewer from "../components/ChildTaskViewer";
+import TaskVerifier from "../components/TaskVerifier";
 import { DataBase, Auth } from "../components/DataBase";
 import {
   ref,
@@ -114,6 +116,7 @@ export default function HomePage() {
       <main className="page">
         <h1>Welcome, Child!</h1>
         <ChildShopViewer />
+        <ChildTaskViewer />
       </main>
     );
   }
@@ -122,6 +125,7 @@ export default function HomePage() {
     return (
       <main className="page">
         <h1>Welcome, Parent!</h1>
+        <TaskVerifier />
         <ShopManager />
 
         <h2>Your Child Accounts:</h2>
