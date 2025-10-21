@@ -118,7 +118,6 @@ export default function ShopManager() {
 
   return (
     <div>
-      <h2>Manage Your Shop</h2>
       <h3>Add New Item</h3>
       <form onSubmit={handleAddItem}>
         <input

@@ -164,7 +164,7 @@ export default function TaskVerifier() {
   }
 
   return (
-    <div>
+    <div className="task-box">
       <h2>Tasks Awaiting Your Verification</h2>
       {pendingTasks.length === 0 ? (
         <p>No tasks currently awaiting your verification. All caught up!</p>
