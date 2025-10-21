@@ -9,3 +9,11 @@ nav {
     padding: 2rem;
     box-sizing: border-box;
 }
+
+nav a {
+    color: inherit;
+}
+
+body {
+    margin-top: 5rem;
+}
