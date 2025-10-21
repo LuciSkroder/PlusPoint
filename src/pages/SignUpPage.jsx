@@ -4,8 +4,8 @@ import {
   fetchSignInMethodsForEmail,
 } from "firebase/auth";
 import { ref, set } from "firebase/database";
-import { Auth, DataBase } from "../components/DataBase"; // Ensure this path is correct
-import { useNavigate } from "react-router-dom"; // Use react-router-dom for useNavigate
+import { Auth, DataBase } from "../components/DataBase";
+import { useNavigate } from "react-router";
 
 export default function SignUpPage() {
   const [email, setEmail] = useState("");
