@@ -1,0 +1,19 @@
+nav {
+    border-bottom: solid #000000;
+    position: fixed;
+    top: 0%;
+    left: 0%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 2rem;
+    box-sizing: border-box;
+}
+
+nav a {
+    color: inherit;
+}
+
+body {
+    margin-top: 5rem;
+}
