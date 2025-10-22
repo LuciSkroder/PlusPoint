@@ -27,7 +27,6 @@ export default function HomePage() {
     navigate("/addchild");
   }
 
-
   useEffect(() => {
     // Listener for Firebase Auth state changes
     const unsubscribeAuth = Auth.onAuthStateChanged(async (user) => {
@@ -129,11 +128,16 @@ export default function HomePage() {
       <main className="page">
         <h1>Welcome, Parent!</h1>
         <div className="home-boxes">
-          <h2 className="home-box">  <img src="../../public/img/shopping-cart.svg" /> </h2>
-          <h2 className="home-box">  <img src="../../public/img/to-do.svg" /> </h2>
+          <h2 className="home-box">
+            {" "}
+            <img src="../../public/img/shopping-cart.svg" />{" "}
+          </h2>
+          <h2 className="home-box">
+            {" "}
+            <img src="../../public/img/to-do.svg" />{" "}
+          </h2>
           <TaskVerifier />
         </div>
-        <ShopManager />
         <h2>Your Child Accounts:</h2>
         {childrenForParent.length === 0 ? (
           <p>No child accounts found linked to your profile.</p>
@@ -146,7 +150,6 @@ export default function HomePage() {
               Tilføj Barn
             </button>
           </section>
-        
         )}
       </main>
     );

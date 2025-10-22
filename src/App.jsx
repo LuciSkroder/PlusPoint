@@ -11,6 +11,7 @@ import AddChildPage from "./pages/AddChildPage";
 import { AuthProvider } from "./AuthContext";
 import ProtectedRoute from "./components/ProtectedRoutes";
 import BottomNav from "./components/BottomNav";
+import ShopPage from "./pages/ShopPage";
 
 export default function App() {
   const basename = process.env.NODE_ENV === "production" ? "/PlusPoint" : "/";
@@ -63,6 +64,14 @@ export default function App() {
             element={
               <ProtectedRoute>
                 <UserUpdatePage />
+              </ProtectedRoute>
+            }
+          ></Route>
+          <Route
+            path="/shop"
+            element={
+              <ProtectedRoute>
+                <ShopPage />
               </ProtectedRoute>
             }
           ></Route>

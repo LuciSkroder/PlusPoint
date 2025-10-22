@@ -1,12 +1,6 @@
 import { useState, useEffect } from "react";
 import { Auth, DataBase } from "../components/DataBase";
-import {
-  ref,
-  push,
-  update,
-  remove,
-  onValue,
-} from "firebase/database";
+import { ref, push, update, remove, onValue } from "firebase/database";
 
 // Function to get the current parent's shop items
 function subscribeToParentShop(onItemsChanged) {
@@ -219,7 +213,7 @@ export default function ShopManager() {
                       style={{ maxWidth: "100px", height: "auto" }}
                     />
                   )}
-                  <p>Description: {item.description}</p>
+                  <p> {item.description}</p>
                   <p>Cost: {item.price} points</p>
                   <button onClick={() => setEditItem({ ...item })}>
                     Edit
