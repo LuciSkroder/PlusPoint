@@ -12,6 +12,9 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+.page{
+  margin: 10vh 1vw 10vh 1vw; /* stopper overlap med top-nav og bottom-nav */
+}
 
 a {
   font-weight: 500;

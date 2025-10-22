@@ -35,8 +35,8 @@ export default function PointCounter() {
 
     return (
         <div className="point-tæller">
-            {rolle === "barn" ? (<p>{point} ★</p>) : (
-                <NavLink to="/">placeholder</NavLink>
+            {rolle === "barn" ? (<p>{point} ⭐</p>) : (
+                <NavLink to="/"></NavLink>
             )}
         </div>
     );
