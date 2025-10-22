@@ -71,7 +71,7 @@ export default function CreateTaskPage() {
               displayName: childrenData[uid].displayName,
             }));
             setChildrenList(loadedChildren);
-           /* if (loadedChildren.length > 0) {
+            /* if (loadedChildren.length > 0) {
               setSelectedChildUid(loadedChildren[0].uid); // Select first child by default
             }*/ // fjernet for ikke at autoselekte for styling
           } else {
@@ -179,9 +179,11 @@ export default function CreateTaskPage() {
   }
 
   return (
-    <div className="input-container">
+    <div className="input-container-task">
       <h2>Create a New Task</h2>
-      <p><strong>Logget ind som</strong> <br /> {currentUser?.email}</p>
+      <p>
+        <strong>Logget ind som</strong> <br /> {currentUser?.email}
+      </p>
 
       <form onSubmit={handleCreateTask}>
         <div>
@@ -192,7 +194,7 @@ export default function CreateTaskPage() {
             onChange={(e) => setSelectedChildUid(e.target.value)}
             required
             disabled={loadingForm}
-          > 
+          >
             <option value="">Vælg barn</option>
             {childrenList.map((child) => (
               <option key={child.uid} value={child.uid}>
