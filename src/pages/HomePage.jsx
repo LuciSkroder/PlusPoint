@@ -5,6 +5,7 @@ import ShopManager from "../components/ShopManager";
 import ChildTaskViewer from "../components/ChildTaskViewer";
 import TaskVerifier from "../components/TaskVerifier";
 import { DataBase, Auth } from "../components/DataBase";
+import { useNavigate } from "react-router";
 import {
   ref,
   onValue,
@@ -16,10 +17,16 @@ import {
 } from "firebase/database";
 
 export default function HomePage() {
+  const navigate = useNavigate();
   const [userRole, setUserRole] = useState(null);
   const [childrenForParent, setChildrenForParent] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  function handleAddChildClick() {
+    navigate("/addchild");
+  }
+
 
   useEffect(() => {
     // Listener for Firebase Auth state changes
@@ -135,7 +142,11 @@ export default function HomePage() {
             {childrenForParent.map((childUser) => (
               <User key={childUser.id} user={childUser} />
             ))}
+            <button className="add-child-btn" onClick={handleAddChildClick}>
+              Tilføj Barn
+            </button>
           </section>
+        
         )}
       </main>
     );
