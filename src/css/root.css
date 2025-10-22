@@ -28,3 +28,13 @@
 .read-the-docs {
   color: #888;
 }
+
+.tilbage-knap {
+  border: none;
+  color: var(--sort);
+  font-size: 1rem;
+  background-color: transparent;
+  cursor: pointer;
+  transform: rotate(180deg) scale(1.5);
+  outline: none;
+}
