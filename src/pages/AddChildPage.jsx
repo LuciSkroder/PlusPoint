@@ -114,7 +114,7 @@ function AddChildPage() {
             placeholder="Barnets kodeord"
           />
         </div>
-        <button type="submit" disabled={loadingForm}>
+        <button type="submit" disabled={loadingForm} className="add-child-submit">
           {loadingForm ? "Adding Child..." : "Add Child"}
         </button>
       </form>

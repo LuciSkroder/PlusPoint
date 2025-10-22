@@ -1,9 +1,15 @@
+:root {
+  --accent-color: #ffcc00;
+  --sort: #222222;
+}
+
 #root {
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
 }
+
 
 .logo {
   height: 6em;

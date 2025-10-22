@@ -10,6 +10,7 @@ import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import AddChildPage from "./pages/AddChildPage";
 import { AuthProvider } from "./AuthContext";
 import ProtectedRoute from "./components/ProtectedRoutes";
+import BottomNav from "./components/BottomNav";
 
 export default function App() {
   const basename = process.env.NODE_ENV === "production" ? "/PlusPoint" : "/";
@@ -66,6 +67,7 @@ export default function App() {
             }
           ></Route>
         </Routes>
+        <BottomNav></BottomNav>
       </BrowserRouter>
     </AuthProvider>
   );

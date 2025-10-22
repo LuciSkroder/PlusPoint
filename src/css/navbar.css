@@ -1,4 +1,4 @@
-nav {
+.top-nav {
     border-bottom: solid #000000;
     position: fixed;
     top: 0%;
@@ -8,8 +8,11 @@ nav {
     justify-content: space-between;
     padding: 2rem;
     box-sizing: border-box;
+    background-color: rgb(250, 250, 250);
 }
 
-nav a {
+.top-nav a {
     color: inherit;
 }
+
+/* 5rem removed for at stoppe scrolling, tilføj 5rem til content på siderne så nav bar ikke overlapper */
