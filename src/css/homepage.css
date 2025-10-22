@@ -30,6 +30,10 @@ body {
   min-height: 100vh;
 }
 
+.grid{
+    margin-bottom: 10vh; /* stopper overlap med bottom-nav */
+}
+
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
@@ -52,6 +56,11 @@ button:hover {
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
+}
+
+.add-child-btn{
+  background-color: var(--accent-color);
+  margin-bottom: 1rem;
 }
 
 @media (prefers-color-scheme: light) {
