@@ -1,6 +1,7 @@
 :root {
   --accent-color: #ffcc00;
   --sort: #222222;
+  --hvid: #f4f4f4;
 }
 
 #root {
@@ -25,7 +26,7 @@
 }
 
 @keyframes logo-spin {
-  from {
+  from { 
     transform: rotate(0deg);
   }
   to {

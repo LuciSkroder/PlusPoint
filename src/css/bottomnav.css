@@ -4,10 +4,12 @@ position: fixed;
 bottom: 0;
 width: 100%;
 height: 10vh;
+display: flex;
+align-items: center;
+justify-content: space-around;
 }
 
 .bottom-nav a {
-    color: inherit;
+    color: var(--hvid);
 }
 
-/* 5rem removed for at stoppe scrolling, tilføj 5rem til content på siderne så nav bar ikke overlapper */

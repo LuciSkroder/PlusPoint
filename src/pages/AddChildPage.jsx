@@ -79,7 +79,7 @@ function AddChildPage() {
     <div className="input-container">
       <h2>Tilføj børne konto</h2>
       {/* Display parent's email from currentUser from context */}
-      <p>Logged in as: {currentUser?.email}</p>
+      <p><strong>Logget på med</strong> <br />{currentUser?.email}</p>
       <form onSubmit={handleAddChild}>
         <div>
           <label htmlFor="childDisplayName"></label>
