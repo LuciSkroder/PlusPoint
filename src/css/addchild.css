@@ -10,7 +10,7 @@ body{
     display: flex;
     justify-content: center;
     align-items: stretch;
-    z-index: -1;
+    z-index: 0;
 }
 
 body::before{
@@ -21,7 +21,7 @@ body::before{
     background-image: url(/img/baggrund2.png);
     background-size: cover;
     opacity: 0.3;
-    z-index: 0;
+    z-index: -1;
 }
 
 .input-container{

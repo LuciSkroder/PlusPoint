@@ -7,6 +7,7 @@ height: 10vh;
 display: flex;
 align-items: center;
 justify-content: space-around;
+z-index: 10;
 }
 
 .bottom-nav a {
