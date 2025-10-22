@@ -1,0 +1,39 @@
+#root{
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+}
+
+body{
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    z-index: -1;
+}
+
+body::before{
+    content: "";
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background-image: url(/img/baggrund2.png);
+    background-size: cover;
+    opacity: 0.3;
+    z-index: 0;
+}
+
+.input-container{
+    padding-top: 5rem;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    z-index: 1;
+    }
+
+.input-container input{
+    margin-bottom: 1rem;
+    width: 90vw;
+    height: 3rem;
+    font-size: 1rem;
+}

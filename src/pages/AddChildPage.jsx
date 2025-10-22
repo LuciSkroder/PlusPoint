@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useAuth } from "../AuthContext";
 import { Functions } from "../components/DataBase";
 import { httpsCallable } from "firebase/functions";
+import "../css/addchild.css"
 
 function AddChildPage() {
   const [childEmail, setChildEmail] = useState("");
@@ -75,39 +76,42 @@ function AddChildPage() {
   }
 
   return (
-    <div>
-      <h2>Add a New Child Account</h2>
+    <div className="input-container">
+      <h2>Tilføj børne konto</h2>
       {/* Display parent's email from currentUser from context */}
       <p>Logged in as: {currentUser?.email}</p>
       <form onSubmit={handleAddChild}>
         <div>
-          <label htmlFor="childDisplayName">Child's Display Name:</label>
+          <label htmlFor="childDisplayName"></label>
           <input
             type="text"
             id="childDisplayName"
             value={childDisplayName}
             onChange={(e) => setChildDisplayName(e.target.value)}
             required
+            placeholder="Barnets Navn"
           />
         </div>
         <div>
-          <label htmlFor="childEmail">Child's Email:</label>
+          <label htmlFor="childEmail"></label>
           <input
             type="email"
             id="childEmail"
             value={childEmail}
             onChange={(e) => setChildEmail(e.target.value)}
             required
+            placeholder="Barnets Email"
           />
         </div>
         <div>
-          <label htmlFor="childPassword">Child's Password:</label>
+          <label htmlFor="childPassword"></label>
           <input
             type="password"
             id="childPassword"
             value={childPassword}
             onChange={(e) => setChildPassword(e.target.value)}
             required
+            placeholder="Barnets kodeord"
           />
         </div>
         <button type="submit" disabled={loadingForm}>
