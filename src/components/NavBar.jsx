@@ -5,7 +5,9 @@ import "../css/navbar.css";
 export default function NavBar() {
   return (
     <nav className="top-nav">
-      <NavLink to="/">Home</NavLink>
+      <NavLink to="/login">
+        <img src="../img/logout.png" alt="logout" className="logout-icon" />
+      </NavLink>
       <PointCounter></PointCounter>
       <NavLink to="/create">Create</NavLink>
     </nav>

@@ -1,20 +1,24 @@
 .top-nav {
-    box-shadow: 2px 2px 5px rgba(14, 14, 14, 0.5);
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    position: fixed;
-    top: 0%;
-    left: 0%;
-    width: 100%;
-    height: 5rem;
-    box-sizing: border-box;
-    background-color: rgb(250, 250, 250);
-    z-index: 10;
+  box-shadow: 2px 2px 5px rgba(14, 14, 14, 0.5);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  position: fixed;
+  top: 0%;
+  left: 0%;
+  width: 100%;
+  height: 5rem;
+  box-sizing: border-box;
+  background-color: rgb(250, 250, 250);
+  z-index: 10;
 }
 
 .top-nav a {
-    color: inherit;
+  color: inherit;
 }
 
+img {
+  padding-top: 0.5rem;
+  width: 20px;
+}
 /* 5rem removed for at stoppe scrolling, tilføj 5rem til content på siderne så nav bar ikke overlapper */
