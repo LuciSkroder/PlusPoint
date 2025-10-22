@@ -3,11 +3,9 @@ import { Auth, DataBase } from "../components/DataBase";
 import {
   ref,
   push,
-  set,
   update,
   remove,
   onValue,
-  off,
 } from "firebase/database";
 
 // Function to get the current parent's shop items
