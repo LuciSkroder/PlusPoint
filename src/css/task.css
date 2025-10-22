@@ -46,7 +46,7 @@ body::before{
     padding-bottom: 2rem;
     }
 
-.input-container input::placeholder{
+.input-container input, select, textarea::placeholder{
     padding-left: 1rem;
 }
 
