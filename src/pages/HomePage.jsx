@@ -5,6 +5,7 @@ import ShopManager from "../components/ShopManager";
 import ChildTaskViewer from "../components/ChildTaskViewer";
 import TaskVerifier from "../components/TaskVerifier";
 import { DataBase, Auth } from "../components/DataBase";
+import { useNavigate } from "react-router";
 import {
   ref,
   onValue,
@@ -16,10 +17,15 @@ import {
 } from "firebase/database";
 
 export default function HomePage() {
+  const navigate = useNavigate();
   const [userRole, setUserRole] = useState(null);
   const [childrenForParent, setChildrenForParent] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  function handleAddChildClick() {
+    navigate("/addchild");
+  }
 
   useEffect(() => {
     // Listener for Firebase Auth state changes
@@ -122,11 +128,16 @@ export default function HomePage() {
       <main className="page">
         <h1>Welcome, Parent!</h1>
         <div className="home-boxes">
-          <h2 className="home-box">  <img src="../../public/img/shopping-cart.svg" /> </h2>
-          <h2 className="home-box">  <img src="../../public/img/to-do.svg" /> </h2>
+          <h2 className="home-box">
+            {" "}
+            <img src="../../public/img/shopping-cart.svg" />{" "}
+          </h2>
+          <h2 className="home-box">
+            {" "}
+            <img src="../../public/img/to-do.svg" />{" "}
+          </h2>
           <TaskVerifier />
         </div>
-        <ShopManager />
         <h2>Your Child Accounts:</h2>
         {childrenForParent.length === 0 ? (
           <p>No child accounts found linked to your profile.</p>
@@ -135,6 +146,9 @@ export default function HomePage() {
             {childrenForParent.map((childUser) => (
               <User key={childUser.id} user={childUser} />
             ))}
+            <button className="add-child-btn" onClick={handleAddChildClick}>
+              Tilføj Barn
+            </button>
           </section>
         )}
       </main>

@@ -1,0 +1,18 @@
+.bottom-nav {
+    background-color: var(--accent-color);
+    position: fixed;
+    bottom: 0%;
+    left: 0%;
+    width: 100%;
+    height: 10vh;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    box-shadow: 2px -2px 5px rgba(14, 14, 14, 0.5);
+    z-index: 10;
+}
+
+.bottom-nav a {
+    color: var(--sort);
+}
+

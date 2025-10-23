@@ -11,6 +11,7 @@ import {
   orderByChild,
   equalTo,
 } from "firebase/database";
+import "../css/task.css";
 
 export default function CreateTaskPage() {
   const { currentUser, loading: authLoading } = useAuth();
@@ -20,8 +21,8 @@ export default function CreateTaskPage() {
   const [taskDescription, setTaskDescription] = useState("");
   const [taskRoom, setTaskRoom] = useState("");
   const [taskPoints, setTaskPoints] = useState(""); // Stored as string, parsed to int
-  const [assignedDay, setAssignedDay] = useState("monday"); // Default to Monday
-  const [repeatFrequency, setRepeatFrequency] = useState("never"); // Default to "never"
+  const [assignedDay, setAssignedDay] = useState("Vælg Dag"); // Default to "Vælg Dag"
+  const [repeatFrequency, setRepeatFrequency] = useState("Vælg gentagelser"); // Default to "Vælg gentagelser"
   const [selectedChildUid, setSelectedChildUid] = useState("");
 
   const [childrenList, setChildrenList] = useState([]);
@@ -31,6 +32,7 @@ export default function CreateTaskPage() {
   const [successMessage, setSuccessMessage] = useState("");
 
   const daysOfWeek = [
+    "Vælg dag",
     "monday",
     "tuesday",
     "wednesday",
@@ -41,6 +43,7 @@ export default function CreateTaskPage() {
   ];
 
   const repeatOptions = [
+    { value: "", label: "Vælg gentagelser" },
     { value: "never", label: "Never" },
     { value: "every_day", label: "Every Day" },
     { value: "every_other_day", label: "Every Other Day" },
@@ -68,9 +71,9 @@ export default function CreateTaskPage() {
               displayName: childrenData[uid].displayName,
             }));
             setChildrenList(loadedChildren);
-            if (loadedChildren.length > 0) {
+            /* if (loadedChildren.length > 0) {
               setSelectedChildUid(loadedChildren[0].uid); // Select first child by default
-            }
+            }*/ // fjernet for ikke at autoselekte for styling
           } else {
             setChildrenList([]);
           }
@@ -142,7 +145,7 @@ export default function CreateTaskPage() {
       setTaskDescription("");
       setTaskRoom("");
       setTaskPoints("");
-      setAssignedDay("monday");
+      setAssignedDay("Vælg Dag"); // Reset assigned day
       setRepeatFrequency("never"); // Reset repeat frequency
     } catch (err) {
       console.error("Error creating task:", err);
@@ -176,13 +179,15 @@ export default function CreateTaskPage() {
   }
 
   return (
-    <div>
+    <div className="input-container-task">
       <h2>Create a New Task</h2>
-      <p>Logged in as: {currentUser?.email}</p>
+      <p>
+        <strong>Logget ind som</strong> <br /> {currentUser?.email}
+      </p>
 
       <form onSubmit={handleCreateTask}>
         <div>
-          <label htmlFor="childSelect">Assign to Child:</label>
+          <label htmlFor="childSelect"></label>
           <select
             id="childSelect"
             value={selectedChildUid}
@@ -190,6 +195,7 @@ export default function CreateTaskPage() {
             required
             disabled={loadingForm}
           >
+            <option value="">Vælg barn</option>
             {childrenList.map((child) => (
               <option key={child.uid} value={child.uid}>
                 {child.displayName}
@@ -199,7 +205,7 @@ export default function CreateTaskPage() {
         </div>
 
         <div>
-          <label htmlFor="taskName">Task Name:</label>
+          <label htmlFor="taskName"></label>
           <input
             type="text"
             id="taskName"
@@ -207,32 +213,35 @@ export default function CreateTaskPage() {
             onChange={(e) => setTaskName(e.target.value)}
             required
             disabled={loadingForm}
+            placeholder="Opgave Navn"
           />
         </div>
 
         <div>
-          <label htmlFor="taskDescription">Description:</label>
+          <label htmlFor="taskDescription"></label>
           <textarea
             id="taskDescription"
             value={taskDescription}
             onChange={(e) => setTaskDescription(e.target.value)}
             disabled={loadingForm}
+            placeholder="Beskrivelse"
           />
         </div>
 
         <div>
-          <label htmlFor="taskRoom">Room:</label>
+          <label htmlFor="taskRoom"></label>
           <input
             type="text"
             id="taskRoom"
             value={taskRoom}
             onChange={(e) => setTaskRoom(e.target.value)}
             disabled={loadingForm}
+            placeholder="Rum (efterladt tom hvis ikke relevant)"
           />
         </div>
 
         <div>
-          <label htmlFor="taskPoints">Points Value:</label>
+          <label htmlFor="taskPoints"></label>
           <input
             type="number"
             id="taskPoints"
@@ -241,11 +250,12 @@ export default function CreateTaskPage() {
             min="0"
             required
             disabled={loadingForm}
+            placeholder="Point Værdi"
           />
         </div>
 
         <div>
-          <label htmlFor="assignedDay">Assigned Day:</label>
+          <label htmlFor="assignedDay"></label>
           <select
             id="assignedDay"
             value={assignedDay}
@@ -262,7 +272,7 @@ export default function CreateTaskPage() {
         </div>
 
         <div>
-          <label htmlFor="repeatFrequency">Repeat Frequency:</label>
+          <label htmlFor="repeatFrequency"></label>
           <select
             id="repeatFrequency"
             value={repeatFrequency}

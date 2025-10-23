@@ -4,6 +4,7 @@
   gap: 1rem;
   max-width: 300px;
   margin: 0 auto;
+  margin-top: 5rem;
 }
 
 .login-form input[type="email"],
@@ -33,4 +34,13 @@
   -webkit-box-shadow: 0 0 0 1000px white inset !important;
   box-shadow: 0 0 0 1000px white inset !important;
   -webkit-text-fill-color: black !important;
+}
+
+.login-form button {
+  padding: 12px;
+  background-color: #febe2c;
+  border-radius: 4px;
+  color: var(--sort);
+  font-size: 16px;
+  cursor: pointer;
 }
