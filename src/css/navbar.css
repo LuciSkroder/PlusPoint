@@ -1,7 +1,7 @@
 .top-nav {
   box-shadow: 2px 2px 5px rgba(14, 14, 14, 0.5);
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
   position: fixed;
   top: 0%;
@@ -11,13 +11,43 @@
   box-sizing: border-box;
   background-color: rgb(250, 250, 250);
   z-index: 10;
+  padding: 0 1rem;
 }
 
-.top-nav a {
-  color: inherit;
+.parent-menu {
+  position: relative;
+  margin-left: auto;
 }
 
-.logout-icon {
-  padding-top: 0.5rem;
-  width: 20px;
+.parent-icon {
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  min-width: 120px;
+  z-index: 1000;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  text-decoration: none;
+  color: #333;
+  transition: background-color 0.3s ease;
+}
+
+.dropdown-item .logout-icon {
+  width: 16px;
+  height: 16px;
+  margin-right: 8px;
 }
