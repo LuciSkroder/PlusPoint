@@ -64,16 +64,16 @@ button:focus-visible {
 
 /* Grid container for the boxes */
 .home-boxes {
-    display: flex;
-    justify-content: space-around;
-    align-items: stretch;
-    height: 20rem;
+  display: flex;
+  justify-content: space-around;
+  align-items: stretch;
+  height: 20rem;
 }
 
 .home-box {
   border: 0.2rem solid #febe2c;
   border-radius: 0.2rem;
-  padding: 1.6rem;
+  padding: 1rem;
   background-color: white;
   cursor: pointer;
   transition: background-color 0.3s ease;
@@ -87,37 +87,38 @@ button:focus-visible {
 }
 
 .home-box img {
-  height: 5rem;
+  height: 3.8rem;
 }
 
 .task-box {
-    border: 0.2rem solid #febe2c;
-    border-radius: 0.2rem;
-    padding: 0rem 0.8rem;
-    background-color: white;
-    display: flex;
-    text-align: center;
-    font-weight: bold;
-    flex-direction: column;
-    width: 65%;
-    margin: 1rem 0.5rem 0rem 0.5rem;
-    align-items: center;
+  border: 0.2rem solid #febe2c;
+  border-radius: 0.2rem;
+  padding: 0rem 0.8rem;
+  background-color: white;
+  display: flex;
+  text-align: center;
+  font-weight: bold;
+  flex-direction: column;
+  width: 65%;
+  margin: 1rem 0.5rem 0rem 0.5rem;
+  align-items: center;
 }
 
 .user-card img {
-    width: 20rem;
+  width: 20rem;
 }
 
 .home-left {
-    display: flex;
-    flex-direction: column;
-    border-radius: 0.2rem;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    align-items: stretch;
-    text-align: center;
-    font-weight: bold;
-    margin: 1rem 0.5rem 0rem 0.5rem;
+  display: flex;
+  flex-direction: column;
+  border-radius: 0.2rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  align-items: stretch;
+  text-align: center;
+  font-weight: bold;
+  margin: 1rem 0.5rem 0rem 0.5rem;
+  width: 35%;
 }
 
 /* .task-box ul {
@@ -125,5 +126,11 @@ button:focus-visible {
 } */
 
 .top {
-    margin-bottom: 1rem;
+  margin-bottom: 1rem;
+}
+
+
+
+.task-box ul {
+    border: solid 0.1rem #000000;
 }
