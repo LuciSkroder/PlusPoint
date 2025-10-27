@@ -27,12 +27,12 @@ export default function HomePage() {
     navigate("/addchild");
   }
 
+  // Firebase auth + role handling
   useEffect(() => {
-    // Listener for Firebase Auth state changes
     const unsubscribeAuth = Auth.onAuthStateChanged(async (user) => {
-      setLoading(true); // Start loading when auth state changes
+      setLoading(true);
       setError(null);
-      setChildrenForParent([]); // Clear children list
+      setChildrenForParent([]);
 
       if (!user) {
         setUserRole(null);
@@ -105,6 +105,36 @@ export default function HomePage() {
     return () => unsubscribeAuth();
   }, []);
 
+  // PWA install button
+  useEffect(() => {
+    let deferredPrompt;
+
+    const handleBeforeInstallPrompt = (e) => {
+      e.preventDefault(); // Prevent Chrome from auto-showing prompt
+      deferredPrompt = e;
+
+      const installBtn = document.getElementById("install-btn");
+      if (installBtn) installBtn.style.display = "block";
+
+      installBtn.addEventListener("click", async () => {
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        console.log("User response to PWA install:", outcome);
+        deferredPrompt = null;
+        installBtn.style.display = "none";
+      });
+    };
+
+    window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+
+    return () => {
+      window.removeEventListener(
+        "beforeinstallprompt",
+        handleBeforeInstallPrompt
+      );
+    };
+  }, []);
+
   if (loading) {
     return <p>Loading child accounts for PlusPoint...</p>;
   }
@@ -113,45 +143,62 @@ export default function HomePage() {
     return <p className="error-message">{error}</p>;
   }
 
-  if (userRole === "child") {
-    return (
-      <main className="page">
-        <h1>Welcome, Child!</h1>
-        <ChildShopViewer />
-        <ChildTaskViewer />
-      </main>
-    );
-  }
+  return (
+    <main className="page">
+      {/* PWA Install Button */}
+      <button
+        id="install-btn"
+        style={{
+          display: "none",
+          position: "fixed",
+          bottom: "20px",
+          right: "20px",
+          padding: "10px 20px",
+          backgroundColor: "#4CAF50",
+          color: "white",
+          border: "none",
+          borderRadius: "5px",
+          zIndex: 1000,
+        }}
+      >
+        Install App
+      </button>
 
-  if (userRole === "parent") {
-    return (
-      <main className="page">
-        <h1>Welcome, Parent!</h1>
-        <div className="home-boxes">
-          <h2 className="home-box">
-            {" "}
-            <img src="../../public/img/shopping-cart.svg" />{" "}
-          </h2>
-          <h2 className="home-box">
-            {" "}
-            <img src="../../public/img/to-do.svg" />{" "}
-          </h2>
-          <TaskVerifier />
-        </div>
-        <h2>Your Child Accounts:</h2>
-        {childrenForParent.length === 0 ? (
-          <p>No child accounts found linked to your profile.</p>
-        ) : (
-          <section className="grid">
-            {childrenForParent.map((childUser) => (
-              <User key={childUser.id} user={childUser} />
-            ))}
-            <button className="add-child-btn" onClick={handleAddChildClick}>
-              Tilføj Barn
-            </button>
-          </section>
-        )}
-      </main>
-    );
-  }
+      {userRole === "child" && (
+        <>
+          <h1>Welcome, Child!</h1>
+          <ChildShopViewer />
+          <ChildTaskViewer />
+        </>
+      )}
+
+      {userRole === "parent" && (
+        <>
+          <h1>Welcome, Parent!</h1>
+          <div className="home-boxes">
+            <h2 className="home-box">
+              <img src="../../public/img/shopping-cart.svg" />
+            </h2>
+            <h2 className="home-box">
+              <img src="../../public/img/to-do.svg" />
+            </h2>
+            <TaskVerifier />
+          </div>
+          <h2>Your Child Accounts:</h2>
+          {childrenForParent.length === 0 ? (
+            <p>No child accounts found linked to your profile.</p>
+          ) : (
+            <section className="grid">
+              {childrenForParent.map((childUser) => (
+                <User key={childUser.id} user={childUser} />
+              ))}
+              <button className="add-child-btn" onClick={handleAddChildClick}>
+                Tilføj Barn
+              </button>
+            </section>
+          )}
+        </>
+      )}
+    </main>
+  );
 }
