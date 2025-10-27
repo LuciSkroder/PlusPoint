@@ -142,7 +142,6 @@ export default function HomePage() {
 
   return (
     <main className="page">
-      {/* Permanent Install Button */}
       <button
         onClick={handleInstallClick}
         style={{
@@ -160,11 +159,9 @@ export default function HomePage() {
         Install App
       </button>
 
-      {/* Loading / Error */}
       {loading && <p>Loading child accounts for PlusPoint...</p>}
       {error && <p className="error-message">{error}</p>}
 
-      {/* Role-based content */}
       {!loading && !error && (
         <>
           {userRole === "child" && (
