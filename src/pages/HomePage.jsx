@@ -140,16 +140,9 @@ export default function HomePage() {
     }
   };
 
-  if (loading) {
-    return <p>Loading child accounts for PlusPoint...</p>;
-  }
-
-  if (error) {
-    return <p className="error-message">{error}</p>;
-  }
-
   return (
     <main className="page">
+      {/* Permanent Install Button */}
       <button
         onClick={handleInstallClick}
         style={{
@@ -167,38 +160,50 @@ export default function HomePage() {
         Install App
       </button>
 
-      {userRole === "child" && (
-        <>
-          <h1>Welcome, Child!</h1>
-          <ChildShopViewer />
-          <ChildTaskViewer />
-        </>
-      )}
+      {/* Loading / Error */}
+      {loading && <p>Loading child accounts for PlusPoint...</p>}
+      {error && <p className="error-message">{error}</p>}
 
-      {userRole === "parent" && (
+      {/* Role-based content */}
+      {!loading && !error && (
         <>
-          <h1>Welcome, Parent!</h1>
-          <div className="home-boxes">
-            <h2 className="home-box">
-              <img src="../../public/img/shopping-cart.svg" />
-            </h2>
-            <h2 className="home-box">
-              <img src="../../public/img/to-do.svg" />
-            </h2>
-            <TaskVerifier />
-          </div>
-          <h2>Your Child Accounts:</h2>
-          {childrenForParent.length === 0 ? (
-            <p>No child accounts found linked to your profile.</p>
-          ) : (
-            <section className="grid">
-              {childrenForParent.map((childUser) => (
-                <User key={childUser.id} user={childUser} />
-              ))}
-              <button className="add-child-btn" onClick={handleAddChildClick}>
-                Tilføj Barn
-              </button>
-            </section>
+          {userRole === "child" && (
+            <>
+              <h1>Welcome, Child!</h1>
+              <ChildShopViewer />
+              <ChildTaskViewer />
+            </>
+          )}
+
+          {userRole === "parent" && (
+            <>
+              <h1>Welcome, Parent!</h1>
+              <div className="home-boxes">
+                <h2 className="home-box">
+                  <img src="../../public/img/shopping-cart.svg" />
+                </h2>
+                <h2 className="home-box">
+                  <img src="../../public/img/to-do.svg" />
+                </h2>
+                <TaskVerifier />
+              </div>
+              <h2>Your Child Accounts:</h2>
+              {childrenForParent.length === 0 ? (
+                <p>No child accounts found linked to your profile.</p>
+              ) : (
+                <section className="grid">
+                  {childrenForParent.map((childUser) => (
+                    <User key={childUser.id} user={childUser} />
+                  ))}
+                  <button
+                    className="add-child-btn"
+                    onClick={handleAddChildClick}
+                  >
+                    Tilføj Barn
+                  </button>
+                </section>
+              )}
+            </>
           )}
         </>
       )}
