@@ -180,7 +180,11 @@ export default function HomePage() {
             <h2 className="home-box">
               <img src="../../public/img/shopping-cart.svg" />
             </h2>
-            <h2 className="home-box">
+            <h2
+              className="home-box"
+              onClick={() => navigate("/createtask")}
+              style={{ cursor: "pointer" }}
+            >
               <img src="../../public/img/to-do.svg" />
             </h2>
             <TaskVerifier />
@@ -191,7 +195,32 @@ export default function HomePage() {
           ) : (
             <section className="grid">
               {childrenForParent.map((childUser) => (
-                <User key={childUser.id} user={childUser} />
+                <div
+                  key={childUser.id}
+                  className="user-card"
+                  onClick={() =>
+                    setShowDetails(
+                      childUser.id === showDetails ? null : childUser.id
+                    )
+                  }
+                  style={{ cursor: "pointer" }}
+                >
+                  <img
+                    src="/img/icon-yellow.svg"
+                    alt="User Avatar"
+                    className="user-avatar"
+                  />
+                  <div className="user-info">
+                    <h3 className="user-name">
+                      {childUser.displayName || "No Name"}
+                    </h3>
+                    {showDetails === childUser.id && (
+                      <p className="user-email">
+                        {childUser.email || "No email available"}
+                      </p>
+                    )}
+                  </div>
+                </div>
               ))}
               <button className="add-child-btn" onClick={handleAddChildClick}>
                 Tilføj Barn
