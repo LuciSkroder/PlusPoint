@@ -202,10 +202,10 @@ export default function TaskVerifier() {
 
               <div style={{ marginTop: "10px" }}>
                 <button onClick={() => handleApproveTask(task)}>
-                  Approve & Award Points
+                  Approve
                 </button>
                 <button onClick={() => handleDenyTask(task)}>
-                  Deny & Reset
+                  Deny
                 </button>
               </div>
             </li>

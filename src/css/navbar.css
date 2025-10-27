@@ -14,6 +14,12 @@
   padding: 0 1rem;
 }
 
+.point-tæller {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
 .parent-menu {
   position: relative;
   margin-left: auto;
@@ -50,4 +56,8 @@
   width: 16px;
   height: 16px;
   margin-right: 8px;
+}
+
+.tilbage-knap {
+  /* Styles for the back button */
 }
