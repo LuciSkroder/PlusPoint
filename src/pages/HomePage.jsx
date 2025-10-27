@@ -22,6 +22,8 @@ export default function HomePage() {
   const [childrenForParent, setChildrenForParent] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [deferredPrompt, setDeferredPrompt] = useState(null);
+  const [isIos, setIsIos] = useState(false);
 
   function handleAddChildClick() {
     navigate("/addchild");
@@ -105,35 +107,38 @@ export default function HomePage() {
     return () => unsubscribeAuth();
   }, []);
 
-  // PWA install button
+  // Detect iOS
   useEffect(() => {
-    let deferredPrompt;
-
-    const handleBeforeInstallPrompt = (e) => {
-      e.preventDefault(); // Prevent Chrome from auto-showing prompt
-      deferredPrompt = e;
-
-      const installBtn = document.getElementById("install-btn");
-      if (installBtn) installBtn.style.display = "block";
-
-      installBtn.addEventListener("click", async () => {
-        deferredPrompt.prompt();
-        const { outcome } = await deferredPrompt.userChoice;
-        console.log("User response to PWA install:", outcome);
-        deferredPrompt = null;
-        installBtn.style.display = "none";
-      });
-    };
-
-    window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
-
-    return () => {
-      window.removeEventListener(
-        "beforeinstallprompt",
-        handleBeforeInstallPrompt
-      );
-    };
+    const ios =
+      /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    setIsIos(ios);
   }, []);
+
+  // Listen for beforeinstallprompt on Android
+  useEffect(() => {
+    const handler = (e) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+    };
+    window.addEventListener("beforeinstallprompt", handler);
+
+    return () => window.removeEventListener("beforeinstallprompt", handler);
+  }, []);
+
+  const handleInstallClick = async () => {
+    if (isIos) {
+      alert(
+        "To install PlusPoint on your iPhone, tap the Share button in Safari and select 'Add to Home Screen'."
+      );
+    } else if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      console.log("User response to install:", outcome);
+      setDeferredPrompt(null);
+    } else {
+      alert("Install not available at this time. Please try again later.");
+    }
+  };
 
   if (loading) {
     return <p>Loading child accounts for PlusPoint...</p>;
@@ -145,11 +150,9 @@ export default function HomePage() {
 
   return (
     <main className="page">
-      {/* PWA Install Button */}
       <button
-        id="install-btn"
+        onClick={handleInstallClick}
         style={{
-          display: "none",
           position: "fixed",
           bottom: "20px",
           right: "20px",
