@@ -126,6 +126,7 @@ export default function HomePage() {
   if (userRole === "parent") {
     return (
       <main className="page">
+<<<<<<< HEAD
         <h1>Welcome, Parent!</h1>
         <div className="home-boxes">
           <h2 className="home-box">
@@ -137,6 +138,22 @@ export default function HomePage() {
             <img src="../../public/img/to-do.svg" />{" "}
           </h2>
           <TaskVerifier />
+=======
+        <div className="home-boxes">
+          <div className="home-box-left">
+            <button className="shop-widget" onClick={handleShopClick} >
+              <img src="../../public/img/to-do.svg" alt="shop" />
+            </button>
+            <button>
+              <img src="../../public/img/to-do.svg" alt="tasks" />
+            </button>
+          </div>
+          <div className="home-box-right">
+            <button onClick={handleTasksClick}>
+              <img src="../../public/img/to-do.svg" alt="tasks" />
+            </button>
+          </div>
+>>>>>>> parent of 70216ef (TEST)
         </div>
         <h2>Your Child Accounts:</h2>
         {childrenForParent.length === 0 ? (
