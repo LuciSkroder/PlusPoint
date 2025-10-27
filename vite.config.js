@@ -14,50 +14,13 @@ export default defineConfig(({ command }) => {
         manifest: {
           name: "PlusPoint",
           short_name: "PlusPoint",
-          description: "A Progressive Web App built with React and Vite",
           start_url: "./",
           display: "standalone",
           background_color: "#fff9ec",
           theme_color: "#4CAF50",
           icons: [
-            {
-              src: "/img/icon-192x192.png",
-              sizes: "192x192",
-              type: "image/png",
-            },
-            {
-              src: "/img/icon-512x512.png",
-              sizes: "512x512",
-              type: "image/png",
-            },
-            {
-              src: "/img/icon-512-maskable.png",
-              sizes: "512x512",
-              type: "image/png",
-              purpose: "maskable",
-            },
-          ],
-        },
-        workbox: {
-          runtimeCaching: [
-            {
-              urlPattern: ({ request }) => request.destination === "image",
-              handler: "CacheFirst",
-              options: {
-                cacheName: "images-cache",
-                expiration: {
-                  maxEntries: 50,
-                  maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
-                },
-              },
-            },
-            {
-              urlPattern: ({ request }) =>
-                request.destination === "script" ||
-                request.destination === "style",
-              handler: "StaleWhileRevalidate",
-              options: { cacheName: "assets-cache" },
-            },
+            { src: "/icon-192x192.png", sizes: "192x192", type: "image/png" },
+            { src: "/icon-512x512.png", sizes: "512x512", type: "image/png" },
           ],
         },
       }),
