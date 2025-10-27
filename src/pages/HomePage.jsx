@@ -118,6 +118,7 @@ export default function HomePage() {
   useEffect(() => {
     const handler = (e) => {
       e.preventDefault();
+      console.log("✅ beforeinstallprompt fired:", e);
       setDeferredPrompt(e);
     };
     window.addEventListener("beforeinstallprompt", handler);
@@ -136,12 +137,31 @@ export default function HomePage() {
       console.log("User response to install:", outcome);
       setDeferredPrompt(null);
     } else {
-      alert("Install not available at this time. Please try again later.");
+      console.log("❌ Install not available");
+
+      if (!navigator.serviceWorker.controller) {
+        console.log("- Service worker not controlling the page");
+      }
+
+      fetch("/manifest.webmanifest")
+        .then((res) => {
+          if (!res.ok) {
+            console.log(`- Manifest fetch failed: ${res.status}`);
+          } else {
+            console.log("- Manifest accessible ✅");
+          }
+        })
+        .catch((err) => console.log("- Manifest fetch error:", err));
+
+      console.log("- User may have dismissed previous install prompt");
+
+      alert("Install not available at this time. Check console for details.");
     }
   };
 
   return (
     <main className="page">
+      {/* Permanent Install Button */}
       <button
         onClick={handleInstallClick}
         style={{
@@ -159,9 +179,11 @@ export default function HomePage() {
         Install App
       </button>
 
+      {/* Loading / Error */}
       {loading && <p>Loading child accounts for PlusPoint...</p>}
       {error && <p className="error-message">{error}</p>}
 
+      {/* Role-based content */}
       {!loading && !error && (
         <>
           {userRole === "child" && (
