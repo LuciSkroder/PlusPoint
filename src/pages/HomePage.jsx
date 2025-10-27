@@ -128,14 +128,16 @@ export default function HomePage() {
       <main className="page">
         <h1>Welcome, Parent!</h1>
         <div className="home-boxes">
-          <h2 className="home-box">
-            {" "}
-            <img src="../../public/img/shopping-cart.svg" />{" "}
-          </h2>
-          <h2 className="home-box">
-            {" "}
-            <img src="../../public/img/to-do.svg" />{" "}
-          </h2>
+          <div className="home-left">
+            <h2 className="home-box top">
+              {" "}
+              <img src="../../public/img/shopping-cart.svg" />{" "}
+            </h2>
+            <h2 className="home-box">
+              {" "}
+              <img src="../../public/img/to-do.svg" />{" "}
+            </h2>
+          </div>
           <TaskVerifier />
         </div>
         <h2>Your Child Accounts:</h2>
