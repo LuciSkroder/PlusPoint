@@ -120,3 +120,7 @@ button:focus-visible {
   grid-column: 1;
   grid-row: 2;
 }
+
+.user-card img {
+    width: 20rem;
+}
