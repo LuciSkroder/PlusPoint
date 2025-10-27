@@ -182,7 +182,7 @@ export default function HomePage() {
             </h2>
             <h2
               className="home-box"
-              onClick={() => navigate("/createtask")}
+              onClick={() => navigate("/create")}
               style={{ cursor: "pointer" }}
             >
               <img src="../../public/img/to-do.svg" />
