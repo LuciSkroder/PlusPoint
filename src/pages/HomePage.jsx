@@ -145,25 +145,6 @@ export default function HomePage() {
 
   return (
     <main className="page">
-      {/* PWA Install Button */}
-      <button
-        id="install-btn"
-        style={{
-          display: "none",
-          position: "fixed",
-          bottom: "20px",
-          right: "20px",
-          padding: "10px 20px",
-          backgroundColor: "#4CAF50",
-          color: "white",
-          border: "none",
-          borderRadius: "5px",
-          zIndex: 1000,
-        }}
-      >
-        Install App
-      </button>
-
       {userRole === "child" && (
         <>
           <h1>Welcome, Child!</h1>
