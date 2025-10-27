@@ -125,33 +125,9 @@ export default function HomePage() {
 
   if (userRole === "parent") {
     return (
-      <main className="page">
-        <h1>Welcome, Parent!</h1>
-        <div className="home-boxes">
-          <h2 className="home-box">
-            {" "}
-            <img src="../../public/img/shopping-cart.svg" />{" "}
-          </h2>
-          <h2 className="home-box">
-            {" "}
-            <img src="../../public/img/to-do.svg" />{" "}
-          </h2>
-          <TaskVerifier />
-        </div>
-        <h2>Your Child Accounts:</h2>
-        {childrenForParent.length === 0 ? (
-          <p>No child accounts found linked to your profile.</p>
-        ) : (
-          <section className="grid">
-            {childrenForParent.map((childUser) => (
-              <User key={childUser.id} user={childUser} />
-            ))}
-            <button className="add-child-btn" onClick={handleAddChildClick}>
-              Tilføj Barn
-            </button>
-          </section>
-        )}
-      </main>
+      <div>
+        <p>test</p>
+      </div>
     );
   }
 }
