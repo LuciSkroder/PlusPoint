@@ -17,21 +17,21 @@ export default defineConfig(({ command }) => {
           description: "A Progressive Web App built with React and Vite",
           start_url: "/PlusPoint/",
           display: "standalone",
-          background_color: "#ffffff",
-          theme_color: "#0d6efd",
+          background_color: "#fff9ec",
+          theme_color: "#4CAF50",
           icons: [
             {
-              src: "PlusPoint/icon-192.png",
+              src: "/img/icon-192x192.png",
               sizes: "192x192",
               type: "image/png",
             },
             {
-              src: "PlusPoint/icon-512.png",
+              src: "/img/icon-512x512.png",
               sizes: "512x512",
               type: "image/png",
             },
             {
-              src: "PlusPoint/icon-512-maskable.png",
+              src: "/img/icon-512-maskable.png",
               sizes: "512x512",
               type: "image/png",
               purpose: "maskable",
@@ -56,9 +56,7 @@ export default defineConfig(({ command }) => {
                 request.destination === "script" ||
                 request.destination === "style",
               handler: "StaleWhileRevalidate",
-              options: {
-                cacheName: "assets-cache",
-              },
+              options: { cacheName: "assets-cache" },
             },
           ],
         },

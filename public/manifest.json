@@ -7,14 +7,20 @@
   "theme_color": "#4CAF50",
   "icons": [
     {
-      "src": "/PlusPoint/icon-192x192.png",
+      "src": "/img/icon-192x192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "/PlusPoint/icon-512x512.png",
+      "src": "/img/icon-512x512.png",
       "sizes": "512x512",
       "type": "image/png"
+    },
+    {
+      "src": "/img/icon-512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ]
 }
