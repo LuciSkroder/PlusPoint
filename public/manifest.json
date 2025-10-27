@@ -1,7 +1,7 @@
 {
   "name": "PlusPoint",
   "short_name": "PlusPoint",
-  "start_url": "/PlusPoint/",
+  "start_url": "./",
   "display": "standalone",
   "background_color": "#fff9ec",
   "theme_color": "#4CAF50",

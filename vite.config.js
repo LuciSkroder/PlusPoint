@@ -15,7 +15,7 @@ export default defineConfig(({ command }) => {
           name: "PlusPoint",
           short_name: "PlusPoint",
           description: "A Progressive Web App built with React and Vite",
-          start_url: "/PlusPoint/",
+          start_url: "./",
           display: "standalone",
           background_color: "#fff9ec",
           theme_color: "#4CAF50",
