@@ -61,7 +61,11 @@ export default function NavBar() {
           {showDropdown && (
             <div className="dropdown-menu">
               <NavLink to="/login" className="dropdown-item">
-                <img src="/logout.png" alt="logout" className="logout-icon" />
+                <img
+                  src="./public/img/logout.png"
+                  alt="logout"
+                  className="logout-icon"
+                />
                 Logout
               </NavLink>
             </div>
