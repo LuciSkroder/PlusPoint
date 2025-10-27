@@ -172,9 +172,14 @@ export default function TaskVerifier() {
         <ul style={{ listStyle: "none", padding: 0 }}>
           {pendingTasks.map((task) => (
             <li key={task.id}>
-              <h3>
-                {task.name} ({task.points} points)
-              </h3>
+              <div className="navn-point">
+                <h3>
+                  {task.name}
+                </h3>
+                <h3>
+                  {task.points}
+                </h3>
+              </div>
               <p>
                 <strong>Assigned to:</strong>{" "}
                 {childDisplayNames[task.assignedToChildUid] ||
@@ -200,12 +205,12 @@ export default function TaskVerifier() {
                 </p>
               )}
 
-              <div style={{ marginTop: "10px" }}>
+              <div className="task-buttons">
                 <button onClick={() => handleApproveTask(task)}>
-                  Approve & Award Points
+                  Approve
                 </button>
                 <button onClick={() => handleDenyTask(task)}>
-                  Deny & Reset
+                  Deny
                 </button>
               </div>
             </li>
