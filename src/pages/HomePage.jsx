@@ -22,6 +22,7 @@ export default function HomePage() {
   const [childrenForParent, setChildrenForParent] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showDetails, setShowDetails] = useState(null);
 
   function handleAddChildClick() {
     navigate("/addchild");
@@ -134,7 +135,7 @@ export default function HomePage() {
           </h2>
           <h2
             className="home-box"
-            onClick={() => navigate("/create")}
+            onClick={() => navigate("/createtask")}
             style={{ cursor: "pointer" }}
           >
             {" "}
@@ -148,7 +149,32 @@ export default function HomePage() {
         ) : (
           <section className="grid">
             {childrenForParent.map((childUser) => (
-              <User key={childUser.id} user={childUser} />
+              <div
+                key={childUser.id}
+                className="user-card"
+                onClick={() =>
+                  setShowDetails(
+                    childUser.id === showDetails ? null : childUser.id
+                  )
+                }
+                style={{ cursor: "pointer" }}
+              >
+                <img
+                  src="/img/icon-yellow.svg"
+                  alt="User Avatar"
+                  className="user-avatar"
+                />
+                <div className="user-info">
+                  <h3 className="user-name">
+                    {childUser.displayName || "No Name"}
+                  </h3>
+                  {showDetails === childUser.id && (
+                    <p className="user-email">
+                      {childUser.email || "No email available"}
+                    </p>
+                  )}
+                </div>
+              </div>
             ))}
             <button className="add-child-btn" onClick={handleAddChildClick}>
               Tilføj Barn

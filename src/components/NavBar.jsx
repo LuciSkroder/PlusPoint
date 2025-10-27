@@ -28,7 +28,7 @@ export default function NavBar() {
         <PointCounter></PointCounter>
         <div className="parent-menu">
           <img
-            src="./public/img/parent-icon-black.svg"
+            src="./public/img/icon-black.svg"
             className="parent-icon"
             onClick={toggleDropdown}
           />
@@ -54,7 +54,7 @@ export default function NavBar() {
         <PointCounter></PointCounter>
         <div className="parent-menu">
           <img
-            src="/img/parent-icon-black.svg"
+            src="/img/icon-black.svg"
             className="parent-icon"
             onClick={toggleDropdown}
           />
