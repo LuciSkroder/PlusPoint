@@ -199,10 +199,10 @@ export default function HomePage() {
               <h1>Welcome, Parent!</h1>
               <div className="home-boxes">
                 <h2 className="home-box">
-                  <img src="../../public/img/shopping-cart.svg" />
+                  <img src="../../PlusPoint/img/shopping-cart.svg" />
                 </h2>
                 <h2 className="home-box">
-                  <img src="../../public/img/to-do.svg" />
+                  <img src="../../PlusPoint/img/to-do.svg" />
                 </h2>
                 <TaskVerifier />
               </div>
