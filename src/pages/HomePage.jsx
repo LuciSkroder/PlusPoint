@@ -27,14 +27,6 @@ export default function HomePage() {
     navigate("/addchild");
   }
 
-  function handleShopClick() {
-    navigate("/shop");
-  }
-
-  function handleTasksClick() {
-    navigate("/tasks");
-  }
-
   useEffect(() => {
     // Listener for Firebase Auth state changes
     const unsubscribeAuth = Auth.onAuthStateChanged(async (user) => {
