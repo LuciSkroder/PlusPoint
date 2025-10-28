@@ -109,30 +109,43 @@ export default function HomePage() {
   return (
     <main className="page">
       {userRole === "child" && (
-        <>
-          <h1>Welcome, Child!</h1>
-          <ChildShopViewer />
-          <ChildTaskViewer />
+        <section className="child-home">
+          <div className="home-boxes">
+            <div className="home-box-left">
+              <button className="home-box">
+                <img src="../../public/img/shopping-cart.svg" />
+              </button>
+              <button className="home-box" onClick={() => navigate("/create")}>
+                <img src="../../public/img/to-do.svg" />
+              </button>
+            </div>
+            <div className="home-box-right">
+              <button>
+                <ChildTaskViewer />
+              </button>
+            </div>
+          </div>
           <Karousel />
-        </>
+        </section>
       )}
 
-      {/* Role-based content */}
-      {!loading && !error && (
-        <>
-          <h1>Welcome, Parent!</h1>
+      {!loading && !error && userRole === "parent" && (
+        <main>
           <div className="home-boxes">
-            <h2 className="home-box">
-              <img src="../../public/img/shopping-cart.svg" />
-            </h2>
-            <h2
-              className="home-box"
-              onClick={() => navigate("/create")}
-              style={{ cursor: "pointer" }}
-            >
-              <img src="../../public/img/to-do.svg" />
-            </h2>
-            <TaskVerifier />
+            <div className="home-box-left">
+              <button className="home-box">
+                <img
+                  src="../../public/img/shopping-cart.svg"
+                  onClick={() => navigate("/shop")}
+                />
+              </button>
+              <button className="home-box" onClick={() => navigate("/create")}>
+                <img src="../../public/img/to-do.svg" />
+              </button>
+            </div>
+            <div className="home-box-right">
+              <button>{<TaskVerifier />}</button>
+            </div>
           </div>
           <h2>Your Child Accounts:</h2>
           {childrenForParent.length === 0 ? (
@@ -172,7 +185,7 @@ export default function HomePage() {
               </button>
             </section>
           )}
-        </>
+        </main>
       )}
     </main>
   );

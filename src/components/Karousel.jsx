@@ -3,6 +3,9 @@ import carouselData from "../data/karousel.json";
 
 export default function Karousel({ items = carouselData }) {
   const [active, setActive] = useState(0);
+  const [editMode, setEditMode] = useState(false);
+  const toggleEditMode = () => setEditMode(!editMode);
+
   const length = items.length;
 
   const next = () => setActive((prev) => (prev + 1) % length);
@@ -21,6 +24,7 @@ export default function Karousel({ items = carouselData }) {
           alt={items[active].name}
           className="karousel-image"
         />
+        {/* Ikke i brug lige nu
         <div className="karousel-hero">
           <h2 className="karousel-title">{items[active].name}</h2>
           <p className="karousel-body">{items[active].body}</p>
@@ -32,10 +36,15 @@ export default function Karousel({ items = carouselData }) {
             {items[active].links[0]?.text || "Se mere her"}
           </a>
         </div>
+        */}
       </div>
       <div className="arrows">
         <button className="prev-arrow" onClick={prev}>
           🡸
+        </button>
+        <button className="edit" onClick={toggleEditMode}>
+          {editMode ? "Gem" : "Edit"}
+          {/* hvis ved at redigere, vis "Gem", ellers "Rediger" */}
         </button>
         <button className="next-arrow" onClick={next}>
           🡺
