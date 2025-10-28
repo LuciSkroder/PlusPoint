@@ -128,6 +128,7 @@ export default function HomePage() {
         <h1>Welcome, Child!</h1>
         <ChildShopViewer />
         <ChildTaskViewer />
+        <Karousel></Karousel>
       </main>
     );
   }
@@ -150,9 +151,7 @@ export default function HomePage() {
             </button>
           </div>
         </div>
-        <section className="karousel">
-          <Karousel></Karousel>
-        </section>
+        <section className="karousel"></section>
       </main>
     );
   }
