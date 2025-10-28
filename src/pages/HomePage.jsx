@@ -22,8 +22,7 @@ export default function HomePage() {
   const [childrenForParent, setChildrenForParent] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [deferredPrompt, setDeferredPrompt] = useState(null);
-  const [isIos, setIsIos] = useState(false);
+  const [showDetails, setShowDetails] = useState(null);
 
   function handleAddChildClick() {
     navigate("/addchild");
@@ -161,68 +160,68 @@ export default function HomePage() {
 
   return (
     <main className="page">
-      {/* Permanent Install Button */}
-      <button
-        onClick={handleInstallClick}
-        style={{
-          position: "fixed",
-          bottom: "20px",
-          right: "20px",
-          padding: "10px 20px",
-          backgroundColor: "#4CAF50",
-          color: "white",
-          border: "none",
-          borderRadius: "5px",
-          zIndex: 1000,
-        }}
-      >
-        Install App
-      </button>
-
-      {/* Loading / Error */}
-      {loading && <p>Loading child accounts for PlusPoint...</p>}
-      {error && <p className="error-message">{error}</p>}
+      {userRole === "child" && (
+        <>
+          <h1>Welcome, Child!</h1>
+          <ChildShopViewer />
+          <ChildTaskViewer />
+        </>
+      )}
 
       {/* Role-based content */}
       {!loading && !error && (
         <>
-          {userRole === "child" && (
-            <>
-              <h1>Welcome, Child!</h1>
-              <ChildShopViewer />
-              <ChildTaskViewer />
-            </>
-          )}
-
-          {userRole === "parent" && (
-            <>
-              <h1>Welcome, Parent!</h1>
-              <div className="home-boxes">
-                <h2 className="home-box">
-                  <img src="../../PlusPoint/img/shopping-cart.svg" />
-                </h2>
-                <h2 className="home-box">
-                  <img src="../../PlusPoint/img/to-do.svg" />
-                </h2>
-                <TaskVerifier />
-              </div>
-              <h2>Your Child Accounts:</h2>
-              {childrenForParent.length === 0 ? (
-                <p>No child accounts found linked to your profile.</p>
-              ) : (
-                <section className="grid">
-                  {childrenForParent.map((childUser) => (
-                    <User key={childUser.id} user={childUser} />
-                  ))}
-                  <button
-                    className="add-child-btn"
-                    onClick={handleAddChildClick}
-                  >
-                    Tilføj Barn
-                  </button>
-                </section>
-              )}
-            </>
+          <h1>Welcome, Parent!</h1>
+          <div className="home-boxes">
+            <h2 className="home-box">
+              <img src="../../public/img/shopping-cart.svg" />
+            </h2>
+            <h2
+              className="home-box"
+              onClick={() => navigate("/create")}
+              style={{ cursor: "pointer" }}
+            >
+              <img src="../../public/img/to-do.svg" />
+            </h2>
+            <TaskVerifier />
+          </div>
+          <h2>Your Child Accounts:</h2>
+          {childrenForParent.length === 0 ? (
+            <p>No child accounts found linked to your profile.</p>
+          ) : (
+            <section className="grid">
+              {childrenForParent.map((childUser) => (
+                <div
+                  key={childUser.id}
+                  className="user-card"
+                  onClick={() =>
+                    setShowDetails(
+                      childUser.id === showDetails ? null : childUser.id
+                    )
+                  }
+                  style={{ cursor: "pointer" }}
+                >
+                  <img
+                    src="/img/icon-yellow.svg"
+                    alt="User Avatar"
+                    className="user-avatar"
+                  />
+                  <div className="user-info">
+                    <h3 className="user-name">
+                      {childUser.displayName || "No Name"}
+                    </h3>
+                    {showDetails === childUser.id && (
+                      <p className="user-email">
+                        {childUser.email || "No email available"}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              ))}
+              <button className="add-child-btn" onClick={handleAddChildClick}>
+                Tilføj Barn
+              </button>
+            </section>
           )}
         </>
       )}
