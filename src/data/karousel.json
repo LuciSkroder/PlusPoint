@@ -1,6 +1,6 @@
 [
   {
-    "image": "/img/tasks-icon.png",
+    "image": "../public/img/man.png",
     "name": "Avatar",
     "body": "Placeholder for avatar, skal sættes op med customization",
     "links": [

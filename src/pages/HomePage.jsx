@@ -109,7 +109,7 @@ export default function HomePage() {
   return (
     <main className="page">
       {userRole === "child" && (
-        <main>
+        <section className="child-home">
           <div className="home-boxes">
             <div className="home-box-left">
               <button className="home-box">
@@ -126,7 +126,7 @@ export default function HomePage() {
             </div>
           </div>
           <Karousel />
-        </main>
+        </section>
       )}
 
       {!loading && !error && userRole === "parent" && (
@@ -134,16 +134,17 @@ export default function HomePage() {
           <div className="home-boxes">
             <div className="home-box-left">
               <button className="home-box">
-                <img src="../../public/img/shopping-cart.svg" />
+                <img
+                  src="../../public/img/shopping-cart.svg"
+                  onClick={() => navigate("/shop")}
+                />
               </button>
               <button className="home-box" onClick={() => navigate("/create")}>
                 <img src="../../public/img/to-do.svg" />
               </button>
             </div>
             <div className="home-box-right">
-              <button>
-                <TaskVerifier />
-              </button>
+              <button>{<TaskVerifier />}</button>
             </div>
           </div>
           <h2>Your Child Accounts:</h2>

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import carouselData from "../data/karousel.json";
+import "../css/karousel.css";
 
 export default function Karousel({ items = carouselData }) {
   const [active, setActive] = useState(0);
@@ -37,6 +38,7 @@ export default function Karousel({ items = carouselData }) {
         <button className="prev-arrow" onClick={prev}>
           🡸
         </button>
+        <button className="edit">Edit</button>
         <button className="next-arrow" onClick={next}>
           🡺
         </button>

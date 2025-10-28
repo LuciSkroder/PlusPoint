@@ -3,6 +3,15 @@
   --sort: #222222;
   --hvid: #f4f4f4;
   --komplementær: #2c6cfe;
+
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 a {
@@ -10,6 +19,7 @@ a {
   color: var(--komplementær);
   font-weight: 500;
 }
+
 .bottom-nav img {
   width: 40px;
   height: 40px;
