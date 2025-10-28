@@ -11,17 +11,6 @@
     ]
   },
   {
-    "image": "../public/img/træ-1.png",
-    "name": "Træ",
-    "body": "Placeholder for træ, skal sættes op med level system",
-    "links": [
-      {
-        "url": "/shop",
-        "text": "Visit Shop"
-      }
-    ]
-  },
-  {
     "image": "../public/img/hus-1.png",
     "name": "Hus",
     "body": "Placeholder for hus, skal sættes op med customization",
@@ -40,6 +29,17 @@
       {
         "url": "/settings",
         "text": "Open Settings"
+      }
+    ]
+  },
+  {
+    "image": "../public/img/træ-1.png",
+    "name": "Træ",
+    "body": "Placeholder for træ, skal sættes op med level system",
+    "links": [
+      {
+        "url": "/shop",
+        "text": "Visit Shop"
       }
     ]
   }

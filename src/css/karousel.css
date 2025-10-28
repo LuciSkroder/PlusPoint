@@ -26,3 +26,34 @@
   justify-content: center;
   flex-direction: row;
 }
+
+.karousel-main {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  width: 100%;
+  gap: 1rem;
+}
+
+.karousel-image {
+  width: 25%;
+  height: auto;
+}
+
+.karousel-image.active {
+  opacity: 1;
+  z-index: 2;
+}
+
+.karousel-image.side {
+  transform: scale(0.6);
+  z-index: 1;
+}
+
+.karousel-image.side.left {
+  transform: scale(0.6) translateY(50%) rotate(-25deg);
+}
+
+.karousel-image.side.right {
+  transform: scale(0.6) translateY(50%) rotate(25deg);
+}

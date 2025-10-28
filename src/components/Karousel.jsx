@@ -21,23 +21,14 @@ export default function Karousel({ items = carouselData }) {
       <img alt="" className="karousel-background" />
       <div className="karousel-main">
         <img
-          src={items[active].image}
-          alt={items[active].name}
-          className="karousel-image"
+          src={items[(active - 1 + length) % length].image}
+          className="karousel-image side left"
         />
-        {/* Ikke i brug lige nu
-        <div className="karousel-hero">
-          <h2 className="karousel-title">{items[active].name}</h2>
-          <p className="karousel-body">{items[active].body}</p>
-          <a
-            className="karousel-link"
-            href={items[active].links[0]?.url || "#"}
-            target="../"
-          >
-            {items[active].links[0]?.text || "Se mere her"}
-          </a>
-        </div>
-        */}
+        <img src={items[active].image} className="karousel-image active" />
+        <img
+          src={items[(active + 1) % length].image}
+          className="karousel-image side right"
+        />
       </div>
       <div className="arrows">
         <button className="prev-arrow" onClick={prev}>
