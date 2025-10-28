@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Auth, DataBase } from "../components/DataBase";
-import { useNavigate } from "react-router";
+import "../css/taskpage.css";
 import {
   ref,
   onValue,
@@ -19,7 +19,6 @@ export default function TaskVerifier() {
   const [error, setError] = useState(null);
   const currentUser = Auth.currentUser;
   const parentUid = currentUser?.uid;
-  const navigate = useNavigate();
 
   useEffect(() => {
     if (!parentUid) {
@@ -166,10 +165,7 @@ export default function TaskVerifier() {
   }
 
   return (
-    <div className="task-box"
-      onClick={() => navigate("/taskpage")}
-      style={{ cursor: "pointer" }}
-    >
+    <div className="task-page">
       <h2>Tasks Awaiting Your Verification</h2>
       {pendingTasks.length === 0 ? (
         <p>No tasks currently awaiting your verification. All caught up!</p>
@@ -207,10 +203,10 @@ export default function TaskVerifier() {
 
               <div style={{ marginTop: "10px" }}>
                 <button onClick={() => handleApproveTask(task)}>
-                  Approve & Award Points
+                  Godkend
                 </button>
                 <button onClick={() => handleDenyTask(task)}>
-                  Deny & Reset
+                  Afvis
                 </button>
               </div>
             </li>
