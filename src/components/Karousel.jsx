@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import carouselData from "../data/karousel.json";
+import "../css/karousel.css";
 
 export default function Karousel({ items = carouselData }) {
   const [active, setActive] = useState(0);
