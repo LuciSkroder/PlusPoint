@@ -12,6 +12,7 @@ import { AuthProvider } from "./AuthContext";
 import ProtectedRoute from "./components/ProtectedRoutes";
 import BottomNav from "./components/BottomNav";
 import ShopPage from "./pages/ShopPage";
+import TaskPage from "./pages/TaskPage";
 
 export default function App() {
   const basename = process.env.NODE_ENV === "production" ? "/PlusPoint" : "/";
@@ -48,6 +49,14 @@ export default function App() {
             element={
               <ProtectedRoute>
                 <CreateTaskPage />
+              </ProtectedRoute>
+            }
+          ></Route>
+          <Route
+            path="/taskpage"
+            element={
+              <ProtectedRoute>
+                <TaskPage />
               </ProtectedRoute>
             }
           ></Route>

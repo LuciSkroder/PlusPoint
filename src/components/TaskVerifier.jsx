@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Auth, DataBase } from "../components/DataBase";
+import { useNavigate } from "react-router";
 import {
   ref,
   onValue,
@@ -18,6 +19,7 @@ export default function TaskVerifier() {
   const [error, setError] = useState(null);
   const currentUser = Auth.currentUser;
   const parentUid = currentUser?.uid;
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!parentUid) {
@@ -164,7 +166,10 @@ export default function TaskVerifier() {
   }
 
   return (
-    <div className="task-box">
+    <div className="task-box"
+      onClick={() => navigate("/taskpage")}
+      style={{ cursor: "pointer" }}
+    >
       <h2>Tasks Awaiting Your Verification</h2>
       {pendingTasks.length === 0 ? (
         <p>No tasks currently awaiting your verification. All caught up!</p>
