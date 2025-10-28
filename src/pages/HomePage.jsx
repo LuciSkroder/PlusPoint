@@ -106,36 +106,6 @@ export default function HomePage() {
     return () => unsubscribeAuth();
   }, []);
 
-  // PWA install button
-  useEffect(() => {
-    let deferredPrompt;
-
-    const handleBeforeInstallPrompt = (e) => {
-      e.preventDefault(); // Prevent Chrome from auto-showing prompt
-      deferredPrompt = e;
-
-      const installBtn = document.getElementById("install-btn");
-      if (installBtn) installBtn.style.display = "block";
-
-      installBtn.addEventListener("click", async () => {
-        deferredPrompt.prompt();
-        const { outcome } = await deferredPrompt.userChoice;
-        console.log("User response to PWA install:", outcome);
-        deferredPrompt = null;
-        installBtn.style.display = "none";
-      });
-    };
-
-    window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
-
-    return () => {
-      window.removeEventListener(
-        "beforeinstallprompt",
-        handleBeforeInstallPrompt
-      );
-    };
-  }, []);
-
   if (loading) {
     return <p>Loading child accounts for PlusPoint...</p>;
   }
