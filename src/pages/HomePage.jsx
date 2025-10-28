@@ -15,6 +15,7 @@ import {
   equalTo,
   get,
 } from "firebase/database";
+import Karousel from "../components/Karousel";
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -133,9 +134,26 @@ export default function HomePage() {
 
   if (userRole === "parent") {
     return (
-      <div>
-        <p>test</p>
-      </div>
+      <main className="page">
+        <div className="home-boxes">
+          <div className="home-box-left">
+            <button className="shop-widget" onClick={handleShopClick}>
+              <img src="../../public/img/to-do.svg" alt="shop" />
+            </button>
+            <button>
+              <img src="../../public/img/to-do.svg" alt="tasks" />
+            </button>
+          </div>
+          <div className="home-box-right">
+            <button onClick={handleTasksClick}>
+              <img src="../../public/img/to-do.svg" alt="tasks" />
+            </button>
+          </div>
+        </div>
+        <section className="karousel">
+          <Karousel></Karousel>
+        </section>
+      </main>
     );
   }
 }
