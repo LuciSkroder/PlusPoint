@@ -4,6 +4,7 @@ import ChildShopViewer from "../components/ChildShopViewer";
 import ShopManager from "../components/ShopManager";
 import ChildTaskViewer from "../components/ChildTaskViewer";
 import TaskVerifier from "../components/TaskVerifier";
+import Karousel from "../components/karousel";
 import { DataBase, Auth } from "../components/DataBase";
 import { useNavigate } from "react-router";
 import {
@@ -112,6 +113,7 @@ export default function HomePage() {
           <h1>Welcome, Child!</h1>
           <ChildShopViewer />
           <ChildTaskViewer />
+          <Karousel />
         </>
       )}
 

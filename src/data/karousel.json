@@ -1,0 +1,46 @@
+[
+  {
+    "image": "/img/tasks-icon.png",
+    "name": "Avatar",
+    "body": "Placeholder for avatar, skal sættes op med customization",
+    "links": [
+      {
+        "url": "/create",
+        "text": "Create Tasks"
+      }
+    ]
+  },
+  {
+    "image": "/img/shop-icon.png",
+    "name": "Træ",
+    "body": "Placeholder for træ, skal sættes op med level system",
+    "links": [
+      {
+        "url": "/shop",
+        "text": "Visit Shop"
+      }
+    ]
+  },
+  {
+    "image": "/img/profile-icon.png",
+    "name": "Hus",
+    "body": "Placeholder for hus, skal sættes op med customization",
+    "links": [
+      {
+        "url": "/profile",
+        "text": "View Profile"
+      }
+    ]
+  },
+  {
+    "image": "/img/settings-icon.png",
+    "name": "App settings",
+    "body": "Placeholder for app settings, skal sættes op med customization",
+    "links": [
+      {
+        "url": "/settings",
+        "text": "Open Settings"
+      }
+    ]
+  }
+]
