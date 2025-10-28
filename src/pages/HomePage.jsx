@@ -28,7 +28,6 @@ export default function HomePage() {
     navigate("/addchild");
   }
 
-  // Firebase auth + role handling
   useEffect(() => {
     const unsubscribeAuth = Auth.onAuthStateChanged(async (user) => {
       setLoading(true);
@@ -106,14 +105,6 @@ export default function HomePage() {
     return () => unsubscribeAuth();
   }, []);
 
-  if (loading) {
-    return <p>Loading child accounts for PlusPoint...</p>;
-  }
-
-  if (error) {
-    return <p className="error-message">{error}</p>;
-  }
-
   return (
     <main className="page">
       {userRole === "child" && (
@@ -124,7 +115,8 @@ export default function HomePage() {
         </>
       )}
 
-      {userRole === "parent" && (
+      {/* Role-based content */}
+      {!loading && !error && (
         <>
           <h1>Welcome, Parent!</h1>
           <div className="home-boxes">
