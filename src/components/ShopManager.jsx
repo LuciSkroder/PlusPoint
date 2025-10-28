@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Auth, DataBase } from "../components/DataBase";
 import { ref, push, update, remove, onValue } from "firebase/database";
+import "../css/shop.css";
 
 // Function to get the current parent's shop items
 function subscribeToParentShop(onItemsChanged) {
@@ -66,6 +67,7 @@ export default function ShopManager() {
     imageUrl: "",
   });
   const [editItem, setEditItem] = useState(null);
+  const [showForm, setShowForm] = useState(false);
 
   useEffect(() => {
     const unsubscribe = subscribeToParentShop(setShopItems);
@@ -81,6 +83,7 @@ export default function ShopManager() {
     try {
       await addShopItem(newItem);
       setNewItem({ name: "", price: 0, description: "", imageUrl: "" });
+      setShowForm(false);
     } catch (error) {
       console.error("Error adding item:", error);
       alert("Failed to add item: " + error.message);
@@ -108,10 +111,22 @@ export default function ShopManager() {
     }
   };
 
+  const toggleForm = () => {
+    setShowForm(!showForm);
+  };
+
   return (
     <div>
-      <h3>Add New Item</h3>
-      <form onSubmit={handleAddItem}>
+      <button
+        className={`create-reward-btn ${showForm ? "hidden" : ""}`}
+        onClick={toggleForm}
+      >
+        Create New Reward
+      </button>
+      <form
+        onSubmit={handleAddItem}
+        className={`shop-form ${showForm ? "visible" : ""}`}
+      >
         <input
           type="text"
           placeholder="Item Name"
@@ -144,89 +159,97 @@ export default function ShopManager() {
           onChange={(e) => setNewItem({ ...newItem, imageUrl: e.target.value })}
         />
         <button type="submit">Add Item</button>
+        <button type="button" className="cancel-btn" onClick={toggleForm}>
+          Cancel
+        </button>
       </form>
 
-      <h3>Current Shop Items</h3>
-      {shopItems.length === 0 ? (
-        <p>You haven't added any items to your shop yet.</p>
-      ) : (
-        <ul>
-          {shopItems.map((item) => (
-            <li
-              key={item.id}
-              style={{
-                border: "1px solid #ccc",
-                margin: "10px 0",
-                padding: "10px",
-              }}
-            >
-              {editItem && editItem.id === item.id ? (
-                // Edit form
-                <form
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    handleUpdateItem(item.id, editItem);
-                  }}
-                >
-                  <input
-                    type="text"
-                    value={editItem.name}
-                    onChange={(e) =>
-                      setEditItem({ ...editItem, name: e.target.value })
-                    }
-                  />
-                  <input
-                    type="number"
-                    value={editItem.price}
-                    onChange={(e) =>
-                      setEditItem({
-                        ...editItem,
-                        price: parseFloat(e.target.value) || 0,
-                      })
-                    }
-                  />
-                  <textarea
-                    value={editItem.description}
-                    onChange={(e) =>
-                      setEditItem({ ...editItem, description: e.target.value })
-                    }
-                  ></textarea>
-                  <input
-                    type="text"
-                    value={editItem.imageUrl || ""}
-                    onChange={(e) =>
-                      setEditItem({ ...editItem, imageUrl: e.target.value })
-                    }
-                  />
-                  <button type="submit">Save</button>
-                  <button type="button" onClick={() => setEditItem(null)}>
-                    Cancel
-                  </button>
-                </form>
-              ) : (
-                <>
-                  <h4>{item.name}</h4>
-                  {item.imageUrl && (
-                    <img
-                      src={item.imageUrl}
-                      alt={item.name}
-                      style={{ maxWidth: "100px", height: "auto" }}
+      <div className={`shop-items ${showForm ? "hidden" : ""}`}>
+        <h3>Current Shop Items</h3>
+        {shopItems.length === 0 ? (
+          <p>You haven't added any items to your shop yet.</p>
+        ) : (
+          <ul>
+            {shopItems.map((item) => (
+              <li
+                key={item.id}
+                style={{
+                  border: "1px solid #ccc",
+                  margin: "10px 0",
+                  padding: "10px",
+                }}
+              >
+                {editItem && editItem.id === item.id ? (
+                  // Edit form
+                  <form
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      handleUpdateItem(item.id, editItem);
+                    }}
+                  >
+                    <input
+                      type="text"
+                      value={editItem.name}
+                      onChange={(e) =>
+                        setEditItem({ ...editItem, name: e.target.value })
+                      }
                     />
-                  )}
-                  <p> {item.description}</p>
-                  <p>Cost: {item.price} points</p>
-                  <button onClick={() => setEditItem({ ...item })}>
-                    Edit
-                  </button>{" "}
-                  <button onClick={() => handleDeleteItem(item.id)}>
-                    Delete
-                  </button>
-                </>
-              )}
-            </li>
-          ))}
-        </ul>
-      )}
+                    <input
+                      type="number"
+                      value={editItem.price}
+                      onChange={(e) =>
+                        setEditItem({
+                          ...editItem,
+                          price: parseFloat(e.target.value) || 0,
+                        })
+                      }
+                    />
+                    <textarea
+                      value={editItem.description}
+                      onChange={(e) =>
+                        setEditItem({
+                          ...editItem,
+                          description: e.target.value,
+                        })
+                      }
+                    ></textarea>
+                    <input
+                      type="text"
+                      value={editItem.imageUrl || ""}
+                      onChange={(e) =>
+                        setEditItem({ ...editItem, imageUrl: e.target.value })
+                      }
+                    />
+                    <button type="submit">Save</button>
+                    <button type="button" onClick={() => setEditItem(null)}>
+                      Cancel
+                    </button>
+                  </form>
+                ) : (
+                  <>
+                    <h4>{item.name}</h4>
+                    {item.imageUrl && (
+                      <img
+                        src={item.imageUrl}
+                        alt={item.name}
+                        style={{ maxWidth: "100px", height: "auto" }}
+                      />
+                    )}
+                    <p> {item.description}</p>
+                    <p>Cost: {item.price} points</p>
+                    <button onClick={() => setEditItem({ ...item })}>
+                      Edit
+                    </button>{" "}
+                    <button onClick={() => handleDeleteItem(item.id)}>
+                      Delete
+                    </button>
+                  </>
+                )}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     </div>
   );
 }
