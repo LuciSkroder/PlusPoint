@@ -24,7 +24,13 @@ export default function Karousel({ items = carouselData }) {
           src={items[(active - 1 + length) % length].image}
           className="karousel-image side left"
         />
-        <img src={items[active].image} className="karousel-image active" />
+        <img
+          src={items[active].image}
+          className="karousel-image active"
+          onClick={() =>
+            (window.location.href = items[active].links[0]?.url || "#")
+          }
+        />
         <img
           src={items[(active + 1) % length].image}
           className="karousel-image side right"

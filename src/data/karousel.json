@@ -5,7 +5,7 @@
     "body": "Placeholder for avatar, skal sættes op med customization",
     "links": [
       {
-        "url": "/create",
+        "url": "/avatar",
         "text": "Create Tasks"
       }
     ]
@@ -16,7 +16,7 @@
     "body": "Placeholder for hus, skal sættes op med customization",
     "links": [
       {
-        "url": "/profile",
+        "url": "/hus",
         "text": "View Profile"
       }
     ]
@@ -27,7 +27,7 @@
     "body": "Placeholder for app settings, skal sættes op med customization",
     "links": [
       {
-        "url": "/settings",
+        "url": "/indstillinger/customization",
         "text": "Open Settings"
       }
     ]
@@ -38,7 +38,7 @@
     "body": "Placeholder for træ, skal sættes op med level system",
     "links": [
       {
-        "url": "/shop",
+        "url": "/træ",
         "text": "Visit Shop"
       }
     ]
