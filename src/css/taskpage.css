@@ -1,0 +1,31 @@
+.task-page {
+  border: 0.2rem solid #febe2c;
+  border-radius: 0.2rem;
+  padding: 0.8rem;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-weight: bold;
+  max-width: none;
+  margin: 1.5rem;
+  flex-direction: column;
+}
+
+ul li div {
+    display: flex;
+    justify-content: center;
+}
+
+ul li div button:first-child{
+    border: 0.2rem solid green;
+    background-color: white;
+    font-weight: bold;
+    margin-right: 1rem;
+}
+ul li div button:last-child{
+    border: 0.2rem solid red;
+    background-color: white;
+    font-weight: bold;
+}
