@@ -1,0 +1,249 @@
+.shop-manager-container {
+  padding-top: 80px;
+  padding-bottom: 80px;
+  min-height: 100vh;
+  overflow-y: auto;
+  box-sizing: border-box;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.button-container {
+  position: relative;
+  margin-bottom: 10px;
+}
+
+/* Notification button */
+.notification-btn {
+  width: 100%;
+  height: 50px;
+  background-color: #febe2c;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-bottom: 2rem;
+  margin-top: 2rem;
+  transition: background-color 0.3s ease;
+}
+
+.notification-btn.hidden {
+  display: none;
+}
+
+/* Notification badge */
+.notification-badge {
+  color: white;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 12px;
+  min-width: 16px;
+  text-align: center;
+}
+
+/* Notification popup */
+.notification-popup {
+  position: fixed;
+  top: 100px;
+  right: 20px;
+  background: #fff;
+  border: 1px solid #ccc;
+  padding: 15px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+  max-width: 300px;
+  z-index: 1000;
+}
+
+.notification-item {
+  margin-bottom: 8px;
+  padding: 5px;
+}
+
+.notification-item.unread {
+  background-color: #fff3cd;
+}
+
+.notification-item.read {
+  background-color: #f5f5f5;
+}
+
+.notification-close-btn {
+  margin-top: 10px;
+}
+
+.shop-items ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  width: 100%;
+}
+
+.shop-items li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 2px solid #febe2c;
+  border-radius: 8px;
+  padding: 8px;
+  aspect-ratio: 1;
+  list-style: none;
+  margin: 0;
+  text-align: center;
+  max-width: 180px;
+}
+
+.shop-item-edit {
+  border: 1px solid #ccc;
+  margin: 10px 0;
+  padding: 10px;
+}
+
+.shop-item-image {
+  max-width: 100px;
+}
+
+.shop-items li h4 {
+  margin: 0 0 0.3rem 0;
+  font-size: 0.85rem;
+}
+
+.shop-items li img {
+  max-width: 40px;
+  max-height: 40px;
+  object-fit: cover;
+  margin: 0.3rem 0;
+}
+
+.shop-items li p {
+  margin: 0.1rem 0;
+  font-size: 0.75rem;
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  text-align: center;
+}
+
+.shop-items li button {
+  margin: 0.1rem;
+  padding: 0.3rem 0.5rem;
+  border: 1px solid #febe2c;
+  background-color: #febe2c;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.7rem;
+  flex: 1;
+  max-width: calc(50% - 0.3rem);
+}
+
+.shop-items li button:hover {
+  background-color: #e6a929;
+}
+
+.shop-items li > div {
+  display: flex;
+  width: 100%;
+  gap: 0.3rem;
+  margin-top: auto;
+}
+
+/* ↓↓ Alt på undersiden "Create new reward" ↓↓ */
+
+/*form input[type="text"],
+ form input[type="number"],
+ form textarea {
+  width: 90%;
+  height: 50px;
+  padding: 12px;
+  border: 2px solid #febe2c;
+  border-radius: 4px;
+  font-size: 16px;
+  font-family: inherit;
+  box-sizing: border-box;
+  margin-bottom: 1rem;
+  box-shadow: none;
+  outline: none;
+}
+
+form input[type="text"]:focus,
+form input[type="number"]:focus,
+form textarea:focus {
+  box-shadow: none;
+  outline: none;
+  border: 2px solid #febe2c;
+}
+
+form button[type="submit"] {
+  width: 90%;
+  height: 50px;
+  padding: 12px;
+  border: 2px solid #febe2c;
+  border-radius: 4px;
+  font-size: 16px;
+  font-family: inherit;
+  box-sizing: border-box;
+  margin-bottom: 1rem;
+  margin-left: 0;
+  margin-right: 0;
+  background-color: #febe2c;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}*/
+
+.cancel-btn {
+  width: 90%;
+  height: 50px;
+  padding: 12px;
+  border: 2px solid #ec1111;
+  border-radius: 4px;
+  font-size: 16px;
+  font-family: inherit;
+  box-sizing: border-box;
+  margin-bottom: 1rem;
+  margin-left: 0;
+  margin-right: 0;
+  background-color: #ffffff;
+  color: #000000;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.shop-form {
+  display: none;
+  padding-top: 0;
+}
+
+.shop-form.visible {
+  display: block;
+  width: 100%;
+  padding-top: 0;
+}
+
+.create-reward-btn {
+  width: 100%;
+  height: 50px;
+  background-color: #febe2c;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-bottom: 2rem;
+  margin-top: 2rem;
+  transition: background-color 0.3s ease;
+}
+
+.create-reward-btn.hidden {
+  display: none;
+}
+
+.shop-items.hidden {
+  display: none;
+}

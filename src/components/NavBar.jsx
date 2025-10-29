@@ -25,6 +25,13 @@ export default function NavBar() {
   } else if (location.pathname === "/") {
     return (
       <nav className="top-nav">
+        <NavLink to="/login" className="dropdown-item">
+                <img
+                  src="./public/img/logout.png"
+                  alt="logout"
+                  className="logout-icon"
+                />
+        </NavLink>
         <PointCounter></PointCounter>
         <div className="parent-menu">
           <img
@@ -35,12 +42,10 @@ export default function NavBar() {
           {showDropdown && (
             <div className="dropdown-menu">
               <NavLink to="/login" className="dropdown-item">
-                <img
-                  src="./public/img/logout.png"
-                  alt="logout"
-                  className="logout-icon"
-                />
-                Logout
+                <p className="log-ud">  Log ud ➜] </p>
+              </NavLink>
+              <NavLink to="/indstillinger" className="dropdown-item">
+                <p> Indstillinger ⚙️</p>
               </NavLink>
             </div>
           )}
@@ -61,12 +66,10 @@ export default function NavBar() {
           {showDropdown && (
             <div className="dropdown-menu">
               <NavLink to="/login" className="dropdown-item">
-                <img
-                  src="./public/img/logout.png"
-                  alt="logout"
-                  className="logout-icon"
-                />
-                Logout
+                <p className="log-ud">  Log ud ➜] </p>
+              </NavLink>
+              <NavLink to="/indstillinger" className="dropdown-item">
+                <p> Indstillinger ⚙️</p>
               </NavLink>
             </div>
           )}

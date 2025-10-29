@@ -4,7 +4,7 @@ import ChildShopViewer from "../components/ChildShopViewer";
 import ShopManager from "../components/ShopManager";
 import ChildTaskViewer from "../components/ChildTaskViewer";
 import TaskVerifier from "../components/TaskVerifier";
-import Karousel from "../components/karousel";
+import Karousel from "../components/Karousel";
 import { DataBase, Auth } from "../components/DataBase";
 import { useNavigate } from "react-router";
 import {
@@ -28,6 +28,10 @@ export default function HomePage() {
 
   function handleAddChildClick() {
     navigate("/addchild");
+  }
+
+  function handleShopClick() {
+    navigate("/shop");
   }
 
   // Toggle body class when edit mode changes
@@ -128,7 +132,7 @@ export default function HomePage() {
           {!editMode && (
             <div className="home-boxes">
               <div className="home-box-left">
-                <button className="home-box">
+                <button className="home-box" onClick={handleShopClick}>
                   <img src="../../public/img/shopping-cart.svg" />
                 </button>
                 <button
