@@ -130,9 +130,12 @@ if (userRole === "parent") {
       <h1>Welcome, Parent!</h1>
       <div className="home-boxes">
         <div className="home-left">
-          <h2 className="home-box top">
-            {" "}
-            <img src="../../public/img/shopping-cart.svg" />{" "}
+          <h2
+            className="home-box top"
+            onClick={() => navigate("/shop")}
+            style={{ cursor: "pointer" }}
+          >
+            <img src="../../public/img/shopping-cart.svg" />
           </h2>
           <h2
             className="home-box"
