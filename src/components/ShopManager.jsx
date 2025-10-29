@@ -1,60 +1,38 @@
 import { useState, useEffect } from "react";
 import { Auth, DataBase } from "../components/DataBase";
 import { ref, push, update, remove, onValue } from "firebase/database";
+import "../css/shop.css";
 
-// Function to get the current parent's shop items
 function subscribeToParentShop(onItemsChanged) {
   const user = Auth.currentUser;
-  if (!user) {
-    console.error("No authenticated user for shop management.");
-    onItemsChanged([]);
-    return () => {};
-  }
-
+  if (!user) return () => {};
   const parentShopRef = ref(DataBase, `shop/${user.uid}`);
-
-  const unsubscribe = onValue(parentShopRef, (snapshot) => {
-    const itemsData = snapshot.val();
-    const items = [];
-    if (itemsData) {
-      Object.keys(itemsData).forEach((key) => {
-        items.push({ ...itemsData[key], id: key });
-      });
-    }
+  return onValue(parentShopRef, (snapshot) => {
+    const data = snapshot.val() || {};
+    const items = Object.keys(data).map((key) => ({ ...data[key], id: key }));
     onItemsChanged(items);
   });
-
-  return unsubscribe;
 }
 
-// Function to add a new shop item
 async function addShopItem(newItem) {
   const user = Auth.currentUser;
-  if (!user) throw new Error("No authenticated user.");
-
+  if (!user) return;
   const parentShopRef = ref(DataBase, `shop/${user.uid}`);
   await push(parentShopRef, newItem);
-  console.log("Shop item added successfully!");
 }
 
-// Function to update an existing shop item
 async function updateShopItem(itemId, updatedData) {
   const user = Auth.currentUser;
-  if (!user) throw new Error("No authenticated user.");
-
+  if (!user) return;
   const itemRef = ref(DataBase, `shop/${user.uid}/${itemId}`);
   await update(itemRef, updatedData);
-  console.log(`Shop item ${itemId} updated successfully!`);
 }
 
-// Function to delete a shop item
 async function deleteShopItem(itemId) {
   const user = Auth.currentUser;
-  if (!user) throw new Error("No authenticated user.");
-
+  if (!user) return;
   const itemRef = ref(DataBase, `shop/${user.uid}/${itemId}`);
   await remove(itemRef);
-  console.log(`Shop item ${itemId} deleted successfully!`);
 }
 
 export default function ShopManager() {
@@ -66,52 +44,125 @@ export default function ShopManager() {
     imageUrl: "",
   });
   const [editItem, setEditItem] = useState(null);
+  const [showForm, setShowForm] = useState(false);
+  const [notifications, setNotifications] = useState([]);
+  const [showNotifPopup, setShowNotifPopup] = useState(false);
 
   useEffect(() => {
-    const unsubscribe = subscribeToParentShop(setShopItems);
-    return () => unsubscribe();
+    const unsubscribeShop = subscribeToParentShop(setShopItems);
+    return () => unsubscribeShop();
   }, []);
+
+  useEffect(() => {
+    const user = Auth.currentUser;
+    if (!user) return;
+    const notifRef = ref(DataBase, `notifications/${user.uid}`);
+    const unsubscribeNotif = onValue(notifRef, (snapshot) => {
+      const data = snapshot.val() || {};
+      const notifs = Object.entries(data).map(([id, val]) => ({ id, ...val }));
+      setNotifications(notifs);
+    });
+    return () => unsubscribeNotif();
+  }, []);
+
+  const markAsRead = (notifId) => {
+    const user = Auth.currentUser;
+    if (!user) return;
+    update(ref(DataBase, `notifications/${user.uid}/${notifId}`), {
+      read: true,
+    });
+    setNotifications((prev) =>
+      prev.map((n) => (n.id === notifId ? { ...n, read: true } : n))
+    );
+  };
+
+  const dismissNotification = (notifId) => {
+    const user = Auth.currentUser;
+    if (!user) return;
+    remove(ref(DataBase, `notifications/${user.uid}/${notifId}`));
+    setNotifications((prev) => prev.filter((n) => n.id !== notifId));
+  };
 
   const handleAddItem = async (e) => {
     e.preventDefault();
-    if (!newItem.name || !newItem.price) {
-      alert("Please fill in item name and a point reward");
-      return;
-    }
-    try {
-      await addShopItem(newItem);
-      setNewItem({ name: "", price: 0, description: "", imageUrl: "" });
-    } catch (error) {
-      console.error("Error adding item:", error);
-      alert("Failed to add item: " + error.message);
-    }
+    if (!newItem.name || !newItem.price) return;
+    await addShopItem(newItem);
+    setNewItem({ name: "", price: 0, description: "", imageUrl: "" });
+    setShowForm(false);
   };
 
   const handleUpdateItem = async (itemId, data) => {
-    try {
-      await updateShopItem(itemId, data);
-      setEditItem(null);
-    } catch (error) {
-      console.error("Error updating item:", error);
-      alert("Failed to update item: " + error.message);
-    }
+    await updateShopItem(itemId, data);
+    setEditItem(null);
   };
 
   const handleDeleteItem = async (itemId) => {
-    if (window.confirm("Are you sure you want to delete this item?")) {
-      try {
-        await deleteShopItem(itemId);
-      } catch (error) {
-        console.error("Error deleting item:", error);
-        alert("Failed to delete item: " + error.message);
-      }
+    if (window.confirm("Are you sure?")) {
+      await deleteShopItem(itemId);
     }
   };
 
   return (
-    <div>
-      <h3>Add New Item</h3>
-      <form onSubmit={handleAddItem}>
+    <div className="shop-manager-container">
+      <div className="button-container">
+        <button
+          className={`notification-btn ${showForm ? "hidden" : ""}`}
+          onClick={() => setShowNotifPopup(!showNotifPopup)}
+        >
+          Notifications
+          {notifications.length > 0 && (
+            <span className="notification-badge">{notifications.length}</span>
+          )}
+        </button>
+
+        <button
+          className={`create-reward-btn ${showForm ? "hidden" : ""}`}
+          onClick={() => setShowForm(!showForm)}
+        >
+          Create New Reward
+        </button>
+      </div>
+
+      {showNotifPopup && (
+        <div className="notification-popup">
+          <h4>Notifications</h4>
+          {notifications.length === 0 ? (
+            <p>No notifications</p>
+          ) : (
+            notifications.map((n) => (
+              <div
+                key={n.id}
+                className={`notification-item ${n.read ? "read" : "unread"}`}
+              >
+                <p>
+                  {n.childName} bought {n.itemName} for {n.price} points
+                </p>
+                {!n.read && (
+                  <div>
+                    <button onClick={() => markAsRead(n.id)}>
+                      Mark as Read
+                    </button>
+                    <button onClick={() => dismissNotification(n.id)}>
+                      Dismiss
+                    </button>
+                  </div>
+                )}
+              </div>
+            ))
+          )}
+          <button
+            className="notification-close-btn"
+            onClick={() => setShowNotifPopup(false)}
+          >
+            Close
+          </button>
+        </div>
+      )}
+
+      <form
+        className={`shop-form ${showForm ? "visible" : ""}`}
+        onSubmit={handleAddItem}
+      >
         <input
           type="text"
           placeholder="Item Name"
@@ -130,103 +181,108 @@ export default function ShopManager() {
           required
         />
         <textarea
-          placeholder="Description (Optional)"
+          placeholder="Description"
           value={newItem.description}
           onChange={(e) =>
             setNewItem({ ...newItem, description: e.target.value })
           }
-          required
-        />
+        ></textarea>
         <input
           type="text"
-          placeholder="Image URL (Optional)"
+          placeholder="Image URL"
           value={newItem.imageUrl || ""}
           onChange={(e) => setNewItem({ ...newItem, imageUrl: e.target.value })}
         />
         <button type="submit">Add Item</button>
+        <button
+          type="button"
+          className="cancel-btn"
+          onClick={() => setShowForm(!showForm)}
+        >
+          Cancel
+        </button>
       </form>
 
-      <h3>Current Shop Items</h3>
-      {shopItems.length === 0 ? (
-        <p>You haven't added any items to your shop yet.</p>
-      ) : (
-        <ul>
-          {shopItems.map((item) => (
-            <li
-              key={item.id}
-              style={{
-                border: "1px solid #ccc",
-                margin: "10px 0",
-                padding: "10px",
-              }}
-            >
-              {editItem && editItem.id === item.id ? (
-                // Edit form
-                <form
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    handleUpdateItem(item.id, editItem);
-                  }}
-                >
-                  <input
-                    type="text"
-                    value={editItem.name}
-                    onChange={(e) =>
-                      setEditItem({ ...editItem, name: e.target.value })
-                    }
-                  />
-                  <input
-                    type="number"
-                    value={editItem.price}
-                    onChange={(e) =>
-                      setEditItem({
-                        ...editItem,
-                        price: parseFloat(e.target.value) || 0,
-                      })
-                    }
-                  />
-                  <textarea
-                    value={editItem.description}
-                    onChange={(e) =>
-                      setEditItem({ ...editItem, description: e.target.value })
-                    }
-                  ></textarea>
-                  <input
-                    type="text"
-                    value={editItem.imageUrl || ""}
-                    onChange={(e) =>
-                      setEditItem({ ...editItem, imageUrl: e.target.value })
-                    }
-                  />
-                  <button type="submit">Save</button>
-                  <button type="button" onClick={() => setEditItem(null)}>
-                    Cancel
-                  </button>
-                </form>
-              ) : (
-                <>
-                  <h4>{item.name}</h4>
-                  {item.imageUrl && (
-                    <img
-                      src={item.imageUrl}
-                      alt={item.name}
-                      style={{ maxWidth: "100px", height: "auto" }}
+      <div className={`shop-items ${showForm ? "hidden" : ""}`}>
+        <h3>Current Shop Items</h3>
+        {shopItems.length === 0 ? (
+          <p>No items yet.</p>
+        ) : (
+          <ul>
+            {shopItems.map((item) => (
+              <li key={item.id} className="shop-item-edit">
+                {editItem && editItem.id === item.id ? (
+                  <form
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      handleUpdateItem(item.id, editItem);
+                    }}
+                  >
+                    <input
+                      type="text"
+                      value={editItem.name}
+                      onChange={(e) =>
+                        setEditItem({ ...editItem, name: e.target.value })
+                      }
                     />
-                  )}
-                  <p> {item.description}</p>
-                  <p>Cost: {item.price} points</p>
-                  <button onClick={() => setEditItem({ ...item })}>
-                    Edit
-                  </button>{" "}
-                  <button onClick={() => handleDeleteItem(item.id)}>
-                    Delete
-                  </button>
-                </>
-              )}
-            </li>
-          ))}
-        </ul>
-      )}
+                    <input
+                      type="number"
+                      value={editItem.price}
+                      onChange={(e) =>
+                        setEditItem({
+                          ...editItem,
+                          price: parseFloat(e.target.value) || 0,
+                        })
+                      }
+                    />
+                    <textarea
+                      value={editItem.description}
+                      onChange={(e) =>
+                        setEditItem({
+                          ...editItem,
+                          description: e.target.value,
+                        })
+                      }
+                    ></textarea>
+                    <input
+                      type="text"
+                      value={editItem.imageUrl || ""}
+                      onChange={(e) =>
+                        setEditItem({ ...editItem, imageUrl: e.target.value })
+                      }
+                    />
+                    <button type="submit">Save</button>
+                    <button type="button" onClick={() => setEditItem(null)}>
+                      Cancel
+                    </button>
+                  </form>
+                ) : (
+                  <>
+                    <h4>{item.name}</h4>
+                    {item.imageUrl && (
+                      <img
+                        src={item.imageUrl}
+                        alt={item.name}
+                        className="shop-item-image"
+                      />
+                    )}
+                    <p>{item.description}</p>
+                    <p>Cost: {item.price} points</p>
+                    <div>
+                      <button onClick={() => setEditItem({ ...item })}>
+                        Edit
+                      </button>
+                      <button onClick={() => handleDeleteItem(item.id)}>
+                        Delete
+                      </button>
+                    </div>
+                  </>
+                )}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     </div>
   );
 }

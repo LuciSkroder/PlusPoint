@@ -29,52 +29,102 @@ body {
   margin-bottom: 2rem;
 }
 
-.forældre-home > section {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  flex: 1;
-  padding-bottom: 5vh;
+.add-child-btn {
+  background-color: var(--accent-color);
+  margin: 3rem 0rem;
 }
+
 
 .home-boxes {
   display: flex;
-  flex-direction: row;
-  gap: 1rem;
-  height: 35vh;
-  padding-top: 2vh;
-  overflow: hidden;
-  padding-bottom: 1vh;
+  justify-content: space-around;
+  align-items: stretch;
+  height: 20rem;
 }
 
-.home-boxes button {
-  background-color: var(--hvid); /**/
-  border-radius: 1.5rem;
-  margin-left: 0.5vw;
-  box-shadow: 0 2px 1px rgba(0, 0, 0, 0.6);
-  border: 0.1px solid rgba(0, 0, 0, 0.2);
-}
-
-.home-box-left button {
-  border-radius: 1rem;
-}
-
-.home-box-left,
-.home-box-right {
+.home-box {
+  border: 0.2rem solid #febe2c;
+  border-radius: 0.2rem;
+  padding: 1rem;
+  background-color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
   display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-weight: bold;
+  margin: 0rem 0rem 0rem 0rem;
+  height: 100%;
 }
 
-.home-box-left {
+.home-box img {
+  height: 3.8rem;
+}
+
+.task-box {
+  border: 0.2rem solid #febe2c;
+  border-radius: 0.2rem;
+  padding: 0rem 0.8rem;
+  background-color: white;
+  display: flex;
+  text-align: center;
+  font-weight: bold;
   flex-direction: column;
-  width: 50vw;
-  justify-content: space-between;
-  gap: 2rem;
+  width: 65%;
+  margin: 1rem 0.5rem 0rem 0.5rem;
+  align-items: center;
 }
 
-.home-box-left button {
-  flex: 1;
+
+.home-left {
+  display: flex;
+  flex-direction: column;
+  border-radius: 0.2rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  align-items: stretch;
+  text-align: center;
+  font-weight: bold;
+  margin: 1rem 0.5rem 0rem 0.5rem;
+  width: 35%;
+}
+
+
+.top {
+  margin-bottom: 1rem;
+}
+
+
+
+.task-box ul {
+    border: solid 0.1rem #000000;
+    width: 95%;
+}
+
+.task-box ul li {
+    padding: 0.5rem;
+}
+
+.task-box ul p {
+    display: none;
+}
+
+.navn-point {
+    display: flex;
+    justify-content: space-between;
+}
+
+
+.task-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-top: 0.2rem;
+}
+
+.task-box h3 {
+    margin: 0;
 }
 
 .home-box img {

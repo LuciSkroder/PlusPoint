@@ -45,10 +45,11 @@ export default function HomePage() {
   }, [editMode]);
 
   useEffect(() => {
+    // Listener for Firebase Auth state changes
     const unsubscribeAuth = Auth.onAuthStateChanged(async (user) => {
-      setLoading(true);
+      setLoading(true); // Start loading when auth state changes
       setError(null);
-      setChildrenForParent([]);
+      setChildrenForParent([]); // Clear children list
 
       if (!user) {
         setUserRole(null);
@@ -211,4 +212,5 @@ export default function HomePage() {
       )}
     </main>
   );
+}
 }

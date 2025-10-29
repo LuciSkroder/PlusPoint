@@ -1,0 +1,65 @@
+.shop-items ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.shop-items li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.shop-items li p {
+  margin: 0.25rem 0;
+  font-size: 0.9rem;
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+}
+
+.shop-items li button {
+  margin: 0.25rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid #febe2c;
+  background-color: #febe2c;
+  color: white;
+  border-radius: 4px;
+}
+
+.shop-form {
+  display: none;
+  padding-top: 6rem;
+}
+
+.shop-form.visible {
+  display: block;
+  width: 100%;
+  padding-top: 6rem;
+}
+
+.create-reward-btn {
+  width: 100%;
+  height: 50px;
+  background-color: #febe2c;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-bottom: 2rem;
+  margin-top: 6rem;
+  transition: background-color 0.3s ease;
+}
+
+.create-reward-btn.hidden {
+  display: none;
+}
+
+.shop-items.hidden {
+  display: none;
+}
