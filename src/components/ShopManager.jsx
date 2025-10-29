@@ -5,44 +5,32 @@ import "../css/shop.css";
 
 function subscribeToParentShop(onItemsChanged) {
   const user = Auth.currentUser;
-  if (!user) {
-    onItemsChanged([]);
-    return () => {};
-  }
-
+  if (!user) return () => {};
   const parentShopRef = ref(DataBase, `shop/${user.uid}`);
-
-  const unsubscribe = onValue(parentShopRef, (snapshot) => {
-    const itemsData = snapshot.val();
-    const items = [];
-    if (itemsData) {
-      Object.keys(itemsData).forEach((key) => {
-        items.push({ ...itemsData[key], id: key });
-      });
-    }
+  return onValue(parentShopRef, (snapshot) => {
+    const data = snapshot.val() || {};
+    const items = Object.keys(data).map((key) => ({ ...data[key], id: key }));
     onItemsChanged(items);
   });
-
-  return unsubscribe;
 }
 
 async function addShopItem(newItem) {
   const user = Auth.currentUser;
-  if (!user) throw new Error("No authenticated user.");
+  if (!user) return;
   const parentShopRef = ref(DataBase, `shop/${user.uid}`);
   await push(parentShopRef, newItem);
 }
 
 async function updateShopItem(itemId, updatedData) {
   const user = Auth.currentUser;
-  if (!user) throw new Error("No authenticated user.");
+  if (!user) return;
   const itemRef = ref(DataBase, `shop/${user.uid}/${itemId}`);
   await update(itemRef, updatedData);
 }
 
 async function deleteShopItem(itemId) {
   const user = Auth.currentUser;
-  if (!user) throw new Error("No authenticated user.");
+  if (!user) return;
   const itemRef = ref(DataBase, `shop/${user.uid}/${itemId}`);
   await remove(itemRef);
 }
@@ -58,92 +46,106 @@ export default function ShopManager() {
   const [editItem, setEditItem] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [notifications, setNotifications] = useState([]);
-  const [showBadge, setShowBadge] = useState(false);
+  const [showNotifPopup, setShowNotifPopup] = useState(false);
 
   useEffect(() => {
-    const unsubscribe = subscribeToParentShop(setShopItems);
-    return () => unsubscribe();
+    const unsubscribeShop = subscribeToParentShop(setShopItems);
+    return () => unsubscribeShop();
   }, []);
 
   useEffect(() => {
     const user = Auth.currentUser;
     if (!user) return;
-
     const notifRef = ref(DataBase, `notifications/${user.uid}`);
-    const unsubscribe = onValue(notifRef, (snapshot) => {
+    const unsubscribeNotif = onValue(notifRef, (snapshot) => {
       const data = snapshot.val() || {};
       const notifs = Object.entries(data).map(([id, val]) => ({ id, ...val }));
+      const unread = notifs.filter((n) => !n.read);
+      if (unread.length > 0) setShowNotifPopup(true);
       setNotifications(notifs);
-      if (notifs.length > 0) setShowBadge(true);
     });
-
-    return () => unsubscribe();
+    return () => unsubscribeNotif();
   }, []);
+
+  const markAsRead = (notifId) => {
+    const user = Auth.currentUser;
+    if (!user) return;
+    update(ref(DataBase, `notifications/${user.uid}/${notifId}`), {
+      read: true,
+    });
+    setShowNotifPopup(false);
+  };
 
   const handleAddItem = async (e) => {
     e.preventDefault();
-    if (!newItem.name || !newItem.price) {
-      alert("Please fill in item name and a point reward");
-      return;
-    }
-    try {
-      await addShopItem(newItem);
-      setNewItem({ name: "", price: 0, description: "", imageUrl: "" });
-      setShowForm(false);
-    } catch (error) {
-      alert("Failed to add item: " + error.message);
-    }
+    if (!newItem.name || !newItem.price) return;
+    await addShopItem(newItem);
+    setNewItem({ name: "", price: 0, description: "", imageUrl: "" });
+    setShowForm(false);
   };
 
   const handleUpdateItem = async (itemId, data) => {
-    try {
-      await updateShopItem(itemId, data);
-      setEditItem(null);
-    } catch (error) {
-      alert("Failed to update item: " + error.message);
-    }
+    await updateShopItem(itemId, data);
+    setEditItem(null);
   };
 
   const handleDeleteItem = async (itemId) => {
-    if (window.confirm("Are you sure you want to delete this item?")) {
-      try {
-        await deleteShopItem(itemId);
-      } catch (error) {
-        alert("Failed to delete item: " + error.message);
-      }
+    if (window.confirm("Are you sure?")) {
+      await deleteShopItem(itemId);
     }
-  };
-
-  const toggleForm = () => {
-    setShowForm(!showForm);
-  };
-
-  const handleBadgeClick = () => {
-    setShowBadge(false);
-    alert("You have new notifications!");
   };
 
   return (
     <div>
-      <div className="notification-container">
-        <button className="notif-button" onClick={handleBadgeClick}>
-          🔔
-          {showBadge && (
-            <span className="notif-badge">{notifications.length}</span>
-          )}
+      <div style={{ position: "relative", marginBottom: "10px" }}>
+        <button onClick={() => setShowForm(!showForm)}>
+          Create New Reward
         </button>
+        {notifications.some((n) => !n.read) && (
+          <span
+            style={{
+              position: "absolute",
+              top: "-5px",
+              right: "-5px",
+              background: "red",
+              color: "white",
+              borderRadius: "50%",
+              padding: "2px 6px",
+              fontSize: "12px",
+            }}
+          >
+            {notifications.filter((n) => !n.read).length}
+          </span>
+        )}
       </div>
 
-      <button
-        className={`create-reward-btn ${showForm ? "hidden" : ""}`}
-        onClick={toggleForm}
-      >
-        Create New Reward
-      </button>
-      <form
-        onSubmit={handleAddItem}
-        className={`shop-form ${showForm ? "visible" : ""}`}
-      >
+      {showNotifPopup && (
+        <div
+          style={{
+            position: "fixed",
+            bottom: "20px",
+            right: "20px",
+            background: "#fff",
+            border: "1px solid #ccc",
+            padding: "15px",
+            boxShadow: "0 0 10px rgba(0,0,0,0.3)",
+          }}
+        >
+          <h4>New Purchase!</h4>
+          {notifications
+            .filter((n) => !n.read)
+            .map((n) => (
+              <div key={n.id} style={{ marginBottom: "8px" }}>
+                <p>
+                  {n.childName} bought {n.itemName} for {n.price} points
+                </p>
+                <button onClick={() => markAsRead(n.id)}>Dismiss</button>
+              </div>
+            ))}
+        </div>
+      )}
+
+      <form className={showForm ? "visible" : ""} onSubmit={handleAddItem}>
         <input
           type="text"
           placeholder="Item Name"
@@ -162,29 +164,25 @@ export default function ShopManager() {
           required
         />
         <textarea
-          placeholder="Description (Optional)"
+          placeholder="Description"
           value={newItem.description}
           onChange={(e) =>
             setNewItem({ ...newItem, description: e.target.value })
           }
-          required
-        />
+        ></textarea>
         <input
           type="text"
-          placeholder="Image URL (Optional)"
+          placeholder="Image URL"
           value={newItem.imageUrl || ""}
           onChange={(e) => setNewItem({ ...newItem, imageUrl: e.target.value })}
         />
         <button type="submit">Add Item</button>
-        <button type="button" className="cancel-btn" onClick={toggleForm}>
-          Cancel
-        </button>
       </form>
 
       <div className={`shop-items ${showForm ? "hidden" : ""}`}>
         <h3>Current Shop Items</h3>
         {shopItems.length === 0 ? (
-          <p>You haven't added any items to your shop yet.</p>
+          <p>No items yet.</p>
         ) : (
           <ul>
             {shopItems.map((item) => (
@@ -248,14 +246,14 @@ export default function ShopManager() {
                       <img
                         src={item.imageUrl}
                         alt={item.name}
-                        style={{ maxWidth: "100px", height: "auto" }}
+                        style={{ maxWidth: "100px" }}
                       />
                     )}
                     <p>{item.description}</p>
                     <p>Cost: {item.price} points</p>
                     <button onClick={() => setEditItem({ ...item })}>
                       Edit
-                    </button>{" "}
+                    </button>
                     <button onClick={() => handleDeleteItem(item.id)}>
                       Delete
                     </button>
