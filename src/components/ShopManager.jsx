@@ -76,6 +76,13 @@ export default function ShopManager() {
     );
   };
 
+  const dismissNotification = (notifId) => {
+    const user = Auth.currentUser;
+    if (!user) return;
+    remove(ref(DataBase, `notifications/${user.uid}/${notifId}`));
+    setNotifications((prev) => prev.filter((n) => n.id !== notifId));
+  };
+
   const handleAddItem = async (e) => {
     e.preventDefault();
     if (!newItem.name || !newItem.price) return;
@@ -134,6 +141,7 @@ export default function ShopManager() {
                 </p>
                 {!n.read && (
                   <button onClick={() => markAsRead(n.id)}>Mark as Read</button>
+                  <button onClick={() => dismissNotification(n.id)}>Dismiss</button>
                 )}
               </div>
             ))
