@@ -9,115 +9,84 @@ import {
   serverTimestamp,
 } from "firebase/database";
 
-// Helper function to get child's parent UID
 async function getChildParentUid(childUid) {
-  const childProfileRef = ref(
-    DataBase,
-    `childrenProfiles/${childUid}/parentUid`
+  const snapshot = await get(
+    ref(DataBase, `childrenProfiles/${childUid}/parentUid`)
   );
-  const snapshot = await get(childProfileRef);
-  return snapshot.val(); // Returns parentUid or null
+  return snapshot.val();
 }
 
-// Helper function to get child's current points
 async function getChildPoints(childUid) {
-  const pointsRef = ref(DataBase, `childrenProfiles/${childUid}/points`);
-  const snapshot = await get(pointsRef);
-  return snapshot.val() || 0; // Return points or 0 if not set
+  const snapshot = await get(
+    ref(DataBase, `childrenProfiles/${childUid}/points`)
+  );
+  return snapshot.val() || 0;
 }
 
 async function buyShopItem(item, parentUid) {
   const user = Auth.currentUser;
   if (!user) throw new Error("No authenticated user.");
-  if (!parentUid) throw new Error("Parent UID not available for purchase.");
+  if (!parentUid) throw new Error("Parent UID not available.");
 
   const childUid = user.uid;
   const itemPrice = item.price;
 
-  try {
-    const currentPoints = await getChildPoints(childUid);
-
-    if (currentPoints < itemPrice) {
-      alert(
-        `You don't have enough points to buy ${item.name}! You need ${itemPrice} but only have ${currentPoints}.`
-      );
-      return;
-    }
-
-    // Deduct points
-    const newPoints = currentPoints - itemPrice;
-    const childPointsRef = ref(DataBase, `childrenProfiles/${childUid}`);
-    await update(childPointsRef, { points: newPoints });
-
-    // Record purchase
-    const purchasesRef = ref(
-      DataBase,
-      `childrenProfiles/${childUid}/purchases`
-    );
-    await push(purchasesRef, {
-      itemId: item.id,
-      itemName: item.name,
-      price: itemPrice,
-      timestamp: serverTimestamp(),
-      parentUid: parentUid,
-    });
-
-    alert(
-      `Successfully bought ${item.name} for ${itemPrice} points! You now have ${newPoints} points.`
-    );
-    console.log(
-      `Child ${childUid} bought ${item.name}. New points: ${newPoints}.`
-    );
-
-    // **Parent Notification (Prototype Simplification)**
-    // For this prototype, we're skipping direct client-side parent notification.
-    // In a real app, this is where a Cloud Function would trigger an FCM message to the parent.
-    // For now, the parent could see the purchase in their child's profile in the database.
-  } catch (error) {
-    console.error("Error during buy operation:", error);
-    alert("Failed to complete purchase: " + error.message);
+  const currentPoints = await getChildPoints(childUid);
+  if (currentPoints < itemPrice) {
+    alert(`Not enough points to buy ${item.name}`);
+    return;
   }
+
+  await update(ref(DataBase, `childrenProfiles/${childUid}`), {
+    points: currentPoints - itemPrice,
+  });
+
+  const purchasesRef = ref(DataBase, `childrenProfiles/${childUid}/purchases`);
+  await push(purchasesRef, {
+    itemId: item.id,
+    itemName: item.name,
+    price: itemPrice,
+    timestamp: serverTimestamp(),
+    parentUid,
+  });
+
+  await push(ref(DataBase, `notifications/${parentUid}`), {
+    type: "purchase",
+    childUid,
+    childName: user.displayName || "Unknown Child",
+    itemName: item.name,
+    price: itemPrice,
+    timestamp: serverTimestamp(),
+    read: false,
+  });
+
+  alert(`Successfully bought ${item.name}!`);
 }
 
 function subscribeToChildShop(onItemsChanged) {
   const user = Auth.currentUser;
   if (!user) {
-    console.error("No authenticated user (child) for shop viewing.");
     onItemsChanged([]);
     return () => {};
   }
 
-  let unsubscribeShop = () => {};
-
-  getChildParentUid(user.uid)
-    .then((parentUid) => {
-      if (parentUid) {
-        const parentShopRef = ref(DataBase, `shop/${parentUid}`);
-        unsubscribeShop = onValue(parentShopRef, (snapshot) => {
-          const itemsData = snapshot.val();
-          const items = [];
-          if (itemsData) {
-            Object.keys(itemsData).forEach((key) => {
-              items.push({ ...itemsData[key], id: key });
-            });
-          }
-          onItemsChanged(items);
-        });
-      } else {
-        console.warn(
-          `No parent UID found for child ${user.uid}. Cannot display shop.`
-        );
-        onItemsChanged([]);
-      }
-    })
-    .catch((error) => {
-      console.error("Error fetching parent UID:", error);
+  let unsubscribe = () => {};
+  getChildParentUid(user.uid).then((parentUid) => {
+    if (parentUid) {
+      const parentShopRef = ref(DataBase, `shop/${parentUid}`);
+      unsubscribe = onValue(parentShopRef, (snapshot) => {
+        const data = snapshot.val() || {};
+        const items = Object.keys(data).map((key) => ({
+          ...data[key],
+          id: key,
+        }));
+        onItemsChanged(items);
+      });
+    } else {
       onItemsChanged([]);
-    });
-
-  return () => {
-    unsubscribeShop();
-  };
+    }
+  });
+  return () => unsubscribe();
 }
 
 export default function ChildShopViewer() {
@@ -127,34 +96,29 @@ export default function ChildShopViewer() {
 
   useEffect(() => {
     const user = Auth.currentUser;
-    if (user) {
-      const pointsRef = ref(DataBase, `childrenProfiles/${user.uid}/points`);
-      const unsubscribePoints = onValue(pointsRef, (snapshot) => {
-        setChildPoints(snapshot.val() || 0);
-      });
+    if (!user) return;
 
-      getChildParentUid(user.uid).then((fetchedParentUid) => {
-        if (fetchedParentUid) {
-          setParentUid(fetchedParentUid);
-          const unsubscribeShop = subscribeToChildShop(setShopItems);
-          return () => {
-            unsubscribePoints();
-            unsubscribeShop();
-          };
-        } else {
+    const pointsRef = ref(DataBase, `childrenProfiles/${user.uid}/points`);
+    const unsubscribePoints = onValue(pointsRef, (snapshot) => {
+      setChildPoints(snapshot.val() || 0);
+    });
+
+    getChildParentUid(user.uid).then((uid) => {
+      if (uid) {
+        setParentUid(uid);
+        const unsubscribeShop = subscribeToChildShop(setShopItems);
+        return () => {
           unsubscribePoints();
-          console.warn("Parent UID not found for this child.");
-        }
-      });
-    } else {
-      setShopItems([]);
-      setChildPoints(0);
-    }
-    return () => {};
+          unsubscribeShop();
+        };
+      } else {
+        unsubscribePoints();
+      }
+    });
   }, []);
 
   const handleBuyItem = async (item) => {
-    // Pass the parentUid to the buyShopItem function
+    if (!parentUid) return;
     await buyShopItem(item, parentUid);
   };
 
@@ -165,7 +129,7 @@ export default function ChildShopViewer() {
         Your current points: <strong>{childPoints}</strong>
       </p>
       {shopItems.length === 0 ? (
-        <p>Your parent hasn't added any items to the shop yet.</p>
+        <p>Your parent hasn't added any items yet.</p>
       ) : (
         <ul style={{ listStyle: "none", padding: 0 }}>
           {shopItems.map((item) => (
@@ -178,7 +142,7 @@ export default function ChildShopViewer() {
               </p>
               <button
                 onClick={() => handleBuyItem(item)}
-                disabled={childPoints < item.price} // Disable button if not enough points
+                disabled={childPoints < item.price}
               >
                 Buy
               </button>
