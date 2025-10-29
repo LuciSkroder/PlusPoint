@@ -4,7 +4,7 @@ import ChildShopViewer from "../components/ChildShopViewer";
 import ShopManager from "../components/ShopManager";
 import ChildTaskViewer from "../components/ChildTaskViewer";
 import TaskVerifier from "../components/TaskVerifier";
-import Karousel from "../components/karousel";
+import Karousel from "../components/Karousel";
 import { DataBase, Auth } from "../components/DataBase";
 import { useNavigate } from "react-router";
 import {
