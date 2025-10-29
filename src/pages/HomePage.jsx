@@ -30,6 +30,20 @@ export default function HomePage() {
     navigate("/addchild");
   }
 
+  // Toggle body class when edit mode changes
+  useEffect(() => {
+    if (editMode) {
+      document.body.classList.add("edit-mode-active");
+    } else {
+      document.body.classList.remove("edit-mode-active");
+    }
+
+    // Cleanup: remove class when component unmounts
+    return () => {
+      document.body.classList.remove("edit-mode-active");
+    };
+  }, [editMode]);
+
   useEffect(() => {
     const unsubscribeAuth = Auth.onAuthStateChanged(async (user) => {
       setLoading(true);

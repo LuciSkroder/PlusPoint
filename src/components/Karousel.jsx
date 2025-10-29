@@ -26,7 +26,6 @@ export default function Karousel({ items = carouselData, onEditModeChange }) {
   return (
     <>
       <div className={`karousel-box ${editMode ? "edit-mode" : ""}`}>
-        <img alt="" className="karousel-background" />
         <div className="karousel-main">
           <img
             src={items[(active - 1 + length) % length].image}
@@ -69,7 +68,24 @@ export default function Karousel({ items = carouselData, onEditModeChange }) {
       {editMode && (
         <div className="customize-box-wrapper">
           <div className="customize-box">
-            <p>test</p>
+            <div className="custom-buttons">
+              <button>1</button>
+              <button>2</button>
+              <button>3</button>
+              <button>4</button>
+              <button>5</button>
+              <button>6</button>
+              <button>7</button>
+              <button>8</button>
+              <button>9</button>
+              <button>10</button>
+              <button>11</button>
+              <button>12</button>
+              <button>13</button>
+              <button>14</button>
+              <button>15</button>
+              <button>16</button>
+            </div>
           </div>
         </div>
       )}
