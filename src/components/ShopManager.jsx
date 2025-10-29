@@ -140,8 +140,14 @@ export default function ShopManager() {
                   {n.childName} bought {n.itemName} for {n.price} points
                 </p>
                 {!n.read && (
-                  <button onClick={() => markAsRead(n.id)}>Mark as Read</button>
-                  <button onClick={() => dismissNotification(n.id)}>Dismiss</button>
+                  <div>
+                    <button onClick={() => markAsRead(n.id)}>
+                      Mark as Read
+                    </button>
+                    <button onClick={() => dismissNotification(n.id)}>
+                      Dismiss
+                    </button>
+                  </div>
                 )}
               </div>
             ))
