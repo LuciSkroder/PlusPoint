@@ -71,6 +71,9 @@ export default function ShopManager() {
     update(ref(DataBase, `notifications/${user.uid}/${notifId}`), {
       read: true,
     });
+    setNotifications((prev) =>
+      prev.map((n) => (n.id === notifId ? { ...n, read: true } : n))
+    );
   };
 
   const handleAddItem = async (e) => {
