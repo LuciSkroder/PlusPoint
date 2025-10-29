@@ -25,6 +25,13 @@ export default function NavBar() {
   } else if (location.pathname === "/") {
     return (
       <nav className="top-nav">
+        <NavLink to="/login" className="dropdown-item">
+                <img
+                  src="./public/img/logout.png"
+                  alt="logout"
+                  className="logout-icon"
+                />
+        </NavLink>
         <PointCounter></PointCounter>
         <div className="parent-menu">
           <img
@@ -68,6 +75,9 @@ export default function NavBar() {
                 />
                 Logout
               </NavLink>
+              <div className="dropdown-item">
+                <p>⚙️ Indstillinger</p>
+              </div>
             </div>
           )}
         </div>
