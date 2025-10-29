@@ -140,7 +140,7 @@ export default function HomePage() {
               </div>
               <div className="home-box-right">
                 <button>
-                  <TaskVerifier />
+                  <ChildTaskViewer />
                 </button>
               </div>
             </div>
