@@ -60,8 +60,6 @@ export default function ShopManager() {
     const unsubscribeNotif = onValue(notifRef, (snapshot) => {
       const data = snapshot.val() || {};
       const notifs = Object.entries(data).map(([id, val]) => ({ id, ...val }));
-      const unread = notifs.filter((n) => !n.read);
-      if (unread.length > 0) setShowNotifPopup(true);
       setNotifications(notifs);
     });
     return () => unsubscribeNotif();
@@ -73,7 +71,6 @@ export default function ShopManager() {
     update(ref(DataBase, `notifications/${user.uid}/${notifId}`), {
       read: true,
     });
-    setShowNotifPopup(false);
   };
 
   const handleAddItem = async (e) => {
@@ -96,56 +93,61 @@ export default function ShopManager() {
   };
 
   return (
-    <div>
-      <div style={{ position: "relative", marginBottom: "10px" }}>
-        <button onClick={() => setShowForm(!showForm)}>
+    <div className="shop-manager-container">
+      <div className="button-container">
+        <button
+          className="notification-btn"
+          onClick={() => setShowNotifPopup(!showNotifPopup)}
+        >
+          Notifications
+          {notifications.some((n) => !n.read) && (
+            <span className="notification-badge">
+              {notifications.filter((n) => !n.read).length}
+            </span>
+          )}
+        </button>
+
+        <button
+          className={`create-reward-btn ${showForm ? "hidden" : ""}`}
+          onClick={() => setShowForm(!showForm)}
+        >
           Create New Reward
         </button>
-        {notifications.some((n) => !n.read) && (
-          <span
-            style={{
-              position: "absolute",
-              top: "-5px",
-              right: "-5px",
-              background: "red",
-              color: "white",
-              borderRadius: "50%",
-              padding: "2px 6px",
-              fontSize: "12px",
-            }}
-          >
-            {notifications.filter((n) => !n.read).length}
-          </span>
-        )}
       </div>
 
       {showNotifPopup && (
-        <div
-          style={{
-            position: "fixed",
-            bottom: "20px",
-            right: "20px",
-            background: "#fff",
-            border: "1px solid #ccc",
-            padding: "15px",
-            boxShadow: "0 0 10px rgba(0,0,0,0.3)",
-          }}
-        >
-          <h4>New Purchase!</h4>
-          {notifications
-            .filter((n) => !n.read)
-            .map((n) => (
-              <div key={n.id} style={{ marginBottom: "8px" }}>
+        <div className="notification-popup">
+          <h4>Notifications</h4>
+          {notifications.length === 0 ? (
+            <p>No notifications</p>
+          ) : (
+            notifications.map((n) => (
+              <div
+                key={n.id}
+                className={`notification-item ${n.read ? "read" : "unread"}`}
+              >
                 <p>
                   {n.childName} bought {n.itemName} for {n.price} points
                 </p>
-                <button onClick={() => markAsRead(n.id)}>Dismiss</button>
+                {!n.read && (
+                  <button onClick={() => markAsRead(n.id)}>Mark as Read</button>
+                )}
               </div>
-            ))}
+            ))
+          )}
+          <button
+            className="notification-close-btn"
+            onClick={() => setShowNotifPopup(false)}
+          >
+            Close
+          </button>
         </div>
       )}
 
-      <form className={showForm ? "visible" : ""} onSubmit={handleAddItem}>
+      <form
+        className={`shop-form ${showForm ? "visible" : ""}`}
+        onSubmit={handleAddItem}
+      >
         <input
           type="text"
           placeholder="Item Name"
@@ -177,6 +179,13 @@ export default function ShopManager() {
           onChange={(e) => setNewItem({ ...newItem, imageUrl: e.target.value })}
         />
         <button type="submit">Add Item</button>
+        <button
+          type="button"
+          className="cancel-btn"
+          onClick={() => setShowForm(!showForm)}
+        >
+          Cancel
+        </button>
       </form>
 
       <div className={`shop-items ${showForm ? "hidden" : ""}`}>
@@ -186,14 +195,7 @@ export default function ShopManager() {
         ) : (
           <ul>
             {shopItems.map((item) => (
-              <li
-                key={item.id}
-                style={{
-                  border: "1px solid #ccc",
-                  margin: "10px 0",
-                  padding: "10px",
-                }}
-              >
+              <li key={item.id} className="shop-item-edit">
                 {editItem && editItem.id === item.id ? (
                   <form
                     onSubmit={(e) => {
@@ -246,17 +248,19 @@ export default function ShopManager() {
                       <img
                         src={item.imageUrl}
                         alt={item.name}
-                        style={{ maxWidth: "100px" }}
+                        className="shop-item-image"
                       />
                     )}
                     <p>{item.description}</p>
                     <p>Cost: {item.price} points</p>
-                    <button onClick={() => setEditItem({ ...item })}>
-                      Edit
-                    </button>
-                    <button onClick={() => handleDeleteItem(item.id)}>
-                      Delete
-                    </button>
+                    <div>
+                      <button onClick={() => setEditItem({ ...item })}>
+                        Edit
+                      </button>
+                      <button onClick={() => handleDeleteItem(item.id)}>
+                        Delete
+                      </button>
+                    </div>
                   </>
                 )}
               </li>
