@@ -106,14 +106,12 @@ export default function ShopManager() {
     <div className="shop-manager-container">
       <div className="button-container">
         <button
-          className="notification-btn"
+          className={`notification-btn ${showForm ? "hidden" : ""}`}
           onClick={() => setShowNotifPopup(!showNotifPopup)}
         >
           Notifications
-          {notifications.some((n) => !n.read) && (
-            <span className="notification-badge">
-              {notifications.filter((n) => !n.read).length}
-            </span>
+          {notifications.length > 0 && (
+            <span className="notification-badge">{notifications.length}</span>
           )}
         </button>
 

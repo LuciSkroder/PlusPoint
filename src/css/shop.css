@@ -29,6 +29,10 @@
   transition: background-color 0.3s ease;
 }
 
+.notification-btn.hidden {
+  display: none;
+}
+
 /* Notification badge */
 .notification-badge {
   color: white;
