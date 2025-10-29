@@ -5,19 +5,8 @@
     "body": "Placeholder for avatar, skal sættes op med customization",
     "links": [
       {
-        "url": "/create",
+        "url": "/avatar",
         "text": "Create Tasks"
-      }
-    ]
-  },
-  {
-    "image": "../public/img/træ-1.png",
-    "name": "Træ",
-    "body": "Placeholder for træ, skal sættes op med level system",
-    "links": [
-      {
-        "url": "/shop",
-        "text": "Visit Shop"
       }
     ]
   },
@@ -27,7 +16,7 @@
     "body": "Placeholder for hus, skal sættes op med customization",
     "links": [
       {
-        "url": "/profile",
+        "url": "/hus",
         "text": "View Profile"
       }
     ]
@@ -38,8 +27,19 @@
     "body": "Placeholder for app settings, skal sættes op med customization",
     "links": [
       {
-        "url": "/settings",
+        "url": "/indstillinger",
         "text": "Open Settings"
+      }
+    ]
+  },
+  {
+    "image": "../public/img/træ-1.png",
+    "name": "Træ",
+    "body": "Placeholder for træ, skal sættes op med level system",
+    "links": [
+      {
+        "url": "/træ",
+        "text": "Visit Shop"
       }
     ]
   }

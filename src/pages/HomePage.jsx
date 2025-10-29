@@ -24,10 +24,25 @@ export default function HomePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showDetails, setShowDetails] = useState(null);
+  const [editMode, setEditMode] = useState(false);
 
   function handleAddChildClick() {
     navigate("/addchild");
   }
+
+  // Toggle body class when edit mode changes
+  useEffect(() => {
+    if (editMode) {
+      document.body.classList.add("edit-mode-active");
+    } else {
+      document.body.classList.remove("edit-mode-active");
+    }
+
+    // Cleanup: remove class when component unmounts
+    return () => {
+      document.body.classList.remove("edit-mode-active");
+    };
+  }, [editMode]);
 
   useEffect(() => {
     const unsubscribeAuth = Auth.onAuthStateChanged(async (user) => {
@@ -110,27 +125,32 @@ export default function HomePage() {
     <main className="page">
       {userRole === "child" && (
         <section className="child-home">
-          <div className="home-boxes">
-            <div className="home-box-left">
-              <button className="home-box">
-                <img src="../../public/img/shopping-cart.svg" />
-              </button>
-              <button className="home-box" onClick={() => navigate("/create")}>
-                <img src="../../public/img/to-do.svg" />
-              </button>
+          {!editMode && (
+            <div className="home-boxes">
+              <div className="home-box-left">
+                <button className="home-box">
+                  <img src="../../public/img/shopping-cart.svg" />
+                </button>
+                <button
+                  className="home-box"
+                  onClick={() => navigate("/create")}
+                >
+                  <img src="../../public/img/to-do.svg" />
+                </button>
+              </div>
+              <div className="home-box-right">
+                <button>
+                  <TaskVerifier />
+                </button>
+              </div>
             </div>
-            <div className="home-box-right">
-              <button>
-                <ChildTaskViewer />
-              </button>
-            </div>
-          </div>
-          <Karousel />
+          )}
+          <Karousel onEditModeChange={setEditMode} />
         </section>
       )}
 
       {!loading && !error && userRole === "parent" && (
-        <main>
+        <section className="forældre-home">
           <div className="home-boxes">
             <div className="home-box-left">
               <button className="home-box">
@@ -147,45 +167,47 @@ export default function HomePage() {
               <button>{<TaskVerifier />}</button>
             </div>
           </div>
-          <h2>Your Child Accounts:</h2>
-          {childrenForParent.length === 0 ? (
-            <p>No child accounts found linked to your profile.</p>
-          ) : (
-            <section className="grid">
-              {childrenForParent.map((childUser) => (
-                <div
-                  key={childUser.id}
-                  className="user-card"
-                  onClick={() =>
-                    setShowDetails(
-                      childUser.id === showDetails ? null : childUser.id
-                    )
-                  }
-                  style={{ cursor: "pointer" }}
-                >
-                  <img
-                    src="/img/icon-yellow.svg"
-                    alt="User Avatar"
-                    className="user-avatar"
-                  />
-                  <div className="user-info">
-                    <h3 className="user-name">
-                      {childUser.displayName || "No Name"}
-                    </h3>
-                    {showDetails === childUser.id && (
-                      <p className="user-email">
-                        {childUser.email || "No email available"}
-                      </p>
-                    )}
+          <section className="børne-accounts">
+            <h2>Your Child Accounts:</h2>
+            {childrenForParent.length === 0 ? (
+              <p>No child accounts found linked to your profile.</p>
+            ) : (
+              <section className="grid">
+                {childrenForParent.map((childUser) => (
+                  <div
+                    key={childUser.id}
+                    className="user-card"
+                    onClick={() =>
+                      setShowDetails(
+                        childUser.id === showDetails ? null : childUser.id
+                      )
+                    }
+                    style={{ cursor: "pointer" }}
+                  >
+                    <img
+                      src="/img/icon-yellow.svg"
+                      alt="User Avatar"
+                      className="user-avatar"
+                    />
+                    <div className="user-info">
+                      <h3 className="user-name">
+                        {childUser.displayName || "No Name"}
+                      </h3>
+                      {showDetails === childUser.id && (
+                        <p className="user-email">
+                          {childUser.email || "No email available"}
+                        </p>
+                      )}
+                    </div>
                   </div>
-                </div>
-              ))}
-              <button className="add-child-btn" onClick={handleAddChildClick}>
-                Tilføj Barn
-              </button>
-            </section>
-          )}
-        </main>
+                ))}
+                <button className="add-child-btn" onClick={handleAddChildClick}>
+                  Tilføj Barn
+                </button>
+              </section>
+            )}
+          </section>
+        </section>
       )}
     </main>
   );
