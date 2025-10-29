@@ -27,7 +27,7 @@
     "body": "Placeholder for app settings, skal sættes op med customization",
     "links": [
       {
-        "url": "/indstillinger/customization",
+        "url": "/indstillinger",
         "text": "Open Settings"
       }
     ]
