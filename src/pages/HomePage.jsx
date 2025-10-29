@@ -30,6 +30,10 @@ export default function HomePage() {
     navigate("/addchild");
   }
 
+  function handleShopClick() {
+    navigate("/shop");
+  }
+
   // Toggle body class when edit mode changes
   useEffect(() => {
     if (editMode) {
@@ -128,7 +132,7 @@ export default function HomePage() {
           {!editMode && (
             <div className="home-boxes">
               <div className="home-box-left">
-                <button className="home-box">
+                <button className="home-box" onClick={handleShopClick}>
                   <img src="../../public/img/shopping-cart.svg" />
                 </button>
                 <button
