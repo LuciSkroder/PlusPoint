@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Auth, DataBase } from "../components/DataBase";
+import { useNavigate } from "react-router";
 import {
   ref,
   onValue,
@@ -16,6 +17,7 @@ export default function ChildTaskViewer() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const currentUser = Auth.currentUser; // Get the current user directly
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!currentUser) {
@@ -111,7 +113,11 @@ export default function ChildTaskViewer() {
   }
 
   return (
-    <div>
+    <div       
+      onClick={() => navigate("/taskpage")}
+      style={{ cursor: "pointer" }}
+    >
+
       <h2>Your Assigned Tasks</h2>
       <ul style={{ listStyle: "none", padding: 0 }}>
         {assignedTasks.map((task) => (
