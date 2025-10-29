@@ -152,7 +152,7 @@ export default function ChildTaskViewer() {
             )}
 
             {task.status === "pending" && (
-              <button
+              <div className="button-child"
                 onClick={() => handleMarkAsCompleted(task.id)}
                 style={{
                   backgroundColor: "#4CAF50",
@@ -165,7 +165,7 @@ export default function ChildTaskViewer() {
                 }}
               >
                 Mark as Completed
-              </button>
+              </div>
             )}
             {task.status === "completed" && (
               <p style={{ color: "green", fontWeight: "bold" }}>
