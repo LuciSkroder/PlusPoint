@@ -3,11 +3,9 @@ import { Auth, DataBase } from "../components/DataBase";
 import { ref, push, update, remove, onValue } from "firebase/database";
 import "../css/shop.css";
 
-// Function to get the current parent's shop items
 function subscribeToParentShop(onItemsChanged) {
   const user = Auth.currentUser;
   if (!user) {
-    console.error("No authenticated user for shop management.");
     onItemsChanged([]);
     return () => {};
   }
@@ -28,34 +26,25 @@ function subscribeToParentShop(onItemsChanged) {
   return unsubscribe;
 }
 
-// Function to add a new shop item
 async function addShopItem(newItem) {
   const user = Auth.currentUser;
   if (!user) throw new Error("No authenticated user.");
-
   const parentShopRef = ref(DataBase, `shop/${user.uid}`);
   await push(parentShopRef, newItem);
-  console.log("Shop item added successfully!");
 }
 
-// Function to update an existing shop item
 async function updateShopItem(itemId, updatedData) {
   const user = Auth.currentUser;
   if (!user) throw new Error("No authenticated user.");
-
   const itemRef = ref(DataBase, `shop/${user.uid}/${itemId}`);
   await update(itemRef, updatedData);
-  console.log(`Shop item ${itemId} updated successfully!`);
 }
 
-// Function to delete a shop item
 async function deleteShopItem(itemId) {
   const user = Auth.currentUser;
   if (!user) throw new Error("No authenticated user.");
-
   const itemRef = ref(DataBase, `shop/${user.uid}/${itemId}`);
   await remove(itemRef);
-  console.log(`Shop item ${itemId} deleted successfully!`);
 }
 
 export default function ShopManager() {
@@ -68,9 +57,26 @@ export default function ShopManager() {
   });
   const [editItem, setEditItem] = useState(null);
   const [showForm, setShowForm] = useState(false);
+  const [notifications, setNotifications] = useState([]);
+  const [showBadge, setShowBadge] = useState(false);
 
   useEffect(() => {
     const unsubscribe = subscribeToParentShop(setShopItems);
+    return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    const user = Auth.currentUser;
+    if (!user) return;
+
+    const notifRef = ref(DataBase, `notifications/${user.uid}`);
+    const unsubscribe = onValue(notifRef, (snapshot) => {
+      const data = snapshot.val() || {};
+      const notifs = Object.entries(data).map(([id, val]) => ({ id, ...val }));
+      setNotifications(notifs);
+      if (notifs.length > 0) setShowBadge(true);
+    });
+
     return () => unsubscribe();
   }, []);
 
@@ -85,7 +91,6 @@ export default function ShopManager() {
       setNewItem({ name: "", price: 0, description: "", imageUrl: "" });
       setShowForm(false);
     } catch (error) {
-      console.error("Error adding item:", error);
       alert("Failed to add item: " + error.message);
     }
   };
@@ -95,7 +100,6 @@ export default function ShopManager() {
       await updateShopItem(itemId, data);
       setEditItem(null);
     } catch (error) {
-      console.error("Error updating item:", error);
       alert("Failed to update item: " + error.message);
     }
   };
@@ -105,7 +109,6 @@ export default function ShopManager() {
       try {
         await deleteShopItem(itemId);
       } catch (error) {
-        console.error("Error deleting item:", error);
         alert("Failed to delete item: " + error.message);
       }
     }
@@ -115,8 +118,22 @@ export default function ShopManager() {
     setShowForm(!showForm);
   };
 
+  const handleBadgeClick = () => {
+    setShowBadge(false);
+    alert("You have new notifications!");
+  };
+
   return (
     <div>
+      <div className="notification-container">
+        <button className="notif-button" onClick={handleBadgeClick}>
+          🔔
+          {showBadge && (
+            <span className="notif-badge">{notifications.length}</span>
+          )}
+        </button>
+      </div>
+
       <button
         className={`create-reward-btn ${showForm ? "hidden" : ""}`}
         onClick={toggleForm}
@@ -180,7 +197,6 @@ export default function ShopManager() {
                 }}
               >
                 {editItem && editItem.id === item.id ? (
-                  // Edit form
                   <form
                     onSubmit={(e) => {
                       e.preventDefault();
@@ -235,7 +251,7 @@ export default function ShopManager() {
                         style={{ maxWidth: "100px", height: "auto" }}
                       />
                     )}
-                    <p> {item.description}</p>
+                    <p>{item.description}</p>
                     <p>Cost: {item.price} points</p>
                     <button onClick={() => setEditItem({ ...item })}>
                       Edit
