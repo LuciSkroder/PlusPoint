@@ -42,13 +42,11 @@ export default function NavBar() {
           {showDropdown && (
             <div className="dropdown-menu">
               <NavLink to="/login" className="dropdown-item">
-                <img
-                  src="./public/img/logout.png"
-                  alt="logout"
-                  className="logout-icon"
-                />
-                Logout
+                <p className="log-ud">  Log ud ➜] </p>
               </NavLink>
+              <div className="dropdown-item">
+                <p> Indstillinger ⚙️</p>
+              </div>
             </div>
           )}
         </div>
