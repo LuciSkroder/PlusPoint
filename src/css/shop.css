@@ -154,9 +154,9 @@
 
 /* ↓↓ Alt på undersiden "Create new reward" ↓↓ */
 
-form input[type="text"],
-form input[type="number"],
-form textarea {
+/*form input[type="text"],
+ form input[type="number"],
+ form textarea {
   width: 90%;
   height: 50px;
   padding: 12px;
@@ -194,7 +194,7 @@ form button[type="submit"] {
   color: white;
   cursor: pointer;
   transition: background-color 0.3s ease;
-}
+}*/
 
 .cancel-btn {
   width: 90%;
