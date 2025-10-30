@@ -113,10 +113,7 @@ export default function ChildTaskViewer() {
   }
 
   return (
-    <div       
-      onClick={() => navigate("/taskpage")}
-      style={{ cursor: "pointer" }}
-    >
+    <div>
 
       <h2>Your Assigned Tasks</h2>
       <ul style={{ listStyle: "none", padding: 0 }}>

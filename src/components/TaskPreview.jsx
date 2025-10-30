@@ -66,6 +66,53 @@ export default function ChildTaskViewer() {
     };
   }, [currentUser]);
 
+  const handleMarkAsCompleted = async (taskId) => {
+      if (!currentUser) {
+        setError("You must be logged in to mark tasks as complete.");
+        return;
+      }
+  
+      // Optional: Add a confirmation dialog
+      if (
+        !window.confirm("Are you sure you want to mark this task as completed?")
+      ) {
+        return;
+      }
+  
+      try {
+        const taskRef = ref(DataBase, `tasks/${taskId}`);
+        await update(taskRef, {
+          status: "completed",
+          completedAt: serverTimestamp(), // Use Firebase's server timestamp
+        });
+        alert("Task marked as completed!");
+      } catch (err) {
+        console.error("Error marking task as completed:", err);
+        setError(
+          "Failed to mark task as completed: " +
+            (err.message || "An unknown error occurred.")
+        );
+      }
+    };
+  
+    if (loading) {
+      return <div>Loading your tasks...</div>;
+    }
+  
+    if (error) {
+      return <p style={{ color: "red" }}>{error}</p>;
+    }
+  
+    if (assignedTasks.length === 0) {
+      return (
+        <p>
+          You currently have no tasks assigned. Great job, or ask your parent for
+          more!
+        </p>
+      );
+    }
+
+    
   return (
     <div>
         <h2>Current Time</h2>
