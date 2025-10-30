@@ -130,8 +130,17 @@ export default function ChildTaskViewer() {
             }}
           >
             <p>
-              <strong>Status:</strong>{" "}
-              {task.status.charAt(0).toUpperCase() + task.status.slice(1)}
+              {task.status === "completed" ? (
+                <img 
+                  src="/img/pending.svg" 
+                  alt="Completed"
+                />
+              ) : (
+                <img 
+                  src="/img/cirkel.svg" 
+                  alt="Pending"
+                />
+              )}
             </p>
 
             <h3>
@@ -139,7 +148,8 @@ export default function ChildTaskViewer() {
             </h3>
 
             <h3>
-              ({task.points} points)
+              {task.points} 
+              ⭐
             </h3>
           </li>
         ))}
