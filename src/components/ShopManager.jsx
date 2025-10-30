@@ -130,23 +130,13 @@ export default function ShopManager() {
             <p>No notifications</p>
           ) : (
             notifications.map((n) => (
-              <div
-                key={n.id}
-                className={`notification-item ${n.read ? "read" : "unread"}`}
-              >
+              <div key={n.id} className="notification-item unread">
                 <p>
                   {n.childName} bought {n.itemName} for {n.price} points
                 </p>
-                {!n.read && (
-                  <div>
-                    <button onClick={() => markAsRead(n.id)}>
-                      Mark as Read
-                    </button>
-                    <button onClick={() => dismissNotification(n.id)}>
-                      Dismiss
-                    </button>
-                  </div>
-                )}
+                <button onClick={() => dismissNotification(n.id)}>
+                  Dismiss
+                </button>
               </div>
             ))
           )}
@@ -165,6 +155,7 @@ export default function ShopManager() {
       >
         <input
           type="text"
+          className="form-input"
           placeholder="Item Name"
           value={newItem.name}
           onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
@@ -172,6 +163,7 @@ export default function ShopManager() {
         />
         <input
           type="number"
+          className="form-input"
           placeholder="Price"
           value={newItem.price}
           onChange={(e) =>
@@ -181,6 +173,7 @@ export default function ShopManager() {
           required
         />
         <textarea
+          className="form-textarea"
           placeholder="Description"
           value={newItem.description}
           onChange={(e) =>
@@ -189,6 +182,7 @@ export default function ShopManager() {
         ></textarea>
         <input
           type="text"
+          className="form-input"
           placeholder="Image URL"
           value={newItem.imageUrl || ""}
           onChange={(e) => setNewItem({ ...newItem, imageUrl: e.target.value })}
@@ -220,6 +214,7 @@ export default function ShopManager() {
                   >
                     <input
                       type="text"
+                      className="form-input"
                       value={editItem.name}
                       onChange={(e) =>
                         setEditItem({ ...editItem, name: e.target.value })
@@ -227,6 +222,7 @@ export default function ShopManager() {
                     />
                     <input
                       type="number"
+                      className="form-input"
                       value={editItem.price}
                       onChange={(e) =>
                         setEditItem({
@@ -236,6 +232,7 @@ export default function ShopManager() {
                       }
                     />
                     <textarea
+                      className="form-textarea"
                       value={editItem.description}
                       onChange={(e) =>
                         setEditItem({
@@ -246,6 +243,7 @@ export default function ShopManager() {
                     ></textarea>
                     <input
                       type="text"
+                      className="form-input"
                       value={editItem.imageUrl || ""}
                       onChange={(e) =>
                         setEditItem({ ...editItem, imageUrl: e.target.value })
