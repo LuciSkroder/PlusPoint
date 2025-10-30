@@ -43,8 +43,16 @@ button {
   padding: 2rem;
   text-align: center;
   display: flex;
-  justify-content: center;
   flex-direction: column;
+  min-height: 100vh;
+  justify-content: center;
+  overflow: hidden;
+}
+
+html,
+body,
+#root {
+  height: 100%;
 }
 
 .logo {
@@ -70,4 +78,12 @@ button {
   cursor: pointer;
   transform: rotate(180deg) scale(1.5);
   outline: none;
+}
+
+main,
+.page-container,
+.shop-manager-container {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
 }
