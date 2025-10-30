@@ -129,7 +129,7 @@
   text-align: center;
 }
 
-.shop-items li button {
+.shop-manager-container .shop-items li button {
   margin: 0.1rem;
   padding: 0.3rem 0.5rem;
   border: 1px solid #febe2c;
@@ -139,10 +139,9 @@
   cursor: pointer;
   font-size: 0.7rem;
   flex: 1;
-  max-width: calc(50% - 0.3rem);
 }
 
-.shop-items li button:hover {
+.shop-manager-container .shop-items li button:hover {
   background-color: #e6a929;
 }
 
@@ -245,4 +244,15 @@ form button[type="submit"] {
 
 .shop-items.hidden {
   display: none;
+}
+
+.shop-manager-container .shop-items li button.disabled-btn {
+  background-color: #ccc;
+  border-color: #ccc;
+  color: #666;
+  cursor: not-allowed;
+}
+
+.shop-manager-container .shop-items li button.disabled-btn:hover {
+  background-color: #ccc;
 }

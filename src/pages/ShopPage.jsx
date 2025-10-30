@@ -60,7 +60,6 @@ export default function ShopPage() {
   if (userRole === "child")
     return (
       <main className="page">
-        <h1>Welcome, Child!</h1>
         <ChildShopViewer />
       </main>
     );
