@@ -143,7 +143,10 @@ export default function HomePage() {
                 </button>
               </div>
               <div className="home-box-right">
-                <button>
+                <button
+                  onClick={() => navigate("/taskpage")}
+                  style={{ cursor: "pointer" }}>
+                  
                   <TaskPreview />
                 </button>
               </div>
@@ -168,7 +171,12 @@ export default function HomePage() {
               </button>
             </div>
             <div className="home-box-right">
-              <button>{<TaskVerifier />}</button>
+              <button
+                onClick={() => navigate("/taskpage")}
+                style={{ cursor: "pointer" }}>
+                
+                {<TaskVerifier />}
+              </button>
             </div>
           </div>
           <section className="børne-accounts">

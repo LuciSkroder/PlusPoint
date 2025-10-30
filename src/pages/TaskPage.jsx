@@ -4,11 +4,13 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { DataBase } from "../components/DataBase";
 import ChildTaskViewer from "../components/ChildTaskViewer";
 import TaskVerifier from "../components/TaskVerifier";
+import { useNavigate } from "react-router";
 
 export default function TaskPage() {
   const [userRole, setUserRole] = useState(null);
   const [loading, setLoading] = useState(true);
   const [currentUserUid, setCurrentUserUid] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const auth = getAuth();
