@@ -118,13 +118,21 @@ export default function Karousel({ items = carouselData, onEditModeChange }) {
       if (!currentUser) return;
 
       const itemKey = item.id || item.name?.toLowerCase().replace(/\s+/g, "_");
+      const duHarDenpå = equippedItems[aktivKategori] === itemKey;
 
       const equippedRef = ref(
         DataBase,
         `childrenProfiles/${currentUser.uid}/avatar/equipped/${aktivKategori}`
       );
-      set(equippedRef, itemKey);
-      console.log(`Equipped ${aktivKategori}:`, item);
+
+      if (duHarDenpå) {
+        set(equippedRef, null);
+        console.log(`Unequip ${aktivKategori}:`, item);
+        return;
+      } else {
+        set(equippedRef, itemKey);
+        console.log(`Equipped ${aktivKategori}:`, item);
+      }
     } else {
       console.log("denne tilpasning er låst");
     } //evt. redirec ttil shop
