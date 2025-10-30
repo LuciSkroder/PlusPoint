@@ -9,13 +9,13 @@ export default function BottomNav() {
   } else {
     return (
       <nav className="bottom-nav">
-        <NavLink to="/add-child">
+        <NavLink to="/shop">
           <img src="./public/img/shopping-cart.svg" alt="Shopping Cart" />
         </NavLink>
         <NavLink to="/">
           <img src="./public/img/home.svg" alt="Home" />
         </NavLink>
-        <NavLink to="/create">
+        <NavLink to="/tasks">
           <img src="./public/img/to-do.svg" alt="To Do" />
         </NavLink>
       </nav>
