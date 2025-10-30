@@ -166,26 +166,24 @@ export default function Karousel({ items = carouselData, onEditModeChange }) {
                 (window.location.href = items[active].links[0]?.url || "#")
               }
             />
-            {editMode && (
-              <div className="equipped-preview-overlay">
-                <div className="equipped-item">
-                  <span className="label">Hat:</span>
-                  <span className="value">{equippedItems.hats || "None"}</span>
-                </div>
-                <div className="equipped-item">
-                  <span className="label">Shirt:</span>
-                  <span className="value">
-                    {equippedItems.shirts || "None"}
-                  </span>
-                </div>
-                <div className="equipped-item">
-                  <span className="label">Pants:</span>
-                  <span className="value">
-                    {equippedItems.bukser || "None"}
-                  </span>
-                </div>
+            <div
+              className={`equipped-preview-overlay ${
+                editMode ? "edit-mode" : ""
+              }`}
+            >
+              <div className="equipped-item">
+                <span className="label">Hat:</span>
+                <span className="value">{equippedItems.hats || "None"}</span>
               </div>
-            )}
+              <div className="equipped-item">
+                <span className="label">Shirt:</span>
+                <span className="value">{equippedItems.shirts || "None"}</span>
+              </div>
+              <div className="equipped-item">
+                <span className="label">Pants:</span>
+                <span className="value">{equippedItems.bukser || "None"}</span>
+              </div>
+            </div>
           </div>
           <img
             src={items[(active + 1) % length].image}

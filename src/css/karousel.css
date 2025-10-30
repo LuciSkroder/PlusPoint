@@ -66,8 +66,22 @@
   width: 100%;
 }
 
-/* Equipped items overlay */
 .equipped-preview-overlay {
+  position: absolute;
+  bottom: 25%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 2px solid var(--sort);
+  backdrop-filter: blur(5px);
+  border-radius: 12px;
+  padding: 0 2rem 0 2rem;
+  min-width: 100px;
+  z-index: 5;
+}
+
+/* Equipped items overlay */
+
+.equipped-preview-overlay.edit-mode {
   position: absolute;
   bottom: 10%;
   left: 50%;
