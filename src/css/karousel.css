@@ -5,13 +5,7 @@
   background-repeat: no-repeat;
   background-position: 0% 100%;
   margin-top: auto;
-  width: 100vw;
-  position: relative;
-  left: 50%;
-  right: 50%;
-  margin-left: -50vw;
-  margin-right: -50vw;
-  min-height: 20vh;
+  margin-bottom: 8vh;
 }
 
 .karousel-main img {
