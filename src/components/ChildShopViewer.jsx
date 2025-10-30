@@ -4,12 +4,13 @@ import {
   ref,
   get,
   onValue,
-  update,
   push,
+  update,
   serverTimestamp,
 } from "firebase/database";
 import "../css/shop.css";
 
+// Helper functions
 async function getChildParentUid(childUid) {
   const snapshot = await get(
     ref(DataBase, `childrenProfiles/${childUid}/parentUid`)
@@ -30,33 +31,34 @@ async function buyShopItem(item, parentUid) {
   if (!parentUid) throw new Error("Parent UID not available.");
 
   const childUid = user.uid;
-  const itemPrice = item.price;
-
   const currentPoints = await getChildPoints(childUid);
-  if (currentPoints < itemPrice) {
+
+  if (currentPoints < item.price) {
     alert(`Not enough points to buy ${item.name}`);
     return;
   }
 
+  // Deduct points
   await update(ref(DataBase, `childrenProfiles/${childUid}`), {
-    points: currentPoints - itemPrice,
+    points: currentPoints - item.price,
   });
 
-  const purchasesRef = ref(DataBase, `childrenProfiles/${childUid}/purchases`);
-  await push(purchasesRef, {
+  // Record purchase
+  await push(ref(DataBase, `childrenProfiles/${childUid}/purchases`), {
     itemId: item.id,
     itemName: item.name,
-    price: itemPrice,
+    price: item.price,
     timestamp: serverTimestamp(),
     parentUid,
   });
 
+  // Notify parent
   await push(ref(DataBase, `notifications/${parentUid}`), {
     type: "purchase",
     childUid,
     childName: user.displayName || "Unknown Child",
     itemName: item.name,
-    price: itemPrice,
+    price: item.price,
     timestamp: serverTimestamp(),
     read: false,
   });
@@ -64,36 +66,13 @@ async function buyShopItem(item, parentUid) {
   alert(`Successfully bought ${item.name}!`);
 }
 
-function subscribeToChildShop(onItemsChanged) {
-  const user = Auth.currentUser;
-  if (!user) {
-    onItemsChanged([]);
-    return () => {};
-  }
-
-  let unsubscribe = () => {};
-  getChildParentUid(user.uid).then((parentUid) => {
-    if (parentUid) {
-      const parentShopRef = ref(DataBase, `shop/${parentUid}`);
-      unsubscribe = onValue(parentShopRef, (snapshot) => {
-        const data = snapshot.val() || {};
-        const items = Object.keys(data).map((key) => ({
-          ...data[key],
-          id: key,
-        }));
-        onItemsChanged(items);
-      });
-    } else {
-      onItemsChanged([]);
-    }
-  });
-  return () => unsubscribe();
-}
-
+// Component
 export default function ChildShopViewer() {
   const [shopItems, setShopItems] = useState([]);
   const [childPoints, setChildPoints] = useState(0);
   const [parentUid, setParentUid] = useState(null);
+  const [purchases, setPurchases] = useState([]);
+  const [showPurchases, setShowPurchases] = useState(false);
 
   useEffect(() => {
     const user = Auth.currentUser;
@@ -107,10 +86,36 @@ export default function ChildShopViewer() {
     getChildParentUid(user.uid).then((uid) => {
       if (uid) {
         setParentUid(uid);
-        const unsubscribeShop = subscribeToChildShop(setShopItems);
+
+        // Subscribe to shop
+        const shopRef = ref(DataBase, `shop/${uid}`);
+        const unsubscribeShop = onValue(shopRef, (snapshot) => {
+          const data = snapshot.val() || {};
+          const items = Object.keys(data).map((key) => ({
+            ...data[key],
+            id: key,
+          }));
+          setShopItems(items);
+        });
+
+        // Subscribe to purchases
+        const purchasesRef = ref(
+          DataBase,
+          `childrenProfiles/${user.uid}/purchases`
+        );
+        const unsubscribePurchases = onValue(purchasesRef, (snapshot) => {
+          const data = snapshot.val() || {};
+          const list = Object.keys(data).map((key) => ({
+            id: key,
+            ...data[key],
+          }));
+          setPurchases(list);
+        });
+
         return () => {
           unsubscribePoints();
           unsubscribeShop();
+          unsubscribePurchases();
         };
       } else {
         unsubscribePoints();
@@ -126,43 +131,69 @@ export default function ChildShopViewer() {
   return (
     <div className="shop-manager-container">
       <div className="button-container">
+        <button
+          onClick={() => setShowPurchases(!showPurchases)}
+          style={{ position: "absolute", top: "10px", left: "10px" }}
+        >
+          {showPurchases ? "Hide Purchases" : "View My Purchases"}
+        </button>
+
         <h2>Your Shop</h2>
         <p>
-          Your current points: <strong>{childPoints}</strong>
+          Current points: <strong>{childPoints}</strong>
         </p>
       </div>
 
-      <div className="shop-items">
-        {shopItems.length === 0 ? (
-          <p>Your parent hasn't added any items yet.</p>
-        ) : (
-          <ul>
-            {shopItems.map((item) => (
-              <li key={item.id}>
-                <h4>{item.name}</h4>
-                {item.imageUrl && (
-                  <img
-                    src={item.imageUrl}
-                    alt={item.name}
-                    className="shop-item-image"
-                  />
-                )}
-                <p>{item.description}</p>
-                <p>Cost: {item.price} points</p>
-                <div>
-                  <button
-                    onClick={() => handleBuyItem(item)}
-                    disabled={childPoints < item.price}
-                    className={childPoints < item.price ? "disabled-btn" : ""}
-                  >
-                    {childPoints < item.price ? "Not enough points" : "Buy"}
-                  </button>
-                </div>
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
+      {showPurchases ? (
+        <div className="shop-items">
+          {purchases.length === 0 ? (
+            <p>You haven't bought anything yet.</p>
+          ) : (
+            <ul>
+              {purchases.map((purchase) => (
+                <li key={purchase.id}>
+                  <h4>{purchase.itemName}</h4>
+                  <p>Price: {purchase.price} points</p>
+                  <p>
+                    Bought on: {new Date(purchase.timestamp).toLocaleString()}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      ) : (
+        <div className="shop-items">
+          {shopItems.length === 0 ? (
+            <p>Your parent hasn't added any items yet.</p>
+          ) : (
+            <ul>
+              {shopItems.map((item) => (
+                <li key={item.id}>
+                  <h4>{item.name}</h4>
+                  {item.imageUrl && (
+                    <img
+                      src={item.imageUrl}
+                      alt={item.name}
+                      className="shop-item-image"
+                    />
+                  )}
+                  <p>{item.description}</p>
+                  <p>Cost: {item.price} points</p>
+                  <div>
+                    <button
+                      onClick={() => handleBuyItem(item)}
+                      disabled={childPoints < item.price}
+                    >
+                      {childPoints < item.price ? "Not enough points" : "Buy"}
+                    </button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      )}
     </div>
   );
 }
