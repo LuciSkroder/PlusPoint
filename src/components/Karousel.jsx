@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Auth, DataBase } from "./DataBase";
-import { ref, onValue } from "firebase/database";
+import { ref, onValue, set } from "firebase/database";
 import carouselData from "../data/karousel.json";
 import "../css/karousel.css";
 
@@ -9,6 +9,11 @@ export default function Karousel({ items = carouselData, onEditModeChange }) {
   const [editMode, setEditMode] = useState(false);
   const [aktivKategori, setAktivKategori] = useState("hats");
   const [loading, setLoading] = useState(true);
+  const [equippedItems, setEquippedItems] = useState({
+    bukser: null,
+    hats: null,
+    shirts: null,
+  });
 
   const [tilpasningData, setTilpasningData] = useState({
     bukser: [],
@@ -65,9 +70,37 @@ export default function Karousel({ items = carouselData, onEditModeChange }) {
     return () => unsubscribe();
   }, [editMode]);
 
+  useEffect(() => {
+    const currentUser = Auth.currentUser;
+    if (!currentUser || !editMode) return;
+
+    const equippedRef = ref(
+      DataBase,
+      `childrenProfiles/${currentUser.uid}/avatar/equipped`
+    );
+
+    const unsubscribe = onValue(equippedRef, (snapshot) => {
+      if (snapshot.exists()) {
+        const data = snapshot.val();
+        setEquippedItems({
+          hats: data.hats || null,
+          bukser: data.bukser || null,
+          shirts: data.shirts || null,
+        });
+      }
+    });
+
+    return () => unsubscribe();
+  }, [editMode]);
+
   const erDenUnlocked = (item) => {
     const itemKey = item.id || item.name?.toLowerCase().replace(/\s+/g, "_");
     return unlockedItems[aktivKategori].includes(itemKey);
+  };
+
+  const erDenEquipped = (item) => {
+    const itemKey = item.id || item.name?.toLowerCase().replace(/\s+/g, "_");
+    return equippedItems[aktivKategori] === itemKey;
   };
 
   const toggleEditMode = () => {
@@ -81,7 +114,17 @@ export default function Karousel({ items = carouselData, onEditModeChange }) {
   const handleTilpasningClick = (item, låstOp) => {
     if (låstOp) {
       console.log(`Selected ${aktivKategori}:`, item);
-      // Her skal tilpasningen ske
+      const currentUser = Auth.currentUser;
+      if (!currentUser) return;
+
+      const itemKey = item.id || item.name?.toLowerCase().replace(/\s+/g, "_");
+
+      const equippedRef = ref(
+        DataBase,
+        `childrenProfiles/${currentUser.uid}/avatar/equipped/${aktivKategori}`
+      );
+      set(equippedRef, itemKey);
+      console.log(`Equipped ${aktivKategori}:`, item);
     } else {
       console.log("denne tilpasning er låst");
     } //evt. redirec ttil shop
@@ -107,13 +150,35 @@ export default function Karousel({ items = carouselData, onEditModeChange }) {
                 items[(active - 1 + length) % length].links[0]?.url || "#")
             }
           />
-          <img
-            src={items[active].image}
-            className="karousel-image active"
-            onClick={() =>
-              (window.location.href = items[active].links[0]?.url || "#")
-            }
-          />
+          <div className="avatar-wrapper">
+            <img
+              src={items[active].image}
+              className="karousel-image active"
+              onClick={() =>
+                (window.location.href = items[active].links[0]?.url || "#")
+              }
+            />
+            {editMode && (
+              <div className="equipped-preview-overlay">
+                <div className="equipped-item">
+                  <span className="label">Hat:</span>
+                  <span className="value">{equippedItems.hats || "None"}</span>
+                </div>
+                <div className="equipped-item">
+                  <span className="label">Shirt:</span>
+                  <span className="value">
+                    {equippedItems.shirts || "None"}
+                  </span>
+                </div>
+                <div className="equipped-item">
+                  <span className="label">Pants:</span>
+                  <span className="value">
+                    {equippedItems.bukser || "None"}
+                  </span>
+                </div>
+              </div>
+            )}
+          </div>
           <img
             src={items[(active + 1) % length].image}
             className="karousel-image side right"
@@ -173,6 +238,7 @@ export default function Karousel({ items = carouselData, onEditModeChange }) {
               ) : (
                 tilpasningData[aktivKategori].map((item) => {
                   const låstOp = erDenUnlocked(item);
+                  const equipped = erDenEquipped(item);
                   return (
                     <button
                       key={item.id || item.name}
@@ -182,13 +248,20 @@ export default function Karousel({ items = carouselData, onEditModeChange }) {
                       }`}
                       disabled={!låstOp}
                       title={
-                        låstOp
+                        equipped
+                          ? `Du har den på`
+                          : låstOp
                           ? `Brug ${item.name}`
                           : `Køb ${item.name} i shoppen (${item.price} point)`
                       }
                     >
                       {/* indholdet */}
                       <span className="item-navn">{item.name}</span>
+
+                      {/* Du har item på */}
+                      {equipped && låstOp && (
+                        <span className="equipped-indicator">✓</span>
+                      )}
 
                       {/* hvis den ikke er købt */}
                       {!låstOp && (
