@@ -8,6 +8,7 @@ import {
   push,
   serverTimestamp,
 } from "firebase/database";
+import "../css/shop.css";
 
 async function getChildParentUid(childUid) {
   const snapshot = await get(
@@ -123,38 +124,45 @@ export default function ChildShopViewer() {
   };
 
   return (
-    <div>
-      <h2>Your Shop</h2>
-      <p>
-        Your current points: <strong>{childPoints}</strong>
-      </p>
-      {shopItems.length === 0 ? (
-        <p>Your parent hasn't added any items yet.</p>
-      ) : (
-        <ul style={{ listStyle: "none", padding: 0 }}>
-          {shopItems.map((item) => (
-            <li key={item.id}>
-              <h4>{item.name}</h4>
-              {item.imageUrl && <img src={item.imageUrl} alt={item.name} />}
-              <p>{item.description}</p>
-              <p>
-                Cost: <strong>{item.price} points</strong>
-              </p>
-              <button
-                onClick={() => handleBuyItem(item)}
-                disabled={childPoints < item.price}
-              >
-                Buy
-              </button>
-              {childPoints < item.price && (
-                <span style={{ marginLeft: "10px", color: "red" }}>
-                  Not enough points!
-                </span>
-              )}
-            </li>
-          ))}
-        </ul>
-      )}
+    <div className="shop-manager-container">
+      <div className="button-container">
+        <h2>Your Shop</h2>
+        <p>
+          Your current points: <strong>{childPoints}</strong>
+        </p>
+      </div>
+
+      <div className="shop-items">
+        {shopItems.length === 0 ? (
+          <p>Your parent hasn't added any items yet.</p>
+        ) : (
+          <ul>
+            {shopItems.map((item) => (
+              <li key={item.id}>
+                <h4>{item.name}</h4>
+                {item.imageUrl && (
+                  <img
+                    src={item.imageUrl}
+                    alt={item.name}
+                    className="shop-item-image"
+                  />
+                )}
+                <p>{item.description}</p>
+                <p>Cost: {item.price} points</p>
+                <div>
+                  <button
+                    onClick={() => handleBuyItem(item)}
+                    disabled={childPoints < item.price}
+                    className={childPoints < item.price ? "disabled-btn" : ""}
+                  >
+                    {childPoints < item.price ? "Not enough points" : "Buy"}
+                  </button>
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     </div>
   );
 }

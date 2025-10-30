@@ -1,7 +1,8 @@
 .shop-manager-container {
   padding-top: 80px;
   padding-bottom: 80px;
-  min-height: 100vh;
+  flex: 1 1 auto;
+  min-height: 0;
   overflow-y: auto;
   box-sizing: border-box;
   padding-left: 10px;
@@ -51,7 +52,7 @@
   background: #fff;
   border: 1px solid #ccc;
   padding: 15px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   max-width: 300px;
   z-index: 1000;
 }
@@ -128,7 +129,7 @@
   text-align: center;
 }
 
-.shop-items li button {
+.shop-manager-container .shop-items li button {
   margin: 0.1rem;
   padding: 0.3rem 0.5rem;
   border: 1px solid #febe2c;
@@ -138,10 +139,9 @@
   cursor: pointer;
   font-size: 0.7rem;
   flex: 1;
-  max-width: calc(50% - 0.3rem);
 }
 
-.shop-items li button:hover {
+.shop-manager-container .shop-items li button:hover {
   background-color: #e6a929;
 }
 
@@ -154,9 +154,8 @@
 
 /* ↓↓ Alt på undersiden "Create new reward" ↓↓ */
 
-/*form input[type="text"],
- form input[type="number"],
- form textarea {
+.form-input,
+.form-textarea {
   width: 90%;
   height: 50px;
   padding: 12px;
@@ -170,9 +169,8 @@
   outline: none;
 }
 
-form input[type="text"]:focus,
-form input[type="number"]:focus,
-form textarea:focus {
+.form-input:focus,
+.form-textarea:focus {
   box-shadow: none;
   outline: none;
   border: 2px solid #febe2c;
@@ -194,7 +192,7 @@ form button[type="submit"] {
   color: white;
   cursor: pointer;
   transition: background-color 0.3s ease;
-}*/
+}
 
 .cancel-btn {
   width: 90%;
@@ -246,4 +244,15 @@ form button[type="submit"] {
 
 .shop-items.hidden {
   display: none;
+}
+
+.shop-manager-container .shop-items li button.disabled-btn {
+  background-color: #ccc;
+  border-color: #ccc;
+  color: #666;
+  cursor: not-allowed;
+}
+
+.shop-manager-container .shop-items li button.disabled-btn:hover {
+  background-color: #ccc;
 }
