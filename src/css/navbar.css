@@ -14,7 +14,6 @@
   padding: 0 1rem;
 }
 
-
 .parent-menu {
   position: relative;
 }
@@ -48,13 +47,6 @@
 .dropdown-item .logout-icon {
   width: 1.5rem;
   height: 1.5rem;
-}
-
-.dropdown-item {
-  display: flex;
-  align-items: center;
-  text-decoration: none;
-  color: #333;
 }
 
 .dropdown-item p {
