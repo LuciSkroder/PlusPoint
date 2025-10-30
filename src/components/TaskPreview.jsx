@@ -112,10 +112,38 @@ export default function ChildTaskViewer() {
       );
     }
 
-    
+
   return (
     <div>
         <h2>Current Time</h2>
+        
+        <ul style={{ listStyle: "none", padding: 0 }}>
+        {assignedTasks.map((task) => (
+          <li
+            key={task.id}
+            style={{
+              border: "1px solid #ccc",
+              margin: "10px 0",
+              padding: "15px",
+              borderRadius: "8px",
+              backgroundColor: task.status === "completed" ? "#e0ffe0" : "#fff",
+            }}
+          >
+            <h3>
+              {task.name}
+            </h3>
+
+            <h3>
+              ({task.points} points)
+            </h3>
+           
+            <p>
+              <strong>Status:</strong>{" "}
+              {task.status.charAt(0).toUpperCase() + task.status.slice(1)}
+            </p>
+          </li>
+        ))}
+      </ul>
     </div>
   )
 
