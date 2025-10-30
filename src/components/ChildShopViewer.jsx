@@ -50,6 +50,7 @@ async function buyShopItem(item, parentUid) {
     price: item.price,
     timestamp: serverTimestamp(),
     parentUid,
+    cashedIn: false,
   });
 
   // Notify parent
@@ -72,7 +73,8 @@ export default function ChildShopViewer() {
   const [childPoints, setChildPoints] = useState(0);
   const [parentUid, setParentUid] = useState(null);
   const [purchases, setPurchases] = useState([]);
-  const [showPurchases, setShowPurchases] = useState(false);
+  const [cashedInItems, setCashedInItems] = useState(new Set());
+  const [viewMode, setViewMode] = useState("shop"); // "shop", "purchases", "styling"
 
   useEffect(() => {
     const user = Auth.currentUser;
@@ -83,13 +85,16 @@ export default function ChildShopViewer() {
       setChildPoints(snapshot.val() || 0);
     });
 
+    let unsubscribeShop = () => {};
+    let unsubscribePurchases = () => {};
+
     getChildParentUid(user.uid).then((uid) => {
       if (uid) {
         setParentUid(uid);
 
         // Subscribe to shop
         const shopRef = ref(DataBase, `shop/${uid}`);
-        const unsubscribeShop = onValue(shopRef, (snapshot) => {
+        unsubscribeShop = onValue(shopRef, (snapshot) => {
           const data = snapshot.val() || {};
           const items = Object.keys(data).map((key) => ({
             ...data[key],
@@ -103,7 +108,7 @@ export default function ChildShopViewer() {
           DataBase,
           `childrenProfiles/${user.uid}/purchases`
         );
-        const unsubscribePurchases = onValue(purchasesRef, (snapshot) => {
+        unsubscribePurchases = onValue(purchasesRef, (snapshot) => {
           const data = snapshot.val() || {};
           const list = Object.keys(data).map((key) => ({
             id: key,
@@ -111,16 +116,14 @@ export default function ChildShopViewer() {
           }));
           setPurchases(list);
         });
-
-        return () => {
-          unsubscribePoints();
-          unsubscribeShop();
-          unsubscribePurchases();
-        };
-      } else {
-        unsubscribePoints();
       }
     });
+
+    return () => {
+      unsubscribePoints();
+      unsubscribeShop();
+      unsubscribePurchases();
+    };
   }, []);
 
   const handleBuyItem = async (item) => {
@@ -128,39 +131,137 @@ export default function ChildShopViewer() {
     await buyShopItem(item, parentUid);
   };
 
+  const handleCashIn = async (purchase) => {
+    const confirmed = window.confirm(
+      "Are you sure you want to cash this reward in now?"
+    );
+
+    if (confirmed) {
+      // Hide immediately with CSS
+      setCashedInItems((prev) => new Set([...prev, purchase.id]));
+
+      // Update database
+      await update(
+        ref(
+          DataBase,
+          `childrenProfiles/${Auth.currentUser.uid}/purchases/${purchase.id}`
+        ),
+        {
+          cashedIn: true,
+        }
+      );
+
+      alert(`${purchase.itemName} has been cashed in!`);
+    }
+  };
+
+  // Generate 10 empty styling boxes
+  const generateStylingBoxes = () => {
+    return Array.from({ length: 10 }, (_, index) => ({
+      id: `styling-${index}`,
+      name: `Item ${index + 1}`,
+      description: "Sample description",
+      price: (index + 1) * 10,
+      imageUrl: "",
+    }));
+  };
+
+  const getButtonStyle = (mode) => ({
+    width: "32%",
+    backgroundColor: viewMode === mode ? "#febe2c" : "white",
+    color: viewMode === mode ? "white" : "#febe2c",
+    border: "2px solid #febe2c",
+  });
+
   return (
     <div className="shop-manager-container">
       <div className="button-container">
-        <button
-          onClick={() => setShowPurchases(!showPurchases)}
-          style={{ position: "absolute", top: "10px", left: "10px" }}
-        >
-          {showPurchases ? "Hide Purchases" : "View My Purchases"}
-        </button>
+        <div style={{ display: "flex", gap: "0.5rem" }}>
+          <button
+            className="create-reward-btn"
+            onClick={() => setViewMode("shop")}
+            style={getButtonStyle("shop")}
+          >
+            Shop
+          </button>
 
+          <button
+            className="create-reward-btn"
+            onClick={() => setViewMode("purchases")}
+            style={getButtonStyle("purchases")}
+          >
+            Purchases
+          </button>
+
+          <button
+            className="create-reward-btn"
+            onClick={() => setViewMode("styling")}
+            style={getButtonStyle("styling")}
+          >
+            Styling
+          </button>
+        </div>
+      </div>
+
+      <div style={{ textAlign: "center", marginBottom: "2rem" }}>
         <h2>Your Shop</h2>
         <p>
           Current points: <strong>{childPoints}</strong>
         </p>
       </div>
 
-      {showPurchases ? (
+      {viewMode === "purchases" ? (
         <div className="shop-items">
-          {purchases.length === 0 ? (
+          {purchases.filter((p) => !p.cashedIn && !cashedInItems.has(p.id))
+            .length === 0 ? (
             <p>You haven't bought anything yet.</p>
           ) : (
             <ul>
               {purchases.map((purchase) => (
-                <li key={purchase.id}>
+                <li
+                  key={purchase.id}
+                  className={
+                    purchase.cashedIn || cashedInItems.has(purchase.id)
+                      ? "cashed-in"
+                      : ""
+                  }
+                >
                   <h4>{purchase.itemName}</h4>
                   <p>Price: {purchase.price} points</p>
                   <p>
                     Bought on: {new Date(purchase.timestamp).toLocaleString()}
                   </p>
+                  <div>
+                    <button
+                      onClick={() => handleCashIn(purchase)}
+                      disabled={
+                        purchase.cashedIn || cashedInItems.has(purchase.id)
+                      }
+                    >
+                      {purchase.cashedIn || cashedInItems.has(purchase.id)
+                        ? "Cashed In"
+                        : "Cash In"}
+                    </button>
+                  </div>
                 </li>
               ))}
             </ul>
           )}
+        </div>
+      ) : viewMode === "styling" ? (
+        <div className="shop-items">
+          <ul>
+            {generateStylingBoxes().map((item) => (
+              <li key={item.id}>
+                <h4>{item.name}</h4>
+                <p>{item.description}</p>
+                <p>Cost: {item.price} points</p>
+                <div>
+                  <button disabled>Sample Button</button>
+                </div>
+              </li>
+            ))}
+          </ul>
         </div>
       ) : (
         <div className="shop-items">
