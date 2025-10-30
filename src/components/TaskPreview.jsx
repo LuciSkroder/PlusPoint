@@ -114,7 +114,7 @@ export default function ChildTaskViewer() {
 
 
   return (
-    <div>
+    <div className="taskView-child">
         <h2>Current Time</h2>
         
         <ul style={{ listStyle: "none", padding: 0 }}>
@@ -129,6 +129,11 @@ export default function ChildTaskViewer() {
               backgroundColor: task.status === "completed" ? "#e0ffe0" : "#fff",
             }}
           >
+            <p>
+              <strong>Status:</strong>{" "}
+              {task.status.charAt(0).toUpperCase() + task.status.slice(1)}
+            </p>
+
             <h3>
               {task.name}
             </h3>
@@ -136,11 +141,6 @@ export default function ChildTaskViewer() {
             <h3>
               ({task.points} points)
             </h3>
-           
-            <p>
-              <strong>Status:</strong>{" "}
-              {task.status.charAt(0).toUpperCase() + task.status.slice(1)}
-            </p>
           </li>
         ))}
       </ul>
