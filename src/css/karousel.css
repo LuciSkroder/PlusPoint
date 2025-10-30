@@ -63,12 +63,14 @@
 }
 
 .karousel-box.edit-mode {
-  position: sticky;
+  position: fixed;
   top: 8vh;
+  left: 0;
+  right: 0;
   z-index: 10;
   /*background-color: red;  til trouble shooting */
-  margin-top: 0;
-  margin-bottom: 0;
+  box-shadow: 2px 2px 5px #313131;
+  background-color: var(--hvid);
 }
 
 .customize-box-wrapper {
@@ -79,11 +81,11 @@
   right: 50%;
   margin-left: -50vw;
   margin-right: -50vw;
-  margin-top: -1vh;
 }
 
 .customize-box {
-  min-height: 100vh;
+  padding-top: 40vh;
+  min-height: 200vh;
   width: 100%;
 }
 
