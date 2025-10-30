@@ -112,6 +112,34 @@ export default function ChildTaskViewer() {
     );
   }
 
+
+const cancelCompletedTask = async (taskId) => {
+    if (!currentUser) {
+      setError("You must be logged in to mark tasks as complete.");
+      return;
+    }
+
+    // Optional: Add a confirmation dialog
+    if (
+      !window.confirm("Are you sure you want to cancel this task?")
+    ) {
+      return;
+    }
+
+    try {
+      const taskRef = ref(DataBase, `tasks/${taskId}`);
+      await update(taskRef, {
+        status: "pending"
+      });
+    } catch (err) {
+      console.error("Error marking task as canceled:", err);
+      setError(
+        "Failed to cancel task: " +
+          (err.message || "An unknown error occurred.")
+      );
+    }
+  };
+
   return (
     <div>
 
@@ -171,9 +199,16 @@ export default function ChildTaskViewer() {
               </div>
             )}
             {task.status === "completed" && (
-              <p style={{ color: "green", fontWeight: "bold" }}>
-                Awaiting Parent Verification
-              </p>
+              <div>
+                <p style={{ color: "green", fontWeight: "bold" }}>
+                  Awaiting Parent Verification
+                </p>
+
+                <button onClick={() => cancelCompletedTask(task.id)}
+                >
+                  Annuller
+                </button>
+              </div>
             )}
           </li>
         ))}
@@ -181,3 +216,4 @@ export default function ChildTaskViewer() {
     </div>
   );
 }
+
