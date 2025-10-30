@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import User from "../components/User";
 import ChildShopViewer from "../components/ChildShopViewer";
 import ShopManager from "../components/ShopManager";
-import ChildTaskViewer from "../components/ChildTaskViewer";
+import TaskPreview from "../components/TaskPreview";
 import TaskVerifier from "../components/TaskVerifier";
 import Karousel from "../components/Karousel";
 import { DataBase, Auth } from "../components/DataBase";
@@ -144,7 +144,7 @@ export default function HomePage() {
               </div>
               <div className="home-box-right">
                 <button>
-                  <ChildTaskViewer />
+                  <TaskPreview />
                 </button>
               </div>
             </div>
