@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Auth, DataBase } from "../components/DataBase";
+import { Auth, DataBase } from "./DataBase";
 import { useNavigate } from "react-router";
 import {
   ref,
@@ -67,57 +67,56 @@ export default function ChildTaskViewer() {
   }, [currentUser]);
 
   const handleMarkAsCompleted = async (taskId) => {
-      if (!currentUser) {
-        setError("You must be logged in to mark tasks as complete.");
-        return;
-      }
-  
-      // Optional: Add a confirmation dialog
-      if (
-        !window.confirm("Are you sure you want to mark this task as completed?")
-      ) {
-        return;
-      }
-  
-      try {
-        const taskRef = ref(DataBase, `tasks/${taskId}`);
-        await update(taskRef, {
-          status: "completed",
-          completedAt: serverTimestamp(), // Use Firebase's server timestamp
-        });
-        alert("Task marked as completed!");
-      } catch (err) {
-        console.error("Error marking task as completed:", err);
-        setError(
-          "Failed to mark task as completed: " +
-            (err.message || "An unknown error occurred.")
-        );
-      }
-    };
-  
-    if (loading) {
-      return <div>Loading your tasks...</div>;
-    }
-  
-    if (error) {
-      return <p style={{ color: "red" }}>{error}</p>;
-    }
-  
-    if (assignedTasks.length === 0) {
-      return (
-        <p>
-          You currently have no tasks assigned. Great job, or ask your parent for
-          more!
-        </p>
-      );
+    if (!currentUser) {
+      setError("You must be logged in to mark tasks as complete.");
+      return;
     }
 
+    // Optional: Add a confirmation dialog
+    if (
+      !window.confirm("Are you sure you want to mark this task as completed?")
+    ) {
+      return;
+    }
+
+    try {
+      const taskRef = ref(DataBase, `tasks/${taskId}`);
+      await update(taskRef, {
+        status: "completed",
+        completedAt: serverTimestamp(), // Use Firebase's server timestamp
+      });
+      alert("Task marked as completed!");
+    } catch (err) {
+      console.error("Error marking task as completed:", err);
+      setError(
+        "Failed to mark task as completed: " +
+          (err.message || "An unknown error occurred.")
+      );
+    }
+  };
+
+  if (loading) {
+    return <div>Loading your tasks...</div>;
+  }
+
+  if (error) {
+    return <p style={{ color: "red" }}>{error}</p>;
+  }
+
+  if (assignedTasks.length === 0) {
+    return (
+      <p>
+        You currently have no tasks assigned. Great job, or ask your parent for
+        more!
+      </p>
+    );
+  }
 
   return (
     <div className="taskView-child">
-        <h2>Current Time</h2>
-        
-        <ul style={{ listStyle: "none", padding: 0 }}>
+      <h2>Current Time</h2>
+
+      <ul style={{ listStyle: "none", padding: 0 }}>
         {assignedTasks.map((task) => (
           <li
             key={task.id}
@@ -131,30 +130,18 @@ export default function ChildTaskViewer() {
           >
             <p>
               {task.status === "completed" ? (
-                <img 
-                  src="/img/pending.svg" 
-                  alt="Completed"
-                />
+                <img src="/img/pending.svg" alt="Completed" />
               ) : (
-                <img 
-                  src="/img/cirkel.svg" 
-                  alt="Pending"
-                />
+                <img src="/img/cirkel.svg" alt="Pending" />
               )}
             </p>
 
-            <h3>
-              {task.name}
-            </h3>
+            <h3>{task.name}</h3>
 
-            <h3>
-              {task.points} 
-              ⭐
-            </h3>
+            <h3>{task.points}⭐</h3>
           </li>
         ))}
       </ul>
     </div>
-  )
-
+  );
 }

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import User from "../components/User";
 import ChildShopViewer from "../components/ChildShopViewer";
 import ShopManager from "../components/ShopManager";
-import TaskPreview from "../components/TaskPreview";
+import TaskPreviewChild from "../components/TaskPreviewChild";
 import TaskVerifier from "../components/TaskVerifier";
 import Karousel from "../components/Karousel";
 import { DataBase, Auth } from "../components/DataBase";
@@ -146,9 +146,9 @@ export default function HomePage() {
               <div className="home-box-right">
                 <button
                   onClick={() => navigate("/taskpage")}
-                  style={{ cursor: "pointer" }}>
-                  
-                  <TaskPreview />
+                  style={{ cursor: "pointer" }}
+                >
+                  <TaskPreviewChild />
                 </button>
               </div>
             </div>
@@ -174,8 +174,8 @@ export default function HomePage() {
             <div className="home-box-right">
               <button
                 onClick={() => navigate("/taskpage")}
-                style={{ cursor: "pointer" }}>
-                
+                style={{ cursor: "pointer" }}
+              >
                 {<ParentTaskViewer />}
               </button>
             </div>
