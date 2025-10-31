@@ -87,11 +87,17 @@ export default function Karousel({ items = carouselData, onEditModeChange }) {
           bukser: data.bukser || null,
           shirts: data.shirts || null,
         });
+      } else {
+        setEquippedItems({
+          hats: null,
+          bukser: null,
+          shirts: null,
+        });
       }
     });
 
     return () => unsubscribe();
-  });
+  }, []);
 
   const erDenUnlocked = (item) => {
     const itemKey = item.id || item.name?.toLowerCase().replace(/\s+/g, "_");
@@ -243,43 +249,63 @@ export default function Karousel({ items = carouselData, onEditModeChange }) {
                   Ingen {aktivKategori} tilgængelig endnu
                 </p>
               ) : (
-                tilpasningData[aktivKategori].map((item) => {
-                  const låstOp = erDenUnlocked(item);
-                  const equipped = erDenEquipped(item);
-                  return (
-                    <button
-                      key={item.id || item.name}
-                      onClick={() => handleTilpasningClick(item, låstOp)}
-                      className={`customization-item ${
-                        låstOp ? "låstop" : "ikkelåstop"
-                      }`}
-                      disabled={!låstOp}
-                      title={
-                        equipped
-                          ? `Du har den på`
-                          : låstOp
-                          ? `Brug ${item.name}`
-                          : `Køb ${item.name} i shoppen (${item.price} point)`
-                      }
-                    >
-                      {/* indholdet */}
-                      <span className="item-navn">{item.name}</span>
+                tilpasningData[aktivKategori]
+                  .sort((a, b) => {
+                    // Get item keys for comparison
+                    const aKey =
+                      a.id || a.name?.toLowerCase().replace(/\s+/g, "_");
+                    const bKey =
+                      b.id || b.name?.toLowerCase().replace(/\s+/g, "_");
 
-                      {/* Du har item på */}
-                      {equipped && låstOp && (
-                        <span className="equipped-indicator">✓</span>
-                      )}
+                    // Check if items are unlocked
+                    const aUnlocked =
+                      unlockedItems[aktivKategori].includes(aKey);
+                    const bUnlocked =
+                      unlockedItems[aktivKategori].includes(bKey);
 
-                      {/* hvis den ikke er købt */}
-                      {!låstOp && (
-                        <div className="låst-overlay">
-                          <span className="låst-icon">🔒</span>
-                          <span className="låst-price">{item.price}</span>
-                        </div>
-                      )}
-                    </button>
-                  );
-                })
+                    // Unlocked items come first
+                    if (aUnlocked && !bUnlocked) return -1;
+                    if (!aUnlocked && bUnlocked) return 1;
+
+                    return 0; // Keep original order within each group
+                  })
+                  .map((item) => {
+                    const låstOp = erDenUnlocked(item);
+                    const equipped = erDenEquipped(item);
+                    return (
+                      <button
+                        key={item.id || item.name}
+                        onClick={() => handleTilpasningClick(item, låstOp)}
+                        className={`customization-item ${
+                          låstOp ? "låstop" : "ikkelåstop"
+                        } ${equipped ? "equipped-item" : ""}`}
+                        disabled={!låstOp}
+                        title={
+                          equipped
+                            ? `Du har den på`
+                            : låstOp
+                            ? `Brug ${item.name}`
+                            : `Køb ${item.name} i shoppen (${item.price} point)`
+                        }
+                      >
+                        {/* indholdet */}
+                        <span className="item-navn">{item.name}</span>
+
+                        {/* Du har item på */}
+                        {equipped && låstOp && (
+                          <span className="equipped-indicator">✓</span>
+                        )}
+
+                        {/* hvis den ikke er købt */}
+                        {!låstOp && (
+                          <div className="låst-overlay">
+                            <span className="låst-icon">🔒</span>
+                            <span className="låst-price">{item.price}</span>
+                          </div>
+                        )}
+                      </button>
+                    );
+                  })
               )}
             </div>
           </div>

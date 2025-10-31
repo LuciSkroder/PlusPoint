@@ -139,7 +139,8 @@
   aspect-ratio: 2 / 2;
 }
 
-/* låst item og unlocked item styling 
+/*låst item styling */
+
 .customization-item {
   position: relative;
   display: flex;
@@ -150,17 +151,16 @@
   overflow: hidden;
 }
 
-.customization-item.locked {
-  opacity: 0.7;
+.customization-item.ikkelåstop {
   cursor: not-allowed;
 }
 
-.customization-item.unlocked {
+.customization-item.låstop {
   background-color: var(--accent-color);
   cursor: pointer;
 }
 
-.customization-item.unlocked:hover {
+.customization-item.låstop:hover {
   transform: scale(1.05);
 }
 
@@ -171,17 +171,14 @@
   z-index: 1;
 }
 
- //Lock overlay styling 
-
-
-.lock-overlay {
+.låst-overlay {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(2px);
+  backdrop-filter: blur(1px);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -190,22 +187,34 @@
   z-index: 2;
 }
 
-.lock-icon {
+.låst-icon {
   font-size: 2rem;
   animation: shake 0.5s ease-in-out;
 }
 
-.lock-price {
+.låst-price {
   font-size: 1.2rem;
   font-weight: bold;
   color: var(--accent-color);
-  background-color: rgba(255, 255, 255, 0.9);
+  background-color: var(--hvid);
   padding: 0.25rem 0.75rem;
   border-radius: 12px;
 }
 
+.customization-item.equipped-item {
+  background-color: var(--accent-color);
+  border: solid 4px var(--hvid);
+}
+
 @keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-5px); }
-  75% { transform: translateX(5px); }
-}*/
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
+  }
+}
