@@ -92,11 +92,7 @@ async function buyAvatarItem(item, category) {
       DataBase,
       `childrenProfiles/${childUid}/avatar/owned/${category}/${itemKey}`
     ),
-    {
-      name: item.name,
-      price: item.price,
-      purchaseDate: serverTimestamp(),
-    }
+    true
   );
 
   alert(`Successfully bought ${item.name}!`);
