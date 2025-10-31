@@ -256,3 +256,7 @@ form button[type="submit"] {
 .shop-manager-container .shop-items li button.disabled-btn:hover {
   background-color: #ccc;
 }
+
+.shop-items li.cashed-in {
+  display: none;
+}
