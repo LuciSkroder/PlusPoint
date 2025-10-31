@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Auth, DataBase } from "../components/DataBase";
+import { Auth, DataBase } from "./DataBase";
 import { useNavigate } from "react-router";
 import {
   ref,
@@ -64,7 +64,7 @@ export default function ChildTaskViewer() {
     return () => {
       off(childTasksQuery, "value", unsubscribe);
     };
-  }, [currentUser]); // Re-run effect if currentUser changes
+  }, [currentUser]);
 
   const handleMarkAsCompleted = async (taskId) => {
     if (!currentUser) {
@@ -112,38 +112,10 @@ export default function ChildTaskViewer() {
     );
   }
 
-
-const cancelCompletedTask = async (taskId) => {
-    if (!currentUser) {
-      setError("You must be logged in to mark tasks as complete.");
-      return;
-    }
-
-    // Optional: Add a confirmation dialog
-    if (
-      !window.confirm("Are you sure you want to cancel this task?")
-    ) {
-      return;
-    }
-
-    try {
-      const taskRef = ref(DataBase, `tasks/${taskId}`);
-      await update(taskRef, {
-        status: "pending"
-      });
-    } catch (err) {
-      console.error("Error marking task as canceled:", err);
-      setError(
-        "Failed to cancel task: " +
-          (err.message || "An unknown error occurred.")
-      );
-    }
-  };
-
   return (
-    <div>
+    <div className="taskView-child">
+      <h2>Current Time</h2>
 
-      <h2>Your Assigned Tasks</h2>
       <ul style={{ listStyle: "none", padding: 0 }}>
         {assignedTasks.map((task) => (
           <li
@@ -156,64 +128,20 @@ const cancelCompletedTask = async (taskId) => {
               backgroundColor: task.status === "completed" ? "#e0ffe0" : "#fff",
             }}
           >
-            <h3>
-              {task.name} ({task.points} points)
-            </h3>
             <p>
-              <strong>Description:</strong> {task.description}
+              {task.status === "completed" ? (
+                <img src="/img/pending.svg" alt="Completed" />
+              ) : (
+                <img src="/img/cirkel.svg" alt="Pending" />
+              )}
             </p>
-            <p>
-              <strong>Room:</strong> {task.room}
-            </p>
-            <p>
-              <strong>Assigned Day:</strong> {task.assignedDay}
-            </p>
-            <p>
-              <strong>Repeat:</strong> {task.repeat.replace(/_/g, " ")}
-            </p>
-            <p>
-              <strong>Status:</strong>{" "}
-              {task.status.charAt(0).toUpperCase() + task.status.slice(1)}
-            </p>
-            {task.completedAt && (
-              <p>
-                <strong>Completed On:</strong>{" "}
-                {new Date(task.completedAt).toLocaleDateString()}
-              </p>
-            )}
 
-            {task.status === "pending" && (
-              <div className="button-child"
-                onClick={() => handleMarkAsCompleted(task.id)}
-                style={{
-                  backgroundColor: "#4CAF50",
-                  color: "white",
-                  padding: "10px 15px",
-                  border: "none",
-                  borderRadius: "5px",
-                  cursor: "pointer",
-                  marginTop: "10px",
-                }}
-              >
-                Mark as Completed
-              </div>
-            )}
-            {task.status === "completed" && (
-              <div>
-                <p style={{ color: "green", fontWeight: "bold" }}>
-                  Awaiting Parent Verification
-                </p>
+            <h3>{task.name}</h3>
 
-                <button onClick={() => cancelCompletedTask(task.id)}
-                >
-                  Annuller
-                </button>
-              </div>
-            )}
+            <h3>{task.points}⭐</h3>
           </li>
         ))}
       </ul>
     </div>
   );
 }
-

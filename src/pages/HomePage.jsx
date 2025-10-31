@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import User from "../components/User";
 import ChildShopViewer from "../components/ChildShopViewer";
 import ShopManager from "../components/ShopManager";
-import ChildTaskViewer from "../components/ChildTaskViewer";
+import TaskPreviewChild from "../components/TaskPreviewChild";
 import TaskVerifier from "../components/TaskVerifier";
 import Karousel from "../components/Karousel";
 import { DataBase, Auth } from "../components/DataBase";
@@ -16,6 +16,7 @@ import {
   equalTo,
   get,
 } from "firebase/database";
+import ParentTaskViewer from "../components/TaskPreviewParent";
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -143,8 +144,11 @@ export default function HomePage() {
                 </button>
               </div>
               <div className="home-box-right">
-                <button>
-                  <ChildTaskViewer />
+                <button
+                  onClick={() => navigate("/taskpage")}
+                  style={{ cursor: "pointer" }}
+                >
+                  <TaskPreviewChild />
                 </button>
               </div>
             </div>
@@ -168,7 +172,12 @@ export default function HomePage() {
               </button>
             </div>
             <div className="home-box-right">
-              <button>{<TaskVerifier />}</button>
+              <button
+                onClick={() => navigate("/taskpage")}
+                style={{ cursor: "pointer" }}
+              >
+                {<ParentTaskViewer />}
+              </button>
             </div>
           </div>
           <section className="børne-accounts">

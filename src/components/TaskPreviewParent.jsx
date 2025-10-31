@@ -12,7 +12,7 @@ import {
   get,
 } from "firebase/database";
 
-export default function TaskVerifier() {
+export default function ParentTaskViewer() {
   const [pendingTasks, setPendingTasks] = useState([]);
   const [childDisplayNames, setChildDisplayNames] = useState({});
   const [loading, setLoading] = useState(true);
@@ -174,42 +174,19 @@ export default function TaskVerifier() {
         <ul style={{ listStyle: "none", padding: 0 }}>
           {pendingTasks.map((task) => (
             <li key={task.id}>
-              <h3>
-                {task.name} ({task.points} points)
-              </h3>
-              <p>
+            <div>
+                <h3>
+                    {task.name}
+                </h3>
+                <h3>
+                    {task.points} points
+                </h3>
+            </div>
+            <p>
                 <strong>Assigned to:</strong>{" "}
                 {childDisplayNames[task.assignedToChildUid] ||
-                  task.assignedToChildUid}
-              </p>
-              <p>
-                <strong>Description:</strong> {task.description}
-              </p>
-              <p>
-                <strong>Room:</strong> {task.room}
-              </p>
-              <p>
-                <strong>Assigned Day:</strong> {task.assignedDay}
-              </p>
-              <p>
-                <strong>Status:</strong>{" "}
-                {task.status.charAt(0).toUpperCase() + task.status.slice(1)}
-              </p>
-              {task.completedAt && (
-                <p>
-                  <strong>Child marked complete:</strong>{" "}
-                  {new Date(task.completedAt).toLocaleString()}
-                </p>
-              )}
-
-              <div style={{ marginTop: "10px" }}>
-                <button onClick={() => handleApproveTask(task)}>
-                  Approve & Award Points
-                </button>
-                <button onClick={() => handleDenyTask(task)}>
-                  Deny & Reset
-                </button>
-              </div>
+                task.assignedToChildUid}
+            </p>
             </li>
           ))}
         </ul>

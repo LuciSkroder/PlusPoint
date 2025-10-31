@@ -1,0 +1,19 @@
+.taskView-child ul li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    height: 1.5rem;
+    padding: 0.5rem !important;
+    width: 11rem;
+}
+
+.taskView-child ul li img {
+    width: 1rem;
+}
+
+.taskView-child ul li h3 {
+    display: flex;
+    align-items: center;
+}
+
