@@ -7,6 +7,7 @@ import {
   push,
   update,
   serverTimestamp,
+  set,
 } from "firebase/database";
 import "../css/shop.css";
 
@@ -67,6 +68,40 @@ async function buyShopItem(item, parentUid) {
   alert(`Successfully bought ${item.name}!`);
 }
 
+async function buyAvatarItem(item, category) {
+  const user = Auth.currentUser;
+  if (!user) throw new Error("No authenticated user.");
+
+  const childUid = user.uid;
+  const currentPoints = await getChildPoints(childUid);
+
+  if (currentPoints < item.price) {
+    alert(`Not enough points to buy ${item.name}`);
+    return;
+  }
+
+  // Deduct points
+  await update(ref(DataBase, `childrenProfiles/${childUid}`), {
+    points: currentPoints - item.price,
+  });
+
+  // Add item to owned items
+  const itemKey = item.id || item.name?.toLowerCase().replace(/\s+/g, "_");
+  await set(
+    ref(
+      DataBase,
+      `childrenProfiles/${childUid}/avatar/owned/${category}/${itemKey}`
+    ),
+    {
+      name: item.name,
+      price: item.price,
+      purchaseDate: serverTimestamp(),
+    }
+  );
+
+  alert(`Successfully bought ${item.name}!`);
+}
+
 // Component
 export default function ChildShopViewer() {
   const [shopItems, setShopItems] = useState([]);
@@ -75,6 +110,16 @@ export default function ChildShopViewer() {
   const [purchases, setPurchases] = useState([]);
   const [cashedInItems, setCashedInItems] = useState(new Set());
   const [viewMode, setViewMode] = useState("shop"); // "shop", "purchases", "styling"
+  const [avatarItems, setAvatarItems] = useState({
+    hats: [],
+    shirts: [],
+    bukser: [],
+  });
+  const [unlockedItems, setUnlockedItems] = useState({
+    hats: [],
+    shirts: [],
+    bukser: [],
+  });
 
   useEffect(() => {
     const user = Auth.currentUser;
@@ -126,9 +171,53 @@ export default function ChildShopViewer() {
     };
   }, []);
 
+  // Load avatar customization items
+  useEffect(() => {
+    const avatarRef = ref(DataBase, "avatarCustomizations");
+    const unsubscribe = onValue(avatarRef, (snapshot) => {
+      if (snapshot.exists()) {
+        const data = snapshot.val();
+        setAvatarItems({
+          hats: data.hats ? Object.values(data.hats) : [],
+          shirts: data.shirts ? Object.values(data.shirts) : [],
+          bukser: data.bukser ? Object.values(data.bukser) : [],
+        });
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  // Load unlocked items
+  useEffect(() => {
+    const user = Auth.currentUser;
+    if (!user) return;
+
+    const unlockedRef = ref(
+      DataBase,
+      `childrenProfiles/${user.uid}/avatar/owned`
+    );
+    const unsubscribe = onValue(unlockedRef, (snapshot) => {
+      if (snapshot.exists()) {
+        const data = snapshot.val();
+        setUnlockedItems({
+          hats: data.hats ? Object.keys(data.hats) : [],
+          shirts: data.shirts ? Object.keys(data.shirts) : [],
+          bukser: data.bukser ? Object.keys(data.bukser) : [],
+        });
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
   const handleBuyItem = async (item) => {
     if (!parentUid) return;
     await buyShopItem(item, parentUid);
+  };
+
+  const handleBuyAvatarItem = async (item, category) => {
+    await buyAvatarItem(item, category);
   };
 
   const handleCashIn = async (purchase) => {
@@ -153,6 +242,49 @@ export default function ChildShopViewer() {
 
       alert(`${purchase.itemName} has been cashed in!`);
     }
+  };
+
+  // Check if avatar item is unlocked
+  const isItemUnlocked = (item, category) => {
+    const itemKey = item.id || item.name?.toLowerCase().replace(/\s+/g, "_");
+    return unlockedItems[category].includes(itemKey);
+  };
+
+  // Generate all avatar items for styling view
+  const generateAvatarItems = () => {
+    const allItems = [];
+
+    // Add hats
+    avatarItems.hats.forEach((item) => {
+      allItems.push({
+        ...item,
+        category: "hats",
+        type: "Hat",
+        id: item.id || item.name?.toLowerCase().replace(/\s+/g, "_"),
+      });
+    });
+
+    // Add shirts
+    avatarItems.shirts.forEach((item) => {
+      allItems.push({
+        ...item,
+        category: "shirts",
+        type: "Shirt",
+        id: item.id || item.name?.toLowerCase().replace(/\s+/g, "_"),
+      });
+    });
+
+    // Add bukser
+    avatarItems.bukser.forEach((item) => {
+      allItems.push({
+        ...item,
+        category: "bukser",
+        type: "Pants",
+        id: item.id || item.name?.toLowerCase().replace(/\s+/g, "_"),
+      });
+    });
+
+    return allItems;
   };
 
   // Generate 10 empty styling boxes
@@ -250,18 +382,43 @@ export default function ChildShopViewer() {
         </div>
       ) : viewMode === "styling" ? (
         <div className="shop-items">
-          <ul>
-            {generateStylingBoxes().map((item) => (
-              <li key={item.id}>
-                <h4>{item.name}</h4>
-                <p>{item.description}</p>
-                <p>Cost: {item.price} points</p>
-                <div>
-                  <button disabled>Sample Button</button>
-                </div>
-              </li>
-            ))}
-          </ul>
+          {generateAvatarItems().length === 0 ? (
+            <p>No styling items available yet.</p>
+          ) : (
+            <ul>
+              {generateAvatarItems().map((item) => {
+                const isUnlocked = isItemUnlocked(item, item.category);
+                return (
+                  <li key={`${item.category}-${item.id}`}>
+                    <h4>{item.name}</h4>
+                    <p>{item.type}</p>
+                    <p>Cost: {item.price} points</p>
+                    <div>
+                      {isUnlocked ? (
+                        <button
+                          disabled
+                          style={{ backgroundColor: "#28a745", color: "white" }}
+                        >
+                          Owned
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() =>
+                            handleBuyAvatarItem(item, item.category)
+                          }
+                          disabled={childPoints < item.price}
+                        >
+                          {childPoints < item.price
+                            ? "Not enough points"
+                            : "Buy"}
+                        </button>
+                      )}
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
         </div>
       ) : (
         <div className="shop-items">
