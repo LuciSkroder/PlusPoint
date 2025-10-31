@@ -87,11 +87,17 @@ export default function Karousel({ items = carouselData, onEditModeChange }) {
           bukser: data.bukser || null,
           shirts: data.shirts || null,
         });
+      } else {
+        setEquippedItems({
+          hats: null,
+          bukser: null,
+          shirts: null,
+        });
       }
     });
 
     return () => unsubscribe();
-  });
+  }, []);
 
   const erDenUnlocked = (item) => {
     const itemKey = item.id || item.name?.toLowerCase().replace(/\s+/g, "_");
