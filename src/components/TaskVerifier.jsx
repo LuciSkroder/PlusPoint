@@ -202,7 +202,7 @@ export default function TaskVerifier() {
                 </p>
               )}
 
-              <div style={{ marginTop: "10px" }}>
+              <div className="parentButtons" style={{ marginTop: "10px" }}>
                 <button onClick={() => handleApproveTask(task)}>
                   Approve & Award Points
                 </button>
