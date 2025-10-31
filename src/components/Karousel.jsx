@@ -72,7 +72,7 @@ export default function Karousel({ items = carouselData, onEditModeChange }) {
 
   useEffect(() => {
     const currentUser = Auth.currentUser;
-    if (!currentUser || !editMode) return;
+    if (!currentUser) return;
 
     const equippedRef = ref(
       DataBase,
@@ -91,7 +91,7 @@ export default function Karousel({ items = carouselData, onEditModeChange }) {
     });
 
     return () => unsubscribe();
-  }, [editMode]);
+  });
 
   const erDenUnlocked = (item) => {
     const itemKey = item.id || item.name?.toLowerCase().replace(/\s+/g, "_");
@@ -118,6 +118,7 @@ export default function Karousel({ items = carouselData, onEditModeChange }) {
       if (!currentUser) return;
 
       const itemKey = item.id || item.name?.toLowerCase().replace(/\s+/g, "_");
+
       const duHarDenpå = equippedItems[aktivKategori] === itemKey;
 
       const equippedRef = ref(
