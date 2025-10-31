@@ -141,7 +141,7 @@ const cancelCompletedTask = async (taskId) => {
   };
 
   return (
-    <div>
+    <div className="childViewer">
 
       <h2>Your Assigned Tasks</h2>
       <ul style={{ listStyle: "none", padding: 0 }}>

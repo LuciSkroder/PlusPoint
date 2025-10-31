@@ -173,6 +173,7 @@ export default function HomePage() {
             </div>
             <div className="home-box-right">
               <button
+                className="home-box-parent"
                 onClick={() => navigate("/taskpage")}
                 style={{ cursor: "pointer" }}
               >

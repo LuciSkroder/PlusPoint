@@ -166,7 +166,7 @@ export default function ParentTaskViewer() {
   }
 
   return (
-    <div className="task-box">
+    <div className="taskView-parent">
       <h2>Tasks Awaiting Your Verification</h2>
       {pendingTasks.length === 0 ? (
         <p>No tasks currently awaiting your verification. All caught up!</p>
