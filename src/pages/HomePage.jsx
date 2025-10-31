@@ -16,6 +16,7 @@ import {
   equalTo,
   get,
 } from "firebase/database";
+import ParentTaskViewer from "../components/TaskPreviewParent";
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -175,7 +176,7 @@ export default function HomePage() {
                 onClick={() => navigate("/taskpage")}
                 style={{ cursor: "pointer" }}>
                 
-                {<TaskVerifier />}
+                {<ParentTaskViewer />}
               </button>
             </div>
           </div>
