@@ -174,19 +174,18 @@ export default function ParentTaskViewer() {
         <ul style={{ listStyle: "none", padding: 0 }}>
           {pendingTasks.map((task) => (
             <li key={task.id}>
-            <div>
-                <h3>
-                    {task.name}
-                </h3>
-                <h3>
-                    {task.points} points
-                </h3>
-            </div>
-            <p>
-                <strong>Assigned to:</strong>{" "}
-                {childDisplayNames[task.assignedToChildUid] ||
-                task.assignedToChildUid}
-            </p>
+                <div>
+                    <h3>
+                        {task.name}
+                    </h3>
+                    <h3>
+                        {task.points}⭐
+                    </h3>
+                </div>
+                <p>
+                    {childDisplayNames[task.assignedToChildUid] ||
+                    task.assignedToChildUid}
+                </p>
             </li>
           ))}
         </ul>

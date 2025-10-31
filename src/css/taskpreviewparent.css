@@ -2,15 +2,35 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 0.3rem;
+}
+
+.task-box ul li div h3{
+    margin: 0;
+}
+
+.task-box ul li {
+    display: flex;
     font-size: 0.8rem;
-    height: 1.5rem;
     padding: 0.5rem !important;
+    flex-direction: column;
+    align-items: stretch;
+    margin: 0;
+    width: 11rem;
+}
+
+.task-box ul li p {
+    margin: 0;
+    font-size: 0.6rem;
+    text-align: start;
 }
 
 .task-box ul {
-    border: 1px solid rgb(204, 204, 204);
-    margin: 10px 0px;
-    padding: 15px;
-    border-radius: 8px;
-    background-color: rgb(255, 255, 255);
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    background-color: var(--hvid); /**/
+    border-radius: 1rem;
+    box-shadow: 0 2px 1px rgba(0, 0, 0, 0.6);
+    border: 0.1px solid rgba(0, 0, 0, 0.2);
 }
