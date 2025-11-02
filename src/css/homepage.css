@@ -35,9 +35,8 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   flex: 1;
-  padding-bottom: 5vh;
+  margin-top: 3rem;
 }
 
 .home-boxes {
@@ -99,14 +98,20 @@ section.grid {
   display: flex;
   flex-direction: column;
   align-items: center;
-  flex: 0 1 calc(33.33% - 0.67rem);
-  max-width: calc(33.33% - 0.67rem);
   padding-bottom: 5vh;
+  padding: 1rem;
+  border-radius: 1rem;
+}
+
+.user-card.active {
+  background-color: var(--hvid);
 }
 
 .user-avatar {
   width: 60px;
   height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
 .user-info {

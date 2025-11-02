@@ -4,7 +4,11 @@ import "../css/bottomnav.css";
 export default function BottomNav() {
   const location = useLocation();
 
-  if (location.pathname === "/login") {
+  if (
+    location.pathname === "/login" ||
+    location.pathname === "/signup" ||
+    location.pathname === "/forgotpassword"
+  ) {
     return null;
   } else {
     return (
@@ -15,7 +19,7 @@ export default function BottomNav() {
         <NavLink to="/">
           <img src="./public/img/home.svg" alt="Home" />
         </NavLink>
-        <NavLink to="/tasks">
+        <NavLink to="/taskpage">
           <img src="./public/img/to-do.svg" alt="To Do" />
         </NavLink>
       </nav>

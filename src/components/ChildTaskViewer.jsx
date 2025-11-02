@@ -59,7 +59,7 @@ export default function ChildTaskViewer() {
       },
       (dbError) => {
         console.error("Error fetching child's tasks:", dbError);
-        setError("Failed to load tasks. Please try again.");
+        setError("Kunne ikke indlæse opgaver. Prøv venligst igen.");
         setLoading(false);
       }
     );
@@ -72,13 +72,15 @@ export default function ChildTaskViewer() {
 
   const handleMarkAsCompleted = async (taskId) => {
     if (!currentUser) {
-      setError("You must be logged in to mark tasks as complete.");
+      setError("Du skal være logget ind for at markere opgaver som færdige.");
       return;
     }
 
     // Optional: Add a confirmation dialog
     if (
-      !window.confirm("Are you sure you want to mark this task as completed?")
+      !window.confirm(
+        "Er du sikker på, at du vil markere denne opgave som færdig?"
+      )
     ) {
       return;
     }
@@ -89,12 +91,12 @@ export default function ChildTaskViewer() {
         status: "completed",
         completedAt: serverTimestamp(), // Use Firebase's server timestamp
       });
-      alert("Task marked as completed!");
+      alert("Opgave markeret som færdig!");
     } catch (err) {
       console.error("Error marking task as completed:", err);
       setError(
-        "Failed to mark task as completed: " +
-          (err.message || "An unknown error occurred.")
+        "Kunne ikke markere opgave som færdig: " +
+          (err.message || "Der opstod en ukendt fejl.")
       );
     }
   };
@@ -110,20 +112,22 @@ export default function ChildTaskViewer() {
   if (assignedTasks.length === 0) {
     return (
       <p>
-        You currently have no tasks assigned. Great job, or ask your parent for
-        more!
+        Du har ingen opgaver tildelt i øjeblikket. Godt klaret, eller spørg dine
+        forældre om flere!
       </p>
     );
   }
 
   const cancelCompletedTask = async (taskId) => {
     if (!currentUser) {
-      setError("You must be logged in to mark tasks as complete.");
+      setError("Du skal være logget ind for at markere opgaver som færdige.");
       return;
     }
 
     // Optional: Add a confirmation dialog
-    if (!window.confirm("Are you sure you want to cancel this task?")) {
+    if (
+      !window.confirm("Er du sikker på, at du vil annullere færdiggørelsen?")
+    ) {
       return;
     }
 
@@ -135,8 +139,8 @@ export default function ChildTaskViewer() {
     } catch (err) {
       console.error("Error marking task as canceled:", err);
       setError(
-        "Failed to cancel task: " +
-          (err.message || "An unknown error occurred.")
+        "Kunne ikke annullere opgave: " +
+          (err.message || "Der opstod en ukendt fejl.")
       );
     }
   };
@@ -185,13 +189,13 @@ export default function ChildTaskViewer() {
                   marginTop: "10px",
                 }}
               >
-                Mark as Completed
+                Markér som Færdig
               </div>
             )}
             {task.status === "completed" && (
               <div>
                 <p style={{ color: "green", fontWeight: "bold" }}>
-                  Awaiting Parent Verification
+                  Afventer Forældre godkendelse
                 </p>
 
                 <button onClick={() => cancelCompletedTask(task.id)}>

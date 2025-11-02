@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 import { Auth, DataBase } from "./DataBase";
 import { ref, onValue, set } from "firebase/database";
 import carouselData from "../data/karousel.json";
 import "../css/karousel.css";
 
 export default function Karousel({ items = carouselData, onEditModeChange }) {
+  const navigate = useNavigate();
   const [active, setActive] = useState(0);
   const [editMode, setEditMode] = useState(false);
   const [aktivKategori, setAktivKategori] = useState("hats");
@@ -117,6 +119,13 @@ export default function Karousel({ items = carouselData, onEditModeChange }) {
     }
   };
 
+  const handleShopClick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    console.log("omdiregere til shop");
+    navigate("/shop");
+  };
+
   const handleTilpasningClick = (item, låstOp) => {
     if (låstOp) {
       console.log(`Selected ${aktivKategori}:`, item);
@@ -205,7 +214,7 @@ export default function Karousel({ items = carouselData, onEditModeChange }) {
           <button className="prev-arrow" onClick={prev}>
             🡸
           </button>
-          <button className="edit" onClick={toggleEditMode}>
+          <button className={`edit ${editMode ? "edit-mode" : ""}`} onClick={toggleEditMode}>
             {editMode ? "Gem" : "Edit"}
             {/* hvis ved at redigere, vis "Gem", ellers "Rediger" */}
           </button>
@@ -275,11 +284,16 @@ export default function Karousel({ items = carouselData, onEditModeChange }) {
                     return (
                       <button
                         key={item.id || item.name}
-                        onClick={() => handleTilpasningClick(item, låstOp)}
+                        onClick={(e) => {
+                          if (!låstOp) {
+                            handleShopClick(e);
+                          } else {
+                            handleTilpasningClick(item, låstOp);
+                          }
+                        }}
                         className={`customization-item ${
                           låstOp ? "låstop" : "ikkelåstop"
                         } ${equipped ? "equipped-item" : ""}`}
-                        disabled={!låstOp}
                         title={
                           equipped
                             ? `Du har den på`
@@ -298,7 +312,10 @@ export default function Karousel({ items = carouselData, onEditModeChange }) {
 
                         {/* hvis den ikke er købt */}
                         {!låstOp && (
-                          <div className="låst-overlay">
+                          <div
+                            className="låst-overlay"
+                            onClick={handleShopClick}
+                          >
                             <span className="låst-icon">🔒</span>
                             <span className="låst-price">{item.price}</span>
                           </div>

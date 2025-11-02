@@ -5,9 +5,11 @@ import { DataBase } from "../components/DataBase";
 import ProfilePicture from "../components/ProfilBillede";
 import "../css/profil.css";
 import PointCounter from "../components/PointCounter";
+import { useNavigate } from "react-router";
 
 export default function Profil() {
   const { currentUser } = useAuth();
+  const navigate = useNavigate();
   const [brugerData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -129,7 +131,9 @@ export default function Profil() {
         <div className="profil-box">
           <p>Klik på billedet for at ændre dit profilbillede</p>
         </div>
-        <button>indstillinger ⚙️</button>
+        <button onClick={() => navigate("/indstillinger")}>
+          indstillinger ⚙️
+        </button>
       </header>
     </main>
   );

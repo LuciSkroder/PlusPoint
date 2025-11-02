@@ -62,7 +62,7 @@ export default function ChildTaskViewer() {
       },
       (dbError) => {
         console.error("Error fetching child's tasks:", dbError);
-        setError("Failed to load tasks. Please try again.");
+        setError("Kunne ikke indlæse opgaver. Prøv venligst igen.");
         setLoading(false);
       }
     );
@@ -111,8 +111,8 @@ export default function ChildTaskViewer() {
   if (assignedTasks.length === 0) {
     return (
       <p>
-        You currently have no tasks assigned. Great job, or ask your parent for
-        more!
+        Du har ingen opgaver tildelt i øjeblikket. Godt klaret, eller spørg dine
+        forældre om flere!
       </p>
     );
   }

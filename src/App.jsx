@@ -2,7 +2,6 @@ import { Route, Routes, BrowserRouter } from "react-router";
 import HomePage from "./pages/HomePage";
 import CreateTaskPage from "./pages/CreateTaskPage";
 import NavBar from "./components/NavBar";
-import UserDetailPage from "./pages/UserDetailPage";
 import UserUpdatePage from "./pages/UserUpdatePage";
 import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignUpPage";
@@ -60,14 +59,6 @@ export default function App() {
             element={
               <ProtectedRoute>
                 <TaskPage />
-              </ProtectedRoute>
-            }
-          ></Route>
-          <Route
-            path="/users/:id"
-            element={
-              <ProtectedRoute>
-                <UserDetailPage />
               </ProtectedRoute>
             }
           ></Route>

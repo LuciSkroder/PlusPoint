@@ -106,10 +106,6 @@ textarea::placeholder {
   text-align: center;
 }
 
-.success-popup.exit {
-  animation: slideOut 0.5s ease-in forwards;
-}
-
 .success-popup p {
   margin: 0;
   font-size: 1.1rem;
@@ -124,16 +120,5 @@ textarea::placeholder {
   to {
     opacity: 1;
     transform: translate(-50%, -50%);
-  }
-}
-
-@keyframes slideOut {
-  from {
-    opacity: 1;
-    transform: translate(-50%, -50%);
-  }
-  to {
-    opacity: 0;
-    transform: translate(-50%, -60%);
   }
 }

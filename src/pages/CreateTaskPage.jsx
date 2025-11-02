@@ -81,7 +81,7 @@ export default function CreateTaskPage() {
         })
         .catch((err) => {
           console.error("Error fetching children:", err);
-          setError("Failed to load children profiles.");
+          setError("Kunne ikke indlæse børneprofiler.");
           setLoadingChildren(false);
         });
     } else if (!authLoading) {
@@ -98,13 +98,13 @@ export default function CreateTaskPage() {
     setSuccessMessage("");
 
     if (!currentUser || !parentUid) {
-      setError("You must be logged in as a parent to create tasks.");
+      setError("Du skal være logget ind som forælder for at oprette opgaver.");
       setLoadingForm(false);
       return;
     }
 
     if (!selectedChildUid) {
-      setError("Please select a child to assign the task to.");
+      setError("Vælg venligst et barn at tildele opgaven til.");
       setLoadingForm(false);
       return;
     }
@@ -162,20 +162,20 @@ export default function CreateTaskPage() {
   };
 
   if (authLoading || loadingChildren) {
-    return <div>Loading user and children information...</div>;
+    return <div>Indlæser bruger- og børneinformation...</div>;
   }
 
   if (!currentUser) {
-    return <div>You must be logged in to create tasks. Please log in.</div>;
+    return <div>Du skal være logget ind for at oprette opgaver. Log venligst ind.</div>;
   }
 
   if (childrenList.length === 0) {
     return (
       <div>
-        <h2>Create a New Task</h2>
+        <h2>Opret en Ny Opgave</h2>
         <p>
-          You don't have any child accounts linked yet. Please add a child
-          first.
+          Du har ingen børnekonti linket endnu. Tilføj venligst et barn
+          først.
         </p>
         {/* You might want to add a link here to your AddChildPage */}
       </div>
@@ -184,7 +184,7 @@ export default function CreateTaskPage() {
 
   return (
     <div className="input-container-task">
-      <h2>Create a New Task</h2>
+      <h2>Opret en Ny Opgave</h2>
       <p>
         <strong>Logget ind som</strong> <br /> {currentUser?.email}
       </p>
@@ -293,7 +293,7 @@ export default function CreateTaskPage() {
         </div>
 
         <button type="submit" disabled={loadingForm}>
-          {loadingForm ? "Creating Task..." : "Create Task"}
+          {loadingForm ? "Opretter Opgave..." : "Opret Opgave"}
         </button>
       </form>
 

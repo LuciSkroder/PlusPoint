@@ -280,7 +280,14 @@ export default function ChildShopViewer() {
       });
     });
 
-    return allItems;
+    return allItems.sort((a, b) => {
+      const aIsUnlocked = isItemUnlocked(a, a.category);
+      const bIsUnlocked = isItemUnlocked(b, b.category);
+
+      if (aIsUnlocked && !bIsUnlocked) return 1;
+      if (!aIsUnlocked && bIsUnlocked) return -1;
+      return 0;
+    });
   };
 
   // Generate 10 empty styling boxes
@@ -310,15 +317,7 @@ export default function ChildShopViewer() {
             onClick={() => setViewMode("shop")}
             style={getButtonStyle("shop")}
           >
-            Shop
-          </button>
-
-          <button
-            className="create-reward-btn"
-            onClick={() => setViewMode("purchases")}
-            style={getButtonStyle("purchases")}
-          >
-            Purchases
+            Beløninger
           </button>
 
           <button
@@ -326,7 +325,15 @@ export default function ChildShopViewer() {
             onClick={() => setViewMode("styling")}
             style={getButtonStyle("styling")}
           >
-            Styling
+            In-app
+          </button>
+
+          <button
+            className="create-reward-btn"
+            onClick={() => setViewMode("purchases")}
+            style={getButtonStyle("purchases")}
+          >
+            Dine køb
           </button>
         </div>
       </div>

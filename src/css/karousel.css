@@ -93,12 +93,52 @@
   z-index: 5;
 }
 
+.kategorier {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
 .arrows.edit-mode {
   margin: 5vh 0 5vh 0;
   gap: 2rem;
   display: flex;
   justify-content: center;
   flex-direction: row;
+}
+
+.kategorier {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.kategorier button {
+  width: 8rem;
+  padding: 0.5rem 1rem 0.5rem 1rem;
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 600;
+  border: 2px solid var(--accent-color);
+  background-color: var(--hvid);
+  color: var(--sort);
+  border-radius: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.kategorier button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  background-color: rgba(254, 190, 44, 0.1);
+}
+
+.kategorier button.active {
+  background-color: var(--accent-color);
+  color: var(--sort);
+  border-color: var(--accent-color);
+  box-shadow: 0 4px 8px rgba(254, 190, 44, 0.4);
+  transform: scale(1.05);
 }
 
 .karousel-box.edit-mode {
@@ -202,8 +242,7 @@
 }
 
 .customization-item.equipped-item {
-  background-color: var(--accent-color);
-  border: solid 4px var(--hvid);
+  background-color: var(--hvid);
 }
 
 @keyframes shake {

@@ -41,25 +41,25 @@ function AddChildPage() {
       });
 
       if (result.data && result.data.success) {
-        setSuccessMessage(`Child "${childDisplayName}" added successfully!`);
+        setSuccessMessage(`Barn "${childDisplayName}" tilføjet med succes!`);
         setChildEmail("");
         setChildPassword("");
         setChildDisplayName("");
       } else {
         setError(
           result.data?.message ||
-            "Failed to add child (Cloud Function reported error)."
+            "Kunne ikke tilføje barn (Cloud Function rapporterede fejl)."
         );
       }
     } catch (err) {
       // Handle HttpsError objects from callable functions
       // The error object has 'code' and 'message' properties for HttpsError
       if (err.code && err.message) {
-        setError(`Failed to add child: ${err.message}`);
+        setError(`Kunne ikke tilføje barn: ${err.message}`);
       } else {
         // Fallback for unexpected errors
         setError(
-          `Failed to add child: ${err.message || "An unknown error occurred."}`
+          `Kunne ikke tilføje barn: ${err.message || "Der opstod en ukendt fejl."}`
         );
       }
     } finally {
@@ -68,11 +68,11 @@ function AddChildPage() {
   };
 
   if (authLoading) {
-    return <div>Loading user information...</div>; // Show a loading state while auth is being determined
+    return <div>Indlæser brugerinformation...</div>; // Show a loading state while auth is being determined
   }
 
   if (!currentUser) {
-    return <div>You must be logged in to add a child. Please log in.</div>; // Redirect or show message if not logged in
+    return <div>Du skal være logget ind for at tilføje et barn. Log venligst ind.</div>; // Redirect or show message if not logged in
   }
 
   return (
@@ -115,7 +115,7 @@ function AddChildPage() {
           />
         </div>
         <button type="submit" disabled={loadingForm} className="add-child-submit">
-          {loadingForm ? "Adding Child..." : "Add Child"}
+          {loadingForm ? "Tilføjer Barn..." : "Tilføj Barn"}
         </button>
       </form>
 

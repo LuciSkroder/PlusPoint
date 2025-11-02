@@ -71,7 +71,9 @@ export default function ParentTaskViewer() {
       },
       (dbError) => {
         console.error("Error fetching parent's tasks:", dbError);
-        setError("Failed to load tasks for verification. Please try again.");
+        setError(
+          "Kunne ikke indlæse opgaver til godkendelse. Prøv venligst igen."
+        );
         setLoading(false);
       }
     );
@@ -83,7 +85,7 @@ export default function ParentTaskViewer() {
 
   const handleApproveTask = async (task) => {
     if (!parentUid) {
-      setError("Authentication error. Please log in again.");
+      setError("Autentificeringsfejl. Log venligst ind igen.");
       return;
     }
 
@@ -131,7 +133,7 @@ export default function ParentTaskViewer() {
 
   const handleDenyTask = async (task) => {
     if (!parentUid) {
-      setError("Authentication error. Please log in again.");
+      setError("Autentificeringsfejl. Log venligst ind igen.");
       return;
     }
 
@@ -168,9 +170,9 @@ export default function ParentTaskViewer() {
 
   return (
     <div className="taskView-parent">
-      <h2>Tasks Awaiting Your Verification</h2>
+      <h2>Opgaver der Afventer Godkendelse</h2>
       {pendingTasks.length === 0 ? (
-        <p>No tasks currently awaiting your verification. All caught up!</p>
+        <p>Ingen opgaver afventer godkendelse. Alt er opdateret!</p>
       ) : (
         <ul style={{ listStyle: "none", padding: 0 }}>
           {pendingTasks.map((task) => (
