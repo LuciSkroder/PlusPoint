@@ -10,6 +10,11 @@
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
   </head>
   <body>
+    <script>
+  if (location.pathname === "/PlusPoint") {
+    location.replace(location.pathname + "/");
+  }
+</script>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
