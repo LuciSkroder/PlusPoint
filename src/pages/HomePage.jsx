@@ -205,6 +205,9 @@ export default function HomePage() {
                         <h3 className="user-name">
                           {childUser.displayName || "Intet navn"}
                         </h3>
+                        <h3 className="user-name">
+                          {childUser.points || "Ingen Point"}
+                        </h3>
                         {showDetails === childUser.id && (
                           <p className="user-email">
                             {childUser.email || "Ingen email tilgængelig"}
