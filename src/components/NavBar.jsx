@@ -9,7 +9,7 @@ import "../css/navbar.css";
 function GåTilbage() {
   const navigate = useNavigate();
   return (
-    <button className="tilbage-knap" onClick={() => navigate(import.meta.env.BASE_URL)}>
+    <button className="tilbage-knap" onClick={() => navigate("/", { replace: true })}>
       ➜
     </button>
   );
