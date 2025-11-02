@@ -9,7 +9,7 @@ import "../css/navbar.css";
 function GåTilbage() {
   const navigate = useNavigate();
   return (
-    <button className="tilbage-knap" onClick={() => navigate("/")}>
+    <button className="tilbage-knap" onClick={() => navigate("/PlusPoint/")}>
       ➜
     </button>
   );
