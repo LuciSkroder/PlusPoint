@@ -26,11 +26,11 @@ export default function NavBar() {
     return (
       <nav className="top-nav">
         <NavLink to="/login" className="dropdown-item">
-                <img
-                  src="./public/img/logout.png"
-                  alt="logout"
-                  className="logout-icon"
-                />
+          <img
+            src="./public/img/logout.png"
+            alt="logout"
+            className="logout-icon"
+          />
         </NavLink>
         <PointCounter></PointCounter>
         <div className="parent-menu">
@@ -41,8 +41,8 @@ export default function NavBar() {
           />
           {showDropdown && (
             <div className="dropdown-menu">
-              <NavLink to="/login" className="dropdown-item">
-                <p className="log-ud">  Log ud ➜] </p>
+              <NavLink to="/profil" className="dropdown-item">
+                <p> Profil 👤</p>
               </NavLink>
               <NavLink to="/indstillinger" className="dropdown-item">
                 <p> Indstillinger ⚙️</p>
@@ -65,11 +65,14 @@ export default function NavBar() {
           />
           {showDropdown && (
             <div className="dropdown-menu">
-              <NavLink to="/login" className="dropdown-item">
-                <p className="log-ud">  Log ud ➜] </p>
+              <NavLink to="/profil" className="dropdown-item">
+                <p> Profil 👤</p>
               </NavLink>
               <NavLink to="/indstillinger" className="dropdown-item">
                 <p> Indstillinger ⚙️</p>
+              </NavLink>
+              <NavLink to="/login" className="dropdown-item">
+                <p className="log-ud"> Log ud ➜] </p>
               </NavLink>
             </div>
           )}

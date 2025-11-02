@@ -13,6 +13,8 @@ import ProtectedRoute from "./components/ProtectedRoutes";
 import BottomNav from "./components/BottomNav";
 import ShopPage from "./pages/ShopPage";
 import TaskPage from "./pages/TaskPage";
+import Profil from "./pages/Profil";
+import Indstillinger from "./pages/Indstillinger";
 
 export default function App() {
   const basename = process.env.NODE_ENV === "production" ? "/PlusPoint" : "/";
@@ -84,6 +86,8 @@ export default function App() {
               </ProtectedRoute>
             }
           ></Route>
+          <Route path="/profil" element={<Profil />}></Route>
+          <Route path="/indstillinger" element={<Indstillinger />}></Route>
         </Routes>
         <BottomNav></BottomNav>
       </BrowserRouter>
