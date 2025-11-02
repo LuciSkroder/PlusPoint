@@ -50,6 +50,8 @@ body {
   overflow: hidden;
   padding-bottom: 1vh;
   max-width: 100%;
+  margin-left: 0.3rem;
+  margin-right: 0.3rem;
 }
 
 .home-boxes button {
