@@ -135,9 +135,9 @@ export default function ChildTaskViewer() {
           >
             <p>
               {task.status === "completed" ? (
-                <img src="./img/pending.svg" alt="Completed" />
+                <img src="/img/pending.svg" alt="Completed" />
               ) : (
-                <img src="./img/Cirkel.svg" alt="Pending" />
+                <img src="/img/Cirkel.svg" alt="Pending" />
               )}
             </p>
 

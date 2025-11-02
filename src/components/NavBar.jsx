@@ -77,7 +77,7 @@ export default function NavBar() {
       <nav className="top-nav">
         <NavLink to="/login" className="dropdown-item" onClick={handleLogout}>
           <img
-            src="./img/logout.png"
+            src="/img/logout.png"
             alt="logout"
             className="logout-icon"
           />
