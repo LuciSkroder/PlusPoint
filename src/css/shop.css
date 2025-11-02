@@ -75,7 +75,6 @@
 }
 
 .shop-items ul {
-  background-color: var(--hvid);
   list-style: none;
   padding: 0;
   margin: 0;
@@ -86,6 +85,7 @@
 }
 
 .shop-items li {
+  background-color: var(--hvid);
   display: flex;
   flex-direction: column;
   align-items: center;
