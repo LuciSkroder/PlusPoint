@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { Auth } from "../components/DataBase";
 import { useNavigate } from "react-router";
@@ -45,7 +45,7 @@ export default function LoginPage() {
       </form>
       {error && <p style={{ color: "red" }}>{error}</p>}
       <p>
-        Don't have an account? <a href="/signup">Sign Up</a>
+        Don't have an account? <button onClick={() => navigate("/signup")}>Sign Up</button>
       </p>
       <p>
         <a
