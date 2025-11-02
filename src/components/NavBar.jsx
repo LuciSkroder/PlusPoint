@@ -47,7 +47,7 @@ export default function NavBar() {
     e.preventDefault();
     const confirmed = window.confirm("Er du sikker på, at du vil logge ud?");
     if (confirmed) {
-      window.location.href = "/login";
+      window.location.href = "/PlusPoint/login";
     }
   }
 
