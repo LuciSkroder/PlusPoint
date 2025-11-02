@@ -1,6 +1,7 @@
 import { NavLink, useLocation, useNavigate } from "react-router";
 import { useState } from "react";
 import PointCounter from "./PointCounter";
+import ProfilBillede from "./ProfilBillede";
 import "../css/navbar.css";
 
 function GåTilbage() {
@@ -34,8 +35,8 @@ export default function NavBar() {
         </NavLink>
         <PointCounter></PointCounter>
         <div className="parent-menu">
-          <img
-            src="./public/img/icon-black.svg"
+          <ProfilBillede
+            size={32}
             className="parent-icon"
             onClick={toggleDropdown}
           />
@@ -58,8 +59,8 @@ export default function NavBar() {
         <GåTilbage></GåTilbage>
         <PointCounter></PointCounter>
         <div className="parent-menu">
-          <img
-            src="/img/icon-black.svg"
+          <ProfilBillede
+            size={32}
             className="parent-icon"
             onClick={toggleDropdown}
           />

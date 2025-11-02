@@ -22,6 +22,8 @@
   width: 2rem;
   height: 2rem;
   cursor: pointer;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
 .dropdown-menu {
@@ -47,6 +49,13 @@
 .dropdown-item .logout-icon {
   width: 1.5rem;
   height: 1.5rem;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: #333;
 }
 
 .dropdown-item p {
