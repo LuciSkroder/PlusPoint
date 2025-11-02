@@ -17,7 +17,7 @@ import Indstillinger from "./pages/IndstillingerPage";
 import LevelPage from "./pages/LevelPage";
 
 export default function App() {
-  const basename = process.env.NODE_ENV === "production" ? "/PlusPoint" : "/";
+  const basename = process.env.NODE_ENV === "production" ? "/PlusPoint/" : "/";
 
   return (
     <AuthProvider>

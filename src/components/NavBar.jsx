@@ -9,7 +9,7 @@ import "../css/navbar.css";
 function GåTilbage() {
   const navigate = useNavigate();
   return (
-    <button className="tilbage-knap" onClick={() => navigate("/", { replace: true })}>
+    <button className="tilbage-knap" onClick={() => navigate("/")}>
       ➜
     </button>
   );
@@ -24,12 +24,6 @@ export default function NavBar() {
   const toggleDropdown = () => {
     setShowDropdown(!showDropdown);
   };
-
-  useEffect(() => {
-  if (window.location.pathname.endsWith("/PlusPoint")) {
-    window.history.replaceState({}, "", "/PlusPoint/");
-  }
-}, []);
 
   useEffect(() => {
     const checkUserRole = Auth.onAuthStateChanged(async (user) => {
