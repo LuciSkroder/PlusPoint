@@ -139,10 +139,10 @@ export default function HomePage() {
             <div className="home-boxes">
               <div className="home-box-left">
                 <button className="home-box" onClick={handleShopClick}>
-                  <img src="../img/shopping-cart.svg" />
+                  <img src="./img/shopping-cart.svg" />
                 </button>
                 <button className="home-box" onClick={handleLevelClick}>
-                  <img src="../img/level.png" />
+                  <img src="./img/level.png" />
                 </button>
               </div>
               <div className="home-box-right">
@@ -165,12 +165,12 @@ export default function HomePage() {
             <div className="home-box-left">
               <button className="home-box">
                 <img
-                  src="../img/shopping-cart.svg"
+                  src="./img/shopping-cart.svg"
                   onClick={() => navigate("/shop")}
                 />
               </button>
               <button className="home-box" onClick={() => navigate("/create")}>
-                <img src="../img/to-do.svg" />
+                <img src="./img/to-do.svg" />
               </button>
             </div>
             <div className="home-box-right">

@@ -1,6 +1,6 @@
 [
   {
-    "image": "../img/man.png",
+    "image": "./img/man.png",
     "name": "Avatar",
     "body": "Placeholder for avatar, skal sættes op med customization",
     "links": [
@@ -11,7 +11,7 @@
     ]
   },
   {
-    "image": "../img/hus-1.png",
+    "image": "./img/hus-1.png",
     "name": "Hus",
     "body": "Placeholder for hus, skal sættes op med customization",
     "links": [
@@ -22,7 +22,7 @@
     ]
   },
   {
-    "image": "../img/phone-1.png",
+    "image": "./img/phone-1.png",
     "name": "App settings",
     "body": "Placeholder for app settings, skal sættes op med customization",
     "links": [
@@ -33,7 +33,7 @@
     ]
   },
   {
-    "image": "../img/træ-1.png",
+    "image": "./img/træ-1.png",
     "name": "Træ",
     "body": "Placeholder for træ, skal sættes op med level system",
     "links": [

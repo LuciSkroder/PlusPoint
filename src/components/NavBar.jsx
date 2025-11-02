@@ -139,7 +139,7 @@ export default function NavBar() {
               >
                 <p> Profil 👤</p>
               </NavLink>
-              {userRole === "parent" && (
+              {rolle === "parent" && (
                 <NavLink
                   to="/create"
                   className="dropdown-item"
