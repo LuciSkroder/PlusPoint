@@ -4,6 +4,7 @@ import { ref, get, set } from "firebase/database";
 import { DataBase } from "../components/DataBase";
 import ProfilePicture from "../components/ProfilBillede";
 import "../css/profil.css";
+import PointCounter from "../components/PointCounter";
 
 export default function Profil() {
   const { currentUser } = useAuth();
@@ -116,11 +117,19 @@ export default function Profil() {
         <div className="profil-image-container" onClick={handleProfileClick}>
           <ProfilePicture size={200} className="profilbillede" />
           <div className="image-overlay">
-            <span>📷</span>
+            <span>✎</span>
           </div>
         </div>
-        <h1>{profilnavn}</h1>
-        <p>Her kan du se og redigere din profilinformation.</p>
+        <h1>
+          {profilnavn}
+          <div className="point-profil">
+            <PointCounter />
+          </div>
+        </h1>
+        <div className="profil-box">
+          <p>Klik på billedet for at ændre dit profilbillede</p>
+        </div>
+        <button>indstillinger ⚙️</button>
       </header>
     </main>
   );

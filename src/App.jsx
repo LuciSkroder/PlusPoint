@@ -13,8 +13,8 @@ import ProtectedRoute from "./components/ProtectedRoutes";
 import BottomNav from "./components/BottomNav";
 import ShopPage from "./pages/ShopPage";
 import TaskPage from "./pages/TaskPage";
-import Profil from "./pages/Profil";
-import Indstillinger from "./pages/Indstillinger";
+import Profil from "./pages/ProfilPage";
+import Indstillinger from "./pages/IndstillingerPage";
 
 export default function App() {
   const basename = process.env.NODE_ENV === "production" ? "/PlusPoint" : "/";

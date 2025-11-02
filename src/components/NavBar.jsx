@@ -1,5 +1,5 @@
 import { NavLink, useLocation, useNavigate } from "react-router";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import PointCounter from "./PointCounter";
 import ProfilBillede from "./ProfilBillede";
 import "../css/navbar.css";
@@ -16,10 +16,26 @@ function GåTilbage() {
 export default function NavBar() {
   const location = useLocation();
   const [showDropdown, setShowDropdown] = useState(false);
+  const dropdownRef = useRef(null);
 
   const toggleDropdown = () => {
     setShowDropdown(!showDropdown);
   };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        showDropdown &&
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target)
+      ) {
+        setShowDropdown(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [showDropdown]);
 
   if (location.pathname === "/login") {
     return null;
@@ -34,7 +50,7 @@ export default function NavBar() {
           />
         </NavLink>
         <PointCounter></PointCounter>
-        <div className="parent-menu">
+        <div className="parent-menu" ref={dropdownRef}>
           <ProfilBillede
             size={32}
             className="parent-icon"
@@ -58,7 +74,7 @@ export default function NavBar() {
       <nav className="top-nav">
         <GåTilbage></GåTilbage>
         <PointCounter></PointCounter>
-        <div className="parent-menu">
+        <div className="parent-menu" ref={dropdownRef}>
           <ProfilBillede
             size={32}
             className="parent-icon"
