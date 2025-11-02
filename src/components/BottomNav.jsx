@@ -14,13 +14,13 @@ export default function BottomNav() {
     return (
       <nav className="bottom-nav">
         <NavLink to="/shop">
-          <img src="./public/img/shopping-cart.svg" alt="Shopping Cart" />
+          <img src="./img/shopping-cart.svg" alt="Shopping Cart" />
         </NavLink>
         <NavLink to="/">
-          <img src="./public/img/home.svg" alt="Home" />
+          <img src="./img/home.svg" alt="Home" />
         </NavLink>
         <NavLink to="/taskpage">
-          <img src="./public/img/to-do.svg" alt="To Do" />
+          <img src="./img/to-do.svg" alt="To Do" />
         </NavLink>
       </nav>
     );

@@ -1,6 +1,6 @@
 .karousel-box {
   /*background-color: red; til trouble shooting*/
-  background-image: url(/public/img/elipse.png);
+  background-image: url(/img/elipse.png);
   background-size: contain;
   background-repeat: no-repeat;
   background-position: 0% 100%;
