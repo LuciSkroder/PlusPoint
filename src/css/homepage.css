@@ -49,6 +49,7 @@ body {
   padding-top: 2vh;
   overflow: hidden;
   padding-bottom: 1vh;
+  max-width: 100%;
 }
 
 .home-boxes button {
