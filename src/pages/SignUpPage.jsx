@@ -6,6 +6,7 @@ import {
 import { ref, set } from "firebase/database";
 import { Auth, DataBase } from "../components/DataBase";
 import { useNavigate } from "react-router";
+import "../css/signup.css";
 
 export default function SignUpPage() {
   const [email, setEmail] = useState("");
@@ -99,105 +100,59 @@ export default function SignUpPage() {
   };
 
   return (
-    <div
-      style={{
-        maxWidth: "400px",
-        margin: "50px auto",
-        padding: "20px",
-        border: "1px solid #ccc",
-        borderRadius: "8px",
-        boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-      }}
-    >
-      <h2>Sign Up</h2>
-      <form
-        onSubmit={handleSignUp}
-        style={{ display: "flex", flexDirection: "column", gap: "15px" }}
-      >
-        <div>
-          <label htmlFor="email">Email:</label>
-          <input
-            type="email"
-            id="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            disabled={loading}
-            style={{
-              width: "100%",
-              padding: "10px",
-              border: "1px solid #ddd",
-              borderRadius: "4px",
-            }}
-          />
-        </div>
-        <div>
-          <label htmlFor="password">Password:</label>
-          <input
-            type="password"
-            id="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            disabled={loading}
-            style={{
-              width: "100%",
-              padding: "10px",
-              border: "1px solid #ddd",
-              borderRadius: "4px",
-            }}
-          />
-        </div>
-        <div>
-          <label htmlFor="confirmPassword">Confirm Password:</label>
-          <input
-            type="password"
-            id="confirmPassword"
-            placeholder="Confirm Password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            required
-            disabled={loading}
-            style={{
-              width: "100%",
-              padding: "10px",
-              border: "1px solid #ddd",
-              borderRadius: "4px",
-            }}
-          />
-        </div>
-        <button
-          type="submit"
+    <main className="page">
+      <form onSubmit={handleSignUp} className="signup-form">
+        <h2 style={{ textAlign: "center" }}>Opret Konto</h2>
+
+        <input
+          type="email"
+          id="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
           disabled={loading}
-          style={{
-            padding: "10px 15px",
-            backgroundColor: loading ? "#cccccc" : "#007bff",
-            color: "white",
-            border: "none",
-            borderRadius: "5px",
-            cursor: loading ? "not-allowed" : "pointer",
-            fontSize: "16px",
-          }}
-        >
-          {loading ? "Signing Up..." : "Sign Up"}
+        />
+
+        <input
+          type="password"
+          id="password"
+          placeholder="Kodeord"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+          disabled={loading}
+        />
+
+        <input
+          type="password"
+          id="confirmPassword"
+          placeholder="Bekræft Kodeord"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          required
+          disabled={loading}
+        />
+
+        <button type="submit" disabled={loading} className="signup-button">
+          {loading ? "Opretter..." : "Opret Konto"}
         </button>
+
+        {error && <p style={{ color: "red", textAlign: "center" }}>{error}</p>}
+
+        <p style={{ textAlign: "center" }}>
+          Har du allerede en konto?{" "}
+          <a
+            onClick={() => navigate("/login")}
+            style={{
+              cursor: "pointer",
+              textDecoration: "underline",
+            }}
+          >
+            Log Ind
+          </a>
+        </p>
       </form>
-      {error && <p style={{ color: "red", marginTop: "15px" }}>{error}</p>}
-      <p style={{ marginTop: "20px", textAlign: "center" }}>
-        Already have an account?{" "}
-        <a
-          onClick={() => navigate("/login")}
-          style={{
-            cursor: "pointer",
-            textDecoration: "underline",
-            color: "#007bff",
-          }}
-        >
-          Log In
-        </a>
-      </p>
-    </div>
+    </main>
   );
 }

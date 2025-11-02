@@ -17,6 +17,7 @@ import {
   get,
 } from "firebase/database";
 import ParentTaskViewer from "../components/TaskPreviewParent";
+import ProfilBillede from "../components/ProfilBillede";
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -33,6 +34,10 @@ export default function HomePage() {
 
   function handleShopClick() {
     navigate("/shop");
+  }
+
+  function handleLevelClick() {
+    navigate("/level");
   }
 
   // Toggle body class when edit mode changes
@@ -58,7 +63,7 @@ export default function HomePage() {
       if (!user) {
         setUserRole(null);
         setLoading(false);
-        setError("Please log in to use PlusPoint.");
+        setError("Log venligst ind for at bruge PlusPoint.");
         return;
       }
 
@@ -108,7 +113,7 @@ export default function HomePage() {
               console.error("Error fetching child accounts:", dbError);
               setLoading(false);
               setError(
-                "Failed to load child accounts. Please ensure you are logged in and have permission."
+                "Kunne ikke indlæse børnekonti. Sørg for at du er logget ind og har tilladelse."
               );
             }
           );
@@ -118,7 +123,7 @@ export default function HomePage() {
         }
       } catch (err) {
         console.error("Error determining user role:", err);
-        setError("Could not determine user role. Please try again.");
+        setError("Kunne ikke bestemme brugerrolle. Prøv venligst igen.");
         setLoading(false);
       }
     });
@@ -136,11 +141,8 @@ export default function HomePage() {
                 <button className="home-box" onClick={handleShopClick}>
                   <img src="../../public/img/shopping-cart.svg" />
                 </button>
-                <button
-                  className="home-box"
-                  onClick={() => navigate("/create")}
-                >
-                  <img src="../../public/img/to-do.svg" />
+                <button className="home-box" onClick={handleLevelClick}>
+                  <img src="../../public/img/level.png" />
                 </button>
               </div>
               <div className="home-box-right">
@@ -182,43 +184,45 @@ export default function HomePage() {
             </div>
           </div>
           <section className="børne-accounts">
-            <h2>Your Child Accounts:</h2>
+            <h2>Dine Børnekonti:</h2>
             {childrenForParent.length === 0 ? (
-              <p>No child accounts found linked to your profile.</p>
+              <p>Ingen børnekonti fundet linket til din profil.</p>
             ) : (
-              <section className="grid">
-                {childrenForParent.map((childUser) => (
-                  <div
-                    key={childUser.id}
-                    className="user-card"
-                    onClick={() =>
-                      setShowDetails(
-                        childUser.id === showDetails ? null : childUser.id
-                      )
-                    }
-                    style={{ cursor: "pointer" }}
-                  >
-                    <img
-                      src="/img/icon-yellow.svg"
-                      alt="User Avatar"
-                      className="user-avatar"
-                    />
-                    <div className="user-info">
-                      <h3 className="user-name">
-                        {childUser.displayName || "No Name"}
-                      </h3>
-                      {showDetails === childUser.id && (
-                        <p className="user-email">
-                          {childUser.email || "No email available"}
-                        </p>
-                      )}
+              <>
+                <section className="grid">
+                  {childrenForParent.map((childUser) => (
+                    <div
+                      key={childUser.id}
+                      className={`user-card ${
+                        showDetails === childUser.id ? "active" : ""
+                      }`}
+                      onClick={() =>
+                        setShowDetails(
+                          childUser.id === showDetails ? null : childUser.id
+                        )
+                      }
+                    >
+                      <ProfilBillede
+                        userId={childUser.id}
+                        className="user-avatar"
+                      />
+                      <div className="user-info">
+                        <h3 className="user-name">
+                          {childUser.displayName || "Intet navn"}
+                        </h3>
+                        {showDetails === childUser.id && (
+                          <p className="user-email">
+                            {childUser.email || "Ingen email tilgængelig"}
+                          </p>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </section>
                 <button className="add-child-btn" onClick={handleAddChildClick}>
                   Tilføj Barn
                 </button>
-              </section>
+              </>
             )}
           </section>
         </section>

@@ -1,39 +1,39 @@
 .taskView-parent ul li div {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 0.3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.3rem;
 }
 
-.taskView-parent ul li div h3{
-    margin: 0;
+.taskView-parent ul li div h3 {
+  margin: 0;
 }
 
 .taskView-parent ul li {
-    display: flex;
-    font-size: 0.8rem;
-    padding: 0.5rem !important;
-    flex-direction: column;
-    align-items: stretch;
-    margin: 0;
-    width: 11rem;
+  display: flex;
+  font-size: 0.8rem;
+  padding: 0.5rem !important;
+  flex-direction: column;
+  align-items: stretch;
+  margin: 0;
+  width: 11rem;
 }
 
 .taskView-parent ul li p {
-    margin: 0;
-    font-size: 0.6rem;
-    text-align: start;
+  margin: 0;
+  font-size: 0.6rem;
+  text-align: start;
 }
 
 .taskView-parent ul {
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    background-color: var(--hvid); /**/
-    border-radius: 1rem;
-    border: 0.1px solid rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  background-color: var(--hvid); /**/
+  border-radius: 1rem;
+  border: 0.1px solid rgba(0, 0, 0, 0.2);
 }
 
 button.home-box-parent {
-    display: flex;
+  display: flex;
 }

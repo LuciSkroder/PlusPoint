@@ -2,7 +2,6 @@ import { Route, Routes, BrowserRouter } from "react-router";
 import HomePage from "./pages/HomePage";
 import CreateTaskPage from "./pages/CreateTaskPage";
 import NavBar from "./components/NavBar";
-import UserDetailPage from "./pages/UserDetailPage";
 import UserUpdatePage from "./pages/UserUpdatePage";
 import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignUpPage";
@@ -13,6 +12,9 @@ import ProtectedRoute from "./components/ProtectedRoutes";
 import BottomNav from "./components/BottomNav";
 import ShopPage from "./pages/ShopPage";
 import TaskPage from "./pages/TaskPage";
+import Profil from "./pages/ProfilPage";
+import Indstillinger from "./pages/IndstillingerPage";
+import LevelPage from "./pages/LevelPage";
 
 export default function App() {
   const basename = process.env.NODE_ENV === "production" ? "/PlusPoint" : "/";
@@ -61,14 +63,6 @@ export default function App() {
             }
           ></Route>
           <Route
-            path="/users/:id"
-            element={
-              <ProtectedRoute>
-                <UserDetailPage />
-              </ProtectedRoute>
-            }
-          ></Route>
-          <Route
             path="/users/:id/update"
             element={
               <ProtectedRoute>
@@ -84,6 +78,9 @@ export default function App() {
               </ProtectedRoute>
             }
           ></Route>
+          <Route path="/profil" element={<Profil />}></Route>
+          <Route path="/level" element={<LevelPage />}></Route>
+          <Route path="/indstillinger" element={<Indstillinger />}></Route>
         </Routes>
         <BottomNav></BottomNav>
       </BrowserRouter>

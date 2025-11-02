@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { Auth, DataBase } from "../components/DataBase";
-import { useNavigate } from "react-router";
 import {
   ref,
   onValue,
@@ -19,7 +18,6 @@ export default function TaskVerifier() {
   const [error, setError] = useState(null);
   const currentUser = Auth.currentUser;
   const parentUid = currentUser?.uid;
-  const navigate = useNavigate();
 
   useEffect(() => {
     if (!parentUid) {
@@ -70,7 +68,9 @@ export default function TaskVerifier() {
       },
       (dbError) => {
         console.error("Error fetching parent's tasks:", dbError);
-        setError("Failed to load tasks for verification. Please try again.");
+        setError(
+          "Kunne ikke indlæse opgaver til godkendelse. Prøv venligst igen."
+        );
         setLoading(false);
       }
     );
@@ -82,7 +82,7 @@ export default function TaskVerifier() {
 
   const handleApproveTask = async (task) => {
     if (!parentUid) {
-      setError("Authentication error. Please log in again.");
+      setError("Autentificeringsfejl. Log venligst ind igen.");
       return;
     }
 
@@ -130,7 +130,7 @@ export default function TaskVerifier() {
 
   const handleDenyTask = async (task) => {
     if (!parentUid) {
-      setError("Authentication error. Please log in again.");
+      setError("Autentificeringsfejl. Log venligst ind igen.");
       return;
     }
 
@@ -166,10 +166,10 @@ export default function TaskVerifier() {
   }
 
   return (
-    <div className="task-box">
-      <h2>Tasks Awaiting Your Verification</h2>
+    <div className="task-box-parent">
+      <h2>Opgaver der Afventer Godkendelse</h2>
       {pendingTasks.length === 0 ? (
-        <p>No tasks currently awaiting your verification. All caught up!</p>
+        <p>Ingen opgaver afventer godkendelse. Alt er opdateret!</p>
       ) : (
         <ul style={{ listStyle: "none", padding: 0 }}>
           {pendingTasks.map((task) => (
@@ -177,22 +177,16 @@ export default function TaskVerifier() {
               <h3>
                 {task.name} ({task.points} points)
               </h3>
-              <p>
-                <strong>Assigned to:</strong>{" "}
+              <p className="info-box">
+                {" "}
                 {childDisplayNames[task.assignedToChildUid] ||
                   task.assignedToChildUid}
               </p>
-              <p>
-                <strong>Description:</strong> {task.description}
-              </p>
-              <p>
-                <strong>Room:</strong> {task.room}
-              </p>
-              <p>
-                <strong>Assigned Day:</strong> {task.assignedDay}
-              </p>
-              <p>
-                <strong>Status:</strong>{" "}
+              <p className="info-box">{task.description}</p>
+              <p className="info-box">{task.room}</p>
+              <p className="info-box">{task.assignedDay}</p>
+              <p className="info-box">
+                {" "}
                 {task.status.charAt(0).toUpperCase() + task.status.slice(1)}
               </p>
               {task.completedAt && (
@@ -204,10 +198,10 @@ export default function TaskVerifier() {
 
               <div className="parentButtons" style={{ marginTop: "10px" }}>
                 <button onClick={() => handleApproveTask(task)}>
-                  Approve & Award Points
+                  Godkend & Tildel Point
                 </button>
                 <button onClick={() => handleDenyTask(task)}>
-                  Deny & Reset
+                  Afvis & Nulstil
                 </button>
               </div>
             </li>

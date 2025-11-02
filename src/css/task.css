@@ -43,12 +43,13 @@ select {
   border: none;
   box-shadow: 2px 2px 2px rgba(61, 61, 61, 0.5);
   box-sizing: border-box;
+  padding-left: 1rem;
+  color: var(--sort);
 }
 
-.input-container-task input,
-select,
+.input-container-task input::placeholder,
+select::placeholder,
 textarea::placeholder {
-  padding-left: 1rem;
   color: rgb(106, 106, 106);
 }
 
@@ -86,5 +87,38 @@ textarea::placeholder {
   }
   h2 {
     font-size: 1.3rem;
+  }
+}
+
+.success-popup {
+  position: fixed;
+  top: 20%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: var(--grøn);
+  color: white;
+  padding: 1.5rem 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  width: 15rem;
+  animation: slideIn 0.3s ease-out;
+  text-align: center;
+}
+
+.success-popup p {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -60%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
   }
 }

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Auth, DataBase } from "../components/DataBase";
-import { useNavigate } from "react-router";
 import {
   ref,
   onValue,
@@ -17,7 +16,6 @@ export default function ChildTaskViewer() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const currentUser = Auth.currentUser; // Get the current user directly
-  const navigate = useNavigate();
 
   useEffect(() => {
     if (!currentUser) {
@@ -43,10 +41,16 @@ export default function ChildTaskViewer() {
         const tasksData = [];
         if (snapshot.exists()) {
           snapshot.forEach((childSnapshot) => {
-            tasksData.push({
-              id: childSnapshot.key, // The unique task ID
-              ...childSnapshot.val(), // The task data
-            });
+            const taskData = childSnapshot.val();
+            if (
+              taskData.status === "pending" ||
+              taskData.status === "completed"
+            ) {
+              tasksData.push({
+                id: childSnapshot.key,
+                ...taskData,
+              });
+            }
           });
         }
         setAssignedTasks(tasksData);
@@ -55,7 +59,7 @@ export default function ChildTaskViewer() {
       },
       (dbError) => {
         console.error("Error fetching child's tasks:", dbError);
-        setError("Failed to load tasks. Please try again.");
+        setError("Kunne ikke indlæse opgaver. Prøv venligst igen.");
         setLoading(false);
       }
     );
@@ -68,13 +72,15 @@ export default function ChildTaskViewer() {
 
   const handleMarkAsCompleted = async (taskId) => {
     if (!currentUser) {
-      setError("You must be logged in to mark tasks as complete.");
+      setError("Du skal være logget ind for at markere opgaver som færdige.");
       return;
     }
 
     // Optional: Add a confirmation dialog
     if (
-      !window.confirm("Are you sure you want to mark this task as completed?")
+      !window.confirm(
+        "Er du sikker på, at du vil markere denne opgave som færdig?"
+      )
     ) {
       return;
     }
@@ -85,12 +91,12 @@ export default function ChildTaskViewer() {
         status: "completed",
         completedAt: serverTimestamp(), // Use Firebase's server timestamp
       });
-      alert("Task marked as completed!");
+      alert("Opgave markeret som færdig!");
     } catch (err) {
       console.error("Error marking task as completed:", err);
       setError(
-        "Failed to mark task as completed: " +
-          (err.message || "An unknown error occurred.")
+        "Kunne ikke markere opgave som færdig: " +
+          (err.message || "Der opstod en ukendt fejl.")
       );
     }
   };
@@ -106,22 +112,21 @@ export default function ChildTaskViewer() {
   if (assignedTasks.length === 0) {
     return (
       <p>
-        You currently have no tasks assigned. Great job, or ask your parent for
-        more!
+        Du har ingen opgaver tildelt i øjeblikket. Godt klaret, eller spørg dine
+        forældre om flere!
       </p>
     );
   }
 
-
-const cancelCompletedTask = async (taskId) => {
+  const cancelCompletedTask = async (taskId) => {
     if (!currentUser) {
-      setError("You must be logged in to mark tasks as complete.");
+      setError("Du skal være logget ind for at markere opgaver som færdige.");
       return;
     }
 
     // Optional: Add a confirmation dialog
     if (
-      !window.confirm("Are you sure you want to cancel this task?")
+      !window.confirm("Er du sikker på, at du vil annullere færdiggørelsen?")
     ) {
       return;
     }
@@ -129,20 +134,19 @@ const cancelCompletedTask = async (taskId) => {
     try {
       const taskRef = ref(DataBase, `tasks/${taskId}`);
       await update(taskRef, {
-        status: "pending"
+        status: "pending",
       });
     } catch (err) {
       console.error("Error marking task as canceled:", err);
       setError(
-        "Failed to cancel task: " +
-          (err.message || "An unknown error occurred.")
+        "Kunne ikke annullere opgave: " +
+          (err.message || "Der opstod en ukendt fejl.")
       );
     }
   };
 
   return (
-    <div className="childViewer">
-
+    <div className="task-box-barn">
       <h2>Your Assigned Tasks</h2>
       <ul style={{ listStyle: "none", padding: 0 }}>
         {assignedTasks.map((task) => (
@@ -159,31 +163,21 @@ const cancelCompletedTask = async (taskId) => {
             <h3>
               {task.name} ({task.points} points)
             </h3>
-            <p>
-              <strong>Description:</strong> {task.description}
-            </p>
-            <p>
-              <strong>Room:</strong> {task.room}
-            </p>
-            <p>
+            <p className="description-box">{task.description}</p>
+            <p className="info-box">
               <strong>Assigned Day:</strong> {task.assignedDay}
             </p>
-            <p>
+            <p className="info-box">
               <strong>Repeat:</strong> {task.repeat.replace(/_/g, " ")}
             </p>
-            <p>
+            <p className="info-box">
               <strong>Status:</strong>{" "}
               {task.status.charAt(0).toUpperCase() + task.status.slice(1)}
             </p>
-            {task.completedAt && (
-              <p>
-                <strong>Completed On:</strong>{" "}
-                {new Date(task.completedAt).toLocaleDateString()}
-              </p>
-            )}
 
             {task.status === "pending" && (
-              <div className="button-child"
+              <div
+                className="button-child"
                 onClick={() => handleMarkAsCompleted(task.id)}
                 style={{
                   backgroundColor: "#4CAF50",
@@ -195,17 +189,16 @@ const cancelCompletedTask = async (taskId) => {
                   marginTop: "10px",
                 }}
               >
-                Mark as Completed
+                Markér som Færdig
               </div>
             )}
             {task.status === "completed" && (
               <div>
                 <p style={{ color: "green", fontWeight: "bold" }}>
-                  Awaiting Parent Verification
+                  Afventer Forældre godkendelse
                 </p>
 
-                <button onClick={() => cancelCompletedTask(task.id)}
-                >
+                <button onClick={() => cancelCompletedTask(task.id)}>
                   Annuller
                 </button>
               </div>
@@ -216,4 +209,3 @@ const cancelCompletedTask = async (taskId) => {
     </div>
   );
 }
-
