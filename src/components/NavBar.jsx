@@ -26,6 +26,12 @@ export default function NavBar() {
   };
 
   useEffect(() => {
+  if (window.location.pathname.endsWith("/PlusPoint")) {
+    window.history.replaceState({}, "", "/PlusPoint/");
+  }
+}, []);
+
+  useEffect(() => {
     const checkUserRole = Auth.onAuthStateChanged(async (user) => {
       if (user) {
         const childProfileRef = ref(
