@@ -169,18 +169,11 @@ export default function Karousel({ items = carouselData, onEditModeChange }) {
           <img
             src={items[(active - 1 + length) % length].image}
             className="karousel-image side left"
-            onClick={() =>
-              (window.location.href =
-                items[(active - 1 + length) % length].links[0]?.url || "#")
-            }
           />
           <div className="avatar-wrapper">
             <img
               src={items[active].image}
               className="karousel-image active"
-              onClick={() =>
-                (window.location.href = items[active].links[0]?.url || "#")
-              }
             />
             <div
               className={`equipped-preview-overlay ${
