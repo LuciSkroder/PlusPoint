@@ -216,7 +216,6 @@ export default function Karousel({ items = carouselData, onEditModeChange }) {
           </button>
           <button className={`edit ${editMode ? "edit-mode" : ""}`} onClick={toggleEditMode}>
             {editMode ? "Gem" : "Edit"}
-            {/* hvis ved at redigere, vis "Gem", ellers "Rediger" */}
           </button>
           <button className="next-arrow" onClick={next}>
             🡺
@@ -227,7 +226,6 @@ export default function Karousel({ items = carouselData, onEditModeChange }) {
       {editMode && (
         <div className="customize-box-wrapper">
           <div className="customize-box">
-            {/* Forskellige kategorier af tilpasning*/}
             <section className="kategorier">
               <button
                 className={aktivKategori === "hats" ? "active" : ""}
@@ -276,7 +274,7 @@ export default function Karousel({ items = carouselData, onEditModeChange }) {
                     if (aUnlocked && !bUnlocked) return -1;
                     if (!aUnlocked && bUnlocked) return 1;
 
-                    return 0; // Keep original order within each group
+                    return 0;
                   })
                   .map((item) => {
                     const låstOp = erDenUnlocked(item);
@@ -302,15 +300,11 @@ export default function Karousel({ items = carouselData, onEditModeChange }) {
                             : `Køb ${item.name} i shoppen (${item.price} point)`
                         }
                       >
-                        {/* indholdet */}
                         <span className="item-navn">{item.name}</span>
-
-                        {/* Du har item på */}
                         {equipped && låstOp && (
                           <span className="equipped-indicator">✓</span>
                         )}
 
-                        {/* hvis den ikke er købt */}
                         {!låstOp && (
                           <div
                             className="låst-overlay"

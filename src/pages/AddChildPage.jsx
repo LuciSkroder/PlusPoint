@@ -52,12 +52,9 @@ function AddChildPage() {
         );
       }
     } catch (err) {
-      // Handle HttpsError objects from callable functions
-      // The error object has 'code' and 'message' properties for HttpsError
       if (err.code && err.message) {
         setError(`Kunne ikke tilføje barn: ${err.message}`);
       } else {
-        // Fallback for unexpected errors
         setError(
           `Kunne ikke tilføje barn: ${err.message || "Der opstod en ukendt fejl."}`
         );
@@ -68,17 +65,16 @@ function AddChildPage() {
   };
 
   if (authLoading) {
-    return <div>Indlæser brugerinformation...</div>; // Show a loading state while auth is being determined
+    return <div>Indlæser brugerinformation...</div>;
   }
 
   if (!currentUser) {
-    return <div>Du skal være logget ind for at tilføje et barn. Log venligst ind.</div>; // Redirect or show message if not logged in
+    return <div>Du skal være logget ind for at tilføje et barn. Log venligst ind.</div>;
   }
 
   return (
     <div className="input-container">
       <h2>Tilføj børne konto</h2>
-      {/* Display parent's email from currentUser from context */}
       <p><strong>Logget på med</strong> <br />{currentUser?.email}</p>
       <form onSubmit={handleAddChild}>
         <div>

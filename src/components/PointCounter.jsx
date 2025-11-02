@@ -9,8 +9,6 @@ export default function PointCounter() {
 
     useEffect(() => {
         const checkLogin = Auth.onAuthStateChanged((user) => {
-
-            // hvis der er en bruger logget ind, vis hvor mange point de har 
             if (user) {
                 const barnCheck = ref(DataBase, `childrenProfiles/${user.uid}/parentUid`);
                 get(barnCheck).then((snapshot) => {

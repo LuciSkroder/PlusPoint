@@ -11,7 +11,6 @@ import {
 } from "firebase/database";
 import "../css/shop.css";
 
-// Helper functions
 async function getChildParentUid(childUid) {
   const snapshot = await get(
     ref(DataBase, `childrenProfiles/${childUid}/parentUid`)
@@ -39,12 +38,10 @@ async function buyShopItem(item, parentUid) {
     return;
   }
 
-  // Deduct points
   await update(ref(DataBase, `childrenProfiles/${childUid}`), {
     points: currentPoints - item.price,
   });
 
-  // Record purchase
   await push(ref(DataBase, `childrenProfiles/${childUid}/purchases`), {
     itemId: item.id,
     itemName: item.name,
@@ -98,14 +95,13 @@ async function buyAvatarItem(item, category) {
   alert(`Successfully bought ${item.name}!`);
 }
 
-// Component
 export default function ChildShopViewer() {
   const [shopItems, setShopItems] = useState([]);
   const [childPoints, setChildPoints] = useState(0);
   const [parentUid, setParentUid] = useState(null);
   const [purchases, setPurchases] = useState([]);
   const [cashedInItems, setCashedInItems] = useState(new Set());
-  const [viewMode, setViewMode] = useState("shop"); // "shop", "purchases", "styling"
+  const [viewMode, setViewMode] = useState("shop");
   const [avatarItems, setAvatarItems] = useState({
     hats: [],
     shirts: [],
@@ -133,7 +129,6 @@ export default function ChildShopViewer() {
       if (uid) {
         setParentUid(uid);
 
-        // Subscribe to shop
         const shopRef = ref(DataBase, `shop/${uid}`);
         unsubscribeShop = onValue(shopRef, (snapshot) => {
           const data = snapshot.val() || {};
@@ -144,7 +139,6 @@ export default function ChildShopViewer() {
           setShopItems(items);
         });
 
-        // Subscribe to purchases
         const purchasesRef = ref(
           DataBase,
           `childrenProfiles/${user.uid}/purchases`
@@ -222,10 +216,7 @@ export default function ChildShopViewer() {
     );
 
     if (confirmed) {
-      // Hide immediately with CSS
       setCashedInItems((prev) => new Set([...prev, purchase.id]));
-
-      // Update database
       await update(
         ref(
           DataBase,
@@ -250,7 +241,6 @@ export default function ChildShopViewer() {
   const generateAvatarItems = () => {
     const allItems = [];
 
-    // Add hats
     avatarItems.hats.forEach((item) => {
       allItems.push({
         ...item,
@@ -260,7 +250,6 @@ export default function ChildShopViewer() {
       });
     });
 
-    // Add shirts
     avatarItems.shirts.forEach((item) => {
       allItems.push({
         ...item,
@@ -270,7 +259,6 @@ export default function ChildShopViewer() {
       });
     });
 
-    // Add bukser
     avatarItems.bukser.forEach((item) => {
       allItems.push({
         ...item,
@@ -288,17 +276,6 @@ export default function ChildShopViewer() {
       if (!aIsUnlocked && bIsUnlocked) return -1;
       return 0;
     });
-  };
-
-  // Generate 10 empty styling boxes
-  const generateStylingBoxes = () => {
-    return Array.from({ length: 10 }, (_, index) => ({
-      id: `styling-${index}`,
-      name: `Item ${index + 1}`,
-      description: "Sample description",
-      price: (index + 1) * 10,
-      imageUrl: "",
-    }));
   };
 
   const getButtonStyle = (mode) => ({

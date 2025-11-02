@@ -1,5 +1,4 @@
 .karousel-box {
-  /*background-color: red; til trouble shooting*/
   background-image: url(/img/elipse.png);
   background-size: contain;
   background-repeat: no-repeat;
@@ -147,7 +146,6 @@
   left: 0;
   right: 0;
   z-index: 10;
-  /*background-color: red;  til trouble shooting */
   box-shadow: 2px 2px 5px #313131;
   background-color: var(--hvid);
 }

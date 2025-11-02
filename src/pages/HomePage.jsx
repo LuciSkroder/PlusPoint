@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
 import User from "../components/User";
-import ChildShopViewer from "../components/ChildShopViewer";
-import ShopManager from "../components/ShopManager";
+import ProfilBillede from "../components/ProfilBillede";
 import TaskPreviewChild from "../components/TaskPreviewChild";
-import TaskVerifier from "../components/TaskVerifier";
+import ParentTaskViewer from "../components/TaskPreviewParent";
 import Karousel from "../components/Karousel";
 import { DataBase, Auth } from "../components/DataBase";
 import { useNavigate } from "react-router";
@@ -16,8 +15,6 @@ import {
   equalTo,
   get,
 } from "firebase/database";
-import ParentTaskViewer from "../components/TaskPreviewParent";
-import ProfilBillede from "../components/ProfilBillede";
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -40,7 +37,6 @@ export default function HomePage() {
     navigate("/level");
   }
 
-  // Toggle body class when edit mode changes
   useEffect(() => {
     if (editMode) {
       document.body.classList.add("edit-mode-active");
@@ -48,7 +44,6 @@ export default function HomePage() {
       document.body.classList.remove("edit-mode-active");
     }
 
-    // Cleanup: remove class when component unmounts
     return () => {
       document.body.classList.remove("edit-mode-active");
     };

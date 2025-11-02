@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { Auth } from "../components/DataBase";
 import { useNavigate } from "react-router";
-import "../css/login.css"; // Import the CSS file
+import "../css/login.css";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -11,8 +11,8 @@ export default function LoginPage() {
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
-    e.preventDefault(); // Prevent default form submission
-    setError(""); // Clear previous errors
+    e.preventDefault();
+    setError("");
     try {
       await signInWithEmailAndPassword(Auth, email, password);
       console.log("Logged in successfully!");

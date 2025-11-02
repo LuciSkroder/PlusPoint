@@ -11,24 +11,22 @@ import "../css/signup.css";
 export default function SignUpPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState(""); // State for confirm password
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false); // New loading state for button/form
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSignUp = async (e) => {
-    e.preventDefault(); // Prevent default form submission
-    setError(""); // Clear previous errors
-    setLoading(true); // Set loading true while submission is in progress
+    e.preventDefault();
+    setError("");
+    setLoading(true);
 
-    // Validate passwords match BEFORE sending to Firebase
     if (password !== confirmPassword) {
       setError("Passwords don't match.");
       setLoading(false);
       return;
     }
 
-    // Basic password length check (Firebase will also validate, but client-side is faster UX)
     if (password.length < 6) {
       setError("Password must be at least 6 characters long.");
       setLoading(false);
@@ -51,25 +49,20 @@ export default function SignUpPage() {
         const userProfileRef = ref(DataBase, `users/${user.uid}`);
         await set(userProfileRef, {
           email: user.email,
-          // You might want to get a display name from an input field instead of hardcoding
           displayName: "New Parent User",
-          // Initialize with an empty children object, or an array, depending on your schema
           children: {},
         });
         console.log("User profile created in Realtime Database.");
       }
 
       // 3. Redirect after successful sign-up and database write
-      navigate("/"); // Redirect to homepage or dashboard
+      navigate("/");
     } catch (err) {
-      // Handle any errors that occur during Auth creation or DB writing
       if (err.code === "auth/email-already-in-use") {
         setError(
           "This email is already in use. Please try logging in instead, or use a different email."
         );
-        // Optional: Provide more specific guidance on how they originally signed up
         try {
-          // This call also requires the Auth instance
           const signInMethods = await fetchSignInMethodsForEmail(Auth, email);
           if (signInMethods.length > 0) {
             setError(
@@ -81,7 +74,6 @@ export default function SignUpPage() {
           }
         } catch (fetchError) {
           console.error("Error fetching sign-in methods:", fetchError);
-          // Don't overwrite the main error message if fetching methods fails
         }
       } else if (err.code === "auth/weak-password") {
         setError(
@@ -90,12 +82,11 @@ export default function SignUpPage() {
       } else if (err.code === "auth/invalid-email") {
         setError("The email address is not valid.");
       } else {
-        // Catch any other Firebase errors or network issues
         setError(err.message);
       }
       console.error("Sign up error:", err.message);
     } finally {
-      setLoading(false); // Always stop loading when process is complete
+      setLoading(false);
     }
   };
 

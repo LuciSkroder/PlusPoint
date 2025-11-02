@@ -15,7 +15,7 @@ export default function ChildTaskViewer() {
   const [assignedTasks, setAssignedTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const currentUser = Auth.currentUser; // Get the current user directly
+  const currentUser = Auth.currentUser;
 
   useEffect(() => {
     if (!currentUser) {
@@ -34,7 +34,6 @@ export default function ChildTaskViewer() {
       equalTo(childUid)
     );
 
-    // Set up a real-time listener for these tasks
     const unsubscribe = onValue(
       childTasksQuery,
       (snapshot) => {
@@ -55,7 +54,7 @@ export default function ChildTaskViewer() {
         }
         setAssignedTasks(tasksData);
         setLoading(false);
-        setError(null); // Clear any previous errors
+        setError(null);
       },
       (dbError) => {
         console.error("Error fetching child's tasks:", dbError);
@@ -64,11 +63,10 @@ export default function ChildTaskViewer() {
       }
     );
 
-    // Cleanup function: unsubscribe from the listener when the component unmounts
     return () => {
       off(childTasksQuery, "value", unsubscribe);
     };
-  }, [currentUser]); // Re-run effect if currentUser changes
+  }, [currentUser]);
 
   const handleMarkAsCompleted = async (taskId) => {
     if (!currentUser) {
@@ -76,7 +74,6 @@ export default function ChildTaskViewer() {
       return;
     }
 
-    // Optional: Add a confirmation dialog
     if (
       !window.confirm(
         "Er du sikker på, at du vil markere denne opgave som færdig?"
@@ -89,7 +86,7 @@ export default function ChildTaskViewer() {
       const taskRef = ref(DataBase, `tasks/${taskId}`);
       await update(taskRef, {
         status: "completed",
-        completedAt: serverTimestamp(), // Use Firebase's server timestamp
+        completedAt: serverTimestamp(),
       });
       alert("Opgave markeret som færdig!");
     } catch (err) {
@@ -123,8 +120,6 @@ export default function ChildTaskViewer() {
       setError("Du skal være logget ind for at markere opgaver som færdige.");
       return;
     }
-
-    // Optional: Add a confirmation dialog
     if (
       !window.confirm("Er du sikker på, at du vil annullere færdiggørelsen?")
     ) {

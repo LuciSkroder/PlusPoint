@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Auth, DataBase } from "./DataBase";
 import {
   ref,
@@ -7,8 +7,6 @@ import {
   query,
   orderByChild,
   equalTo,
-  update,
-  serverTimestamp,
 } from "firebase/database";
 
 export default function ChildTaskViewer() {
@@ -71,34 +69,6 @@ export default function ChildTaskViewer() {
       off(childTasksQuery, "value", unsubscribe);
     };
   }, [currentUser]);
-
-  const handleMarkAsCompleted = async (taskId) => {
-    if (!currentUser) {
-      setError("You must be logged in to mark tasks as complete.");
-      return;
-    }
-
-    if (
-      !window.confirm("Are you sure you want to mark this task as completed?")
-    ) {
-      return;
-    }
-
-    try {
-      const taskRef = ref(DataBase, `tasks/${taskId}`);
-      await update(taskRef, {
-        status: "completed",
-        completedAt: serverTimestamp(),
-      });
-      alert("Task marked as completed!");
-    } catch (err) {
-      console.error("Error marking task as completed:", err);
-      setError(
-        "Failed to mark task as completed: " +
-          (err.message || "An unknown error occurred.")
-      );
-    }
-  };
 
   if (loading) {
     return <div>Loading your tasks...</div>;

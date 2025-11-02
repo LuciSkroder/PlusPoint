@@ -20,9 +20,9 @@ export default function CreateTaskPage() {
   const [taskName, setTaskName] = useState("");
   const [taskDescription, setTaskDescription] = useState("");
   const [taskRoom, setTaskRoom] = useState("");
-  const [taskPoints, setTaskPoints] = useState(""); // Stored as string, parsed to int
-  const [assignedDay, setAssignedDay] = useState("Vælg Dag"); // Default to "Vælg Dag"
-  const [repeatFrequency, setRepeatFrequency] = useState("Vælg gentagelser"); // Default to "Vælg gentagelser"
+  const [taskPoints, setTaskPoints] = useState(""); 
+  const [assignedDay, setAssignedDay] = useState("Vælg Dag");
+  const [repeatFrequency, setRepeatFrequency] = useState("Vælg gentagelser");
   const [selectedChildUid, setSelectedChildUid] = useState("");
 
   const [childrenList, setChildrenList] = useState([]);
@@ -49,7 +49,6 @@ export default function CreateTaskPage() {
     { value: "every_other_day", label: "Every Other Day" },
     { value: "once_a_week", label: "Once a Week" },
     { value: "once_a_month", label: "Once a Month" },
-    // You can add more options here, e.g., "twice_a_week", "every_weekday", etc.
   ];
 
   // Fetch children associated with the current parent
@@ -71,9 +70,6 @@ export default function CreateTaskPage() {
               displayName: childrenData[uid].displayName,
             }));
             setChildrenList(loadedChildren);
-            /* if (loadedChildren.length > 0) {
-              setSelectedChildUid(loadedChildren[0].uid); // Select first child by default
-            }*/ // fjernet for ikke at autoselekte for styling
           } else {
             setChildrenList([]);
           }
@@ -85,7 +81,6 @@ export default function CreateTaskPage() {
           setLoadingChildren(false);
         });
     } else if (!authLoading) {
-      // If not authenticated and not loading, clear children
       setChildrenList([]);
       setLoadingChildren(false);
     }
@@ -118,19 +113,19 @@ export default function CreateTaskPage() {
 
     try {
       const tasksRef = ref(DataBase, "tasks");
-      const newTaskRef = push(tasksRef); // Generate a unique ID for the new task
+      const newTaskRef = push(tasksRef);
 
       const newTask = {
         name: taskName,
         description: taskDescription,
         room: taskRoom,
-        points: pointsValue, // Ensure points is a number
+        points: pointsValue,
         assignedDay: assignedDay,
-        repeat: repeatFrequency, // Use the selected repeat frequency
+        repeat: repeatFrequency,
         assignedToChildUid: selectedChildUid,
         createdByParentUid: parentUid,
-        status: "pending", // Initial status for a new task
-        createdAt: new Date().toISOString(), // Timestamp for creation
+        status: "pending",
+        createdAt: new Date().toISOString(),
       };
 
       await set(newTaskRef, newTask);
@@ -144,13 +139,12 @@ export default function CreateTaskPage() {
         setSuccessMessage("");
       }, 5000);
 
-      // Clear form (except selected child for convenience)
       setTaskName("");
       setTaskDescription("");
       setTaskRoom("");
       setTaskPoints("");
-      setAssignedDay("Vælg Dag"); // Reset assigned day
-      setRepeatFrequency("never"); // Reset repeat frequency
+      setAssignedDay("Vælg Dag");
+      setRepeatFrequency("never");
     } catch (err) {
       console.error("Error creating task:", err);
       setError(
@@ -177,7 +171,6 @@ export default function CreateTaskPage() {
           Du har ingen børnekonti linket endnu. Tilføj venligst et barn
           først.
         </p>
-        {/* You might want to add a link here to your AddChildPage */}
       </div>
     );
   }

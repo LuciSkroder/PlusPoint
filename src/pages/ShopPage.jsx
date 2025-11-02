@@ -13,8 +13,6 @@ export default function ShopPage() {
 
   useEffect(() => {
     const auth = getAuth();
-
-    // Listen for auth state changes (handles page reloads, etc.)
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         console.log("User logged in:", user.uid);

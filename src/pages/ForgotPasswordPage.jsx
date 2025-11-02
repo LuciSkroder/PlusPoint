@@ -1,13 +1,13 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { sendPasswordResetEmail } from "firebase/auth";
 import { Auth } from "../components/DataBase";
 import { useNavigate } from "react-router";
-import "../css/login.css"; // Import the CSS file
+import "../css/login.css";
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
-  const [message, setMessage] = useState(""); // For success or error messages
-  const [error, setError] = useState(""); // To specifically show Firebase errors
+  const [message, setMessage] = useState(""); 
+  const [error, setError] = useState(""); 
   const navigate = useNavigate();
 
   const handlePasswordReset = async (e) => {
@@ -23,7 +23,6 @@ export default function ForgotPasswordPage() {
     try {
       await sendPasswordResetEmail(Auth, email);
       setMessage("Password reset email sent! Please check your inbox.");
-      // Optional: You might want to redirect them to the login page after a short delay
       setTimeout(() => {
         navigate("/login");
       }, 3000);
