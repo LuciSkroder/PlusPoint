@@ -1,8 +1,10 @@
 import "../css/404.css";
+import { useNavigate } from "react-router";
 
 export default function NotFound() {
+  const navigate = useNavigate();
   const handleRedirect = () => {
-    window.location.href = "/";
+    navigate("/");
   };
 
   return (
