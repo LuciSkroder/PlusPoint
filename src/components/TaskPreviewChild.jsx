@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Auth, DataBase } from "./DataBase";
-import { useNavigate } from "react-router";
 import {
   ref,
   onValue,
@@ -16,8 +15,12 @@ export default function ChildTaskViewer() {
   const [assignedTasks, setAssignedTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const currentUser = Auth.currentUser; // Get the current user directly
-  const navigate = useNavigate();
+  const currentUser = Auth.currentUser;
+
+  const currentDate = new Date().toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+  });
 
   useEffect(() => {
     if (!currentUser) {
@@ -29,29 +32,33 @@ export default function ChildTaskViewer() {
     const childUid = currentUser.uid;
     const tasksRef = ref(DataBase, "tasks");
 
-    // Query for tasks where 'assignedToChildUid' matches the current child's UID
     const childTasksQuery = query(
       tasksRef,
       orderByChild("assignedToChildUid"),
       equalTo(childUid)
     );
 
-    // Set up a real-time listener for these tasks
     const unsubscribe = onValue(
       childTasksQuery,
       (snapshot) => {
         const tasksData = [];
         if (snapshot.exists()) {
           snapshot.forEach((childSnapshot) => {
-            tasksData.push({
-              id: childSnapshot.key, // The unique task ID
-              ...childSnapshot.val(), // The task data
-            });
+            const taskData = childSnapshot.val();
+            if (
+              taskData.status === "pending" ||
+              taskData.status === "completed"
+            ) {
+              tasksData.push({
+                id: childSnapshot.key,
+                ...taskData,
+              });
+            }
           });
         }
         setAssignedTasks(tasksData);
         setLoading(false);
-        setError(null); // Clear any previous errors
+        setError(null);
       },
       (dbError) => {
         console.error("Error fetching child's tasks:", dbError);
@@ -60,7 +67,6 @@ export default function ChildTaskViewer() {
       }
     );
 
-    // Cleanup function: unsubscribe from the listener when the component unmounts
     return () => {
       off(childTasksQuery, "value", unsubscribe);
     };
@@ -72,7 +78,6 @@ export default function ChildTaskViewer() {
       return;
     }
 
-    // Optional: Add a confirmation dialog
     if (
       !window.confirm("Are you sure you want to mark this task as completed?")
     ) {
@@ -83,7 +88,7 @@ export default function ChildTaskViewer() {
       const taskRef = ref(DataBase, `tasks/${taskId}`);
       await update(taskRef, {
         status: "completed",
-        completedAt: serverTimestamp(), // Use Firebase's server timestamp
+        completedAt: serverTimestamp(),
       });
       alert("Task marked as completed!");
     } catch (err) {
@@ -114,7 +119,7 @@ export default function ChildTaskViewer() {
 
   return (
     <div className="taskView-child">
-      <h2>Current Time</h2>
+      <h2>{currentDate}</h2>
 
       <ul style={{ listStyle: "none", padding: 0 }}>
         {assignedTasks.map((task) => (
@@ -130,9 +135,9 @@ export default function ChildTaskViewer() {
           >
             <p>
               {task.status === "completed" ? (
-                <img src="/img/pending.svg" alt="Completed" />
+                <img src="./public/img/pending.svg" alt="Completed" />
               ) : (
-                <img src="/img/cirkel.svg" alt="Pending" />
+                <img src="./public/img/Cirkel.svg" alt="Pending" />
               )}
             </p>
 

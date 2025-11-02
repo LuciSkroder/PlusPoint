@@ -35,6 +35,10 @@ export default function HomePage() {
     navigate("/shop");
   }
 
+  function handleLevelClick() {
+    navigate("/level");
+  }
+
   // Toggle body class when edit mode changes
   useEffect(() => {
     if (editMode) {
@@ -136,11 +140,8 @@ export default function HomePage() {
                 <button className="home-box" onClick={handleShopClick}>
                   <img src="../../public/img/shopping-cart.svg" />
                 </button>
-                <button
-                  className="home-box"
-                  onClick={() => navigate("/create")}
-                >
-                  <img src="../../public/img/to-do.svg" />
+                <button className="home-box" onClick={handleLevelClick}>
+                  <img src="../../public/img/level.png" />
                 </button>
               </div>
               <div className="home-box-right">

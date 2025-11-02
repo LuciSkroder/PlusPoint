@@ -15,6 +15,7 @@ import ShopPage from "./pages/ShopPage";
 import TaskPage from "./pages/TaskPage";
 import Profil from "./pages/ProfilPage";
 import Indstillinger from "./pages/IndstillingerPage";
+import LevelPage from "./pages/LevelPage";
 
 export default function App() {
   const basename = process.env.NODE_ENV === "production" ? "/PlusPoint" : "/";
@@ -87,6 +88,7 @@ export default function App() {
             }
           ></Route>
           <Route path="/profil" element={<Profil />}></Route>
+          <Route path="/level" element={<LevelPage />}></Route>
           <Route path="/indstillinger" element={<Indstillinger />}></Route>
         </Routes>
         <BottomNav></BottomNav>

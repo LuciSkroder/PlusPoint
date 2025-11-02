@@ -65,3 +65,7 @@
 .log-ud {
   color: #f00014;
 }
+
+.tilbage-knap {
+  box-shadow: none;
+}

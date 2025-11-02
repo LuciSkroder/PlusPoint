@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Auth, DataBase } from "../components/DataBase";
-import { useNavigate } from "react-router";
 import {
   ref,
   onValue,
@@ -17,7 +16,6 @@ export default function ChildTaskViewer() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const currentUser = Auth.currentUser; // Get the current user directly
-  const navigate = useNavigate();
 
   useEffect(() => {
     if (!currentUser) {
@@ -43,10 +41,16 @@ export default function ChildTaskViewer() {
         const tasksData = [];
         if (snapshot.exists()) {
           snapshot.forEach((childSnapshot) => {
-            tasksData.push({
-              id: childSnapshot.key, // The unique task ID
-              ...childSnapshot.val(), // The task data
-            });
+            const taskData = childSnapshot.val();
+            if (
+              taskData.status === "pending" ||
+              taskData.status === "completed"
+            ) {
+              tasksData.push({
+                id: childSnapshot.key,
+                ...taskData,
+              });
+            }
           });
         }
         setAssignedTasks(tasksData);
@@ -112,24 +116,21 @@ export default function ChildTaskViewer() {
     );
   }
 
-
-const cancelCompletedTask = async (taskId) => {
+  const cancelCompletedTask = async (taskId) => {
     if (!currentUser) {
       setError("You must be logged in to mark tasks as complete.");
       return;
     }
 
     // Optional: Add a confirmation dialog
-    if (
-      !window.confirm("Are you sure you want to cancel this task?")
-    ) {
+    if (!window.confirm("Are you sure you want to cancel this task?")) {
       return;
     }
 
     try {
       const taskRef = ref(DataBase, `tasks/${taskId}`);
       await update(taskRef, {
-        status: "pending"
+        status: "pending",
       });
     } catch (err) {
       console.error("Error marking task as canceled:", err);
@@ -141,8 +142,7 @@ const cancelCompletedTask = async (taskId) => {
   };
 
   return (
-    <div className="childViewer">
-
+    <div className="task-box-barn">
       <h2>Your Assigned Tasks</h2>
       <ul style={{ listStyle: "none", padding: 0 }}>
         {assignedTasks.map((task) => (
@@ -159,31 +159,21 @@ const cancelCompletedTask = async (taskId) => {
             <h3>
               {task.name} ({task.points} points)
             </h3>
-            <p>
-              <strong>Description:</strong> {task.description}
-            </p>
-            <p>
-              <strong>Room:</strong> {task.room}
-            </p>
-            <p>
+            <p className="description-box">{task.description}</p>
+            <p className="info-box">
               <strong>Assigned Day:</strong> {task.assignedDay}
             </p>
-            <p>
+            <p className="info-box">
               <strong>Repeat:</strong> {task.repeat.replace(/_/g, " ")}
             </p>
-            <p>
+            <p className="info-box">
               <strong>Status:</strong>{" "}
               {task.status.charAt(0).toUpperCase() + task.status.slice(1)}
             </p>
-            {task.completedAt && (
-              <p>
-                <strong>Completed On:</strong>{" "}
-                {new Date(task.completedAt).toLocaleDateString()}
-              </p>
-            )}
 
             {task.status === "pending" && (
-              <div className="button-child"
+              <div
+                className="button-child"
                 onClick={() => handleMarkAsCompleted(task.id)}
                 style={{
                   backgroundColor: "#4CAF50",
@@ -204,8 +194,7 @@ const cancelCompletedTask = async (taskId) => {
                   Awaiting Parent Verification
                 </p>
 
-                <button onClick={() => cancelCompletedTask(task.id)}
-                >
+                <button onClick={() => cancelCompletedTask(task.id)}>
                   Annuller
                 </button>
               </div>
@@ -216,4 +205,3 @@ const cancelCompletedTask = async (taskId) => {
     </div>
   );
 }
-

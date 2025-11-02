@@ -43,9 +43,10 @@ body {
 .home-boxes {
   display: flex;
   flex-direction: row;
+  padding-left: 1rem;
+  padding-right: 1rem;
   gap: 1rem;
   height: 35vh;
-  width: 100%;
   padding-top: 2vh;
   overflow: hidden;
   padding-bottom: 1vh;
@@ -57,6 +58,7 @@ body {
   margin-left: 0.5vw;
   box-shadow: 0 2px 1px rgba(0, 0, 0, 0.6);
   border: 0.1px solid rgba(0, 0, 0, 0.2);
+  overflow: hidden;
 }
 
 .home-box-left button {

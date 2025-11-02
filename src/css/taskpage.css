@@ -1,40 +1,96 @@
 .parentButtons {
-    display: flex;
+  display: flex;
 }
 
-ul li div button:first-child{
-    border: 0.2rem solid green;
-    background-color: white;
-    font-weight: bold;
-    margin-right: 1rem;
+ul li div button:first-child {
+  border: 0.2rem solid var(--grøn);
+  background-color: white;
+  font-weight: bold;
+  margin-right: 1rem;
 }
-ul li div button:last-child{
-    border: 0.2rem solid red;
-    background-color: white;
-    font-weight: bold;
+ul li div button:last-child {
+  background-color: var(--rød);
+  color: white;
+  font-weight: bold;
 }
 
 .task-box {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 6rem;
-    margin-bottom: 6rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 6rem;
+  margin-bottom: 6rem;
 }
 
 .task-box ul li {
-    border-radius: 1.5rem;
-    background-color: var(--hvid); /**/
-    margin-left: 0.5vw;
-    border: 0.1px solid rgba(0, 0, 0, 0.2);
-    padding: 15px !important;
+  border-radius: 1.5rem;
+  background-color: var(--hvid);
+  margin-left: 0.5vw;
+  border: 0.1px solid rgba(0, 0, 0, 0.2);
+  padding: 15px !important;
+  max-height: 3rem;
 }
 
-.childViewer {
-    margin-top: 6rem;
-    margin-bottom: 6rem;
+.task-box ul {
+  max-height: 3rem;
+  background-color: red;
 }
 
 .home-boxes-right button {
-    display: flex !important;
+  display: flex !important;
+}
+
+.info-box {
+  display: inline-block;
+  background-color: var(--accent-color);
+  border-radius: 1rem;
+  padding: 0.4rem 0.8rem;
+  margin: 0.3rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--sort);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.task-box-parent {
+  margin: 8vh 1rem;
+  padding: 1.5rem;
+  background-color: var(--hvid);
+  border: 2px solid rgba(0, 0, 0, 0.15);
+  border-radius: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.task-box-parent h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.task-box-parent ul li {
+  background-color: #f9f9f9;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 1rem;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.task-box-parent .parentButtons button:first-child {
+  background-color: var(--grøn);
+  color: white;
+  border: none;
+}
+
+.task-box-parent .parentButtons button:last-child {
+  background-color: var(--rød);
+  color: white;
+  border: none;
+}
+
+.task-box-barn {
+  margin: 8vh 1rem;
+  padding: 1.5rem;
+  background-color: var(--hvid);
+  border: 2px solid rgba(0, 0, 0, 0.15);
+  border-radius: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }

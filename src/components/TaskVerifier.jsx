@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { Auth, DataBase } from "../components/DataBase";
-import { useNavigate } from "react-router";
 import {
   ref,
   onValue,
@@ -19,7 +18,6 @@ export default function TaskVerifier() {
   const [error, setError] = useState(null);
   const currentUser = Auth.currentUser;
   const parentUid = currentUser?.uid;
-  const navigate = useNavigate();
 
   useEffect(() => {
     if (!parentUid) {
@@ -166,7 +164,7 @@ export default function TaskVerifier() {
   }
 
   return (
-    <div className="task-box">
+    <div className="task-box-parent">
       <h2>Tasks Awaiting Your Verification</h2>
       {pendingTasks.length === 0 ? (
         <p>No tasks currently awaiting your verification. All caught up!</p>
@@ -177,22 +175,16 @@ export default function TaskVerifier() {
               <h3>
                 {task.name} ({task.points} points)
               </h3>
-              <p>
-                <strong>Assigned to:</strong>{" "}
+              <p className="info-box">
+                {" "}
                 {childDisplayNames[task.assignedToChildUid] ||
                   task.assignedToChildUid}
               </p>
-              <p>
-                <strong>Description:</strong> {task.description}
-              </p>
-              <p>
-                <strong>Room:</strong> {task.room}
-              </p>
-              <p>
-                <strong>Assigned Day:</strong> {task.assignedDay}
-              </p>
-              <p>
-                <strong>Status:</strong>{" "}
+              <p className="info-box">{task.description}</p>
+              <p className="info-box">{task.room}</p>
+              <p className="info-box">{task.assignedDay}</p>
+              <p className="info-box">
+                {" "}
                 {task.status.charAt(0).toUpperCase() + task.status.slice(1)}
               </p>
               {task.completedAt && (

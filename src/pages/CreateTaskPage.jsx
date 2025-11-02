@@ -140,6 +140,10 @@ export default function CreateTaskPage() {
           childrenList.find((c) => c.uid === selectedChildUid)?.displayName
         }!`
       );
+      setTimeout(() => {
+        setSuccessMessage("");
+      }, 5000);
+
       // Clear form (except selected child for convenience)
       setTaskName("");
       setTaskDescription("");
@@ -294,7 +298,11 @@ export default function CreateTaskPage() {
       </form>
 
       {error && <p style={{ color: "red" }}>{error}</p>}
-      {successMessage && <p style={{ color: "green" }}>{successMessage}</p>}
+      {successMessage && (
+        <div className="success-popup">
+          <p>{successMessage}</p>
+        </div>
+      )}
     </div>
   );
 }
