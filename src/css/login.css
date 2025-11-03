@@ -48,3 +48,11 @@
 button.login-button {
   width: 100% !important;
 }
+
+.sign-up-link {
+  background-color: transparent;
+  box-shadow: none;
+  border: none;
+  color: var(--komplementær);
+  text-decoration: underline;
+}
